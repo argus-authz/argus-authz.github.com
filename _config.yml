@@ -9,8 +9,8 @@ pygments: true
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title : Argus Authorization Service
-tagline: Site Tagline
+title : Argus
+tagline :
 author :
   name : Argus
   email : blah@email.test

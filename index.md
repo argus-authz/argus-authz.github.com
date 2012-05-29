@@ -1,7 +1,6 @@
 ---
 layout: page
 title: Argus Authorization Service
-tagline: Supporting tagline
 ---
 {% include JB/setup %}
 
