@@ -23,8 +23,6 @@
       </header>
       <section>
 
-
-      
 <h2>Argus Authorization Service</h2>
 <p>The Argus Authorization Service renders consistent authorization 
 decisions for distributed services (e.g., user interfaces, 
@@ -32,6 +30,11 @@ portals, computing elements, storage elements). The service is
 based on the XACML standard, and uses authorization policies to 
 determine if a user is allowed or denied to perform a certain 
 action on a particular service.</p>
+
+<p>
+<img width="400" src="img/argus-components-schema.png" alt="Argus Components" />
+</p>
+
 <p>Argus is composed of three main components:
 <ul>
 <li>The Policy Administration Point (PAP) provides the tools to 
@@ -45,16 +48,19 @@ integrity and consistency of the authorization requests received
 from the PEP clients. Lightweight PEP client libraries are also 
 provided to ease the integration and interoperability with other 
 EMI services or components.         
-</ul></p>
+</ul>
+</p>
 
 <h3>Documentation</h3>
 <p>The general <a href="https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework">Argus documenation</a> is available.</p>
 
 <h3>Argus Components</h3>
 <p>
-<ul><a href="/argus-pap">Argus PAP service</a></ul>
-<ul><a href="/argus-pdp">Argus PDP service</a></ul>
-<ul><a href="/argus-pep-server">Argus PEP Server</a></ul>
+<ul>
+<li><a href="/argus-pap">Argus PAP</a> (Policy Administration Point)
+<li><a href="/argus-pdp">Argus PDP</a> (Policy Decision Point)
+<li><a href="/argus-pep-server">Argus PEP Server</a> (Policy Enforcement Point)
+</ul>
 </p>
 
 
