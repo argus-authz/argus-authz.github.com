@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Argus Authorization Service by argus-authz</title>
+    <title>Argus Authorization Service</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -18,14 +18,44 @@
         <h1>Argus Authorization Service</h1>
         <p>XACML Authorization</p>
 
-
-        <p class="view"><a href="https://github.com/argus-authz">View My GitHub Profile</a></p>
+        <p class="view"><a href="https://github.com/argus-authz">GitHub Profile</a></p>
 
       </header>
       <section>
-        <h1>Argus pages on GitHub</h1>
+      
+<h2>Argus Authorization Server</h2>
+<p>The Argus Authorization Service renders consistent authorization 
+decisions for distributed services (e.g., user interfaces, 
+portals, computing elements, storage elements). The service is 
+based on the XACML standard, and uses authorization policies to 
+determine if a user is allowed or denied to perform a certain 
+action on a particular service.</p>
+<p>Argus is composed of three main components:
+<ul>
+<li>The Policy Administration Point (PAP) provides the tools to 
+author authorization policies, organize them in the local 
+repository and configure policy distribution among remote PAPs.
+<li>The Policy Decision Point (PDP) implements the authorization 
+engine, and is responsible for the evaluation of the authorization
+requests against the XACML policies retrieved from the PAP.
+<li>The Policy Enforcement Point Server (PEP Server) ensures the 
+integrity and consistency of the authorization requests received 
+from the PEP clients. Lightweight PEP client libraries are also 
+provided to ease the integration and interoperability with other 
+EMI services or components.         
+</ul></p>
 
-<p><a href="http://argus-authz.github.com">http://argus-authz.github.com</a></p>
+<h3>Documentation</h3>
+<p>The general <a href="https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework">Argus documenation</a> is available.</p>
+
+<h3>Argus Components</h3>
+<p>
+<ul><a href="/argus-pap">Argus PAP service</a></ul>
+<ul><a href="/argus-pdp">Argus PDP service</a></ul>
+<ul><a href="/argus-pep-server">Argus PEP Server</a></ul>
+</p>
+
+
       </section>
       <footer>
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
