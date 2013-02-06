@@ -1,9 +1,10 @@
 Argus EMI-3 local deployment
 ============================
 
+Author: valery.tschopp@switch.ch
 Date: 2013-02-05
-OS:   SL6 
-Arch: x86_64
+Platform: SL6 (x86_64)
+Host: nemesis.switch.ch
 
 1. Service Installation and Configuration
    --------------------------------------
