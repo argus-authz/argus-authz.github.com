@@ -6,8 +6,13 @@ Date: 2013-02-05
 Platform: SL6 (x86_64)
 Host: nemesis.switch.ch
 
+-----------------------------------------------------------------------------------------------
 1. Service Installation and Configuration
-   --------------------------------------
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Host Information
+-----------------------------------------------------------------------------------------------
 
 root@nemesis# lsb_release -a
 LSB Version: :core-4.0-amd64:core-4.0-noarch:graphics-4.0-amd64:graphics-4.0-noarch:printing-4.0-amd64:printing-4.0-noarch
@@ -32,6 +37,9 @@ sl                                 Scientific Linux 6.3 - x86_64                
 sl-security                        Scientific Linux 6.3 - x86_64 - security updates                707
 repolist: 31621
 
+-----------------------------------------------------------------------------------------------
+1.2 emi-argus Installation
+-----------------------------------------------------------------------------------------------
 
 root@nemesis# yum install emi-argus
 Loaded plugins: priorities, security
@@ -379,6 +387,10 @@ Dependency Installed:
 Complete!
 
 
+-----------------------------------------------------------------------------------------------
+1.3 emi-argus Configuration (YAIM)
+-----------------------------------------------------------------------------------------------
+
 root@nemesis# cat site-info.def 
 # BDII site name
 SITE_NAME=SWITCH_EMI3_RC
@@ -402,6 +414,7 @@ VO_DTEAM_VOMSES="'dteam voms.hellasgrid.gr 15004 /C=GR/O=HellasGrid/OU=hellasgri
 VO_DTEAM_VOMS_CA_DN="'/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006' '/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006'"
 VO_TESTERS_EU_EMI_EU_VOMSES="'testers.eu-emi.eu emitestbed07.cnaf.infn.it 15002 /C=IT/O=INFN/OU=Host/L=CNAF/CN=emitestbed07.cnaf.infn.it testers.eu-emi.eu' 'testers.eu-emi.eu emitestbed01.cnaf.infn.it 15002 /C=IT/O=INFN/OU=Host/L=CNAF/CN=emitestbed01.cnaf.infn.it testers.eu-emi.eu'"
 VO_TESTERS_EU_EMI_EU_VOMS_CA_DN="'/C=IT/O=INFN/CN=INFN CA' '/C=IT/O=INFN/CN=INFN CA'"
+
 
 
 root@nemesis# /opt/glite/yaim/bin/yaim -c -s site-info.def -n ARGUS_server
@@ -494,6 +507,9 @@ Starting BDII update process: [OK]
    INFO: YAIM terminated succesfully.
    
 
+-----------------------------------------------------------------------------------------------
+1.4 Service Checks
+-----------------------------------------------------------------------------------------------
 
 root@nemesis# service argus-pap status
 PAP running!
@@ -504,6 +520,9 @@ argus-pdp is running...
 root@nemesis# service argus-pepd status
 argus-pepd is running...
 
+-----------------------------------------------------------------------------------------------
+1.5 Argus Policies (Test)
+-----------------------------------------------------------------------------------------------
 
 root@nemesis# pap-admin lp
 default (local):
@@ -535,8 +554,9 @@ resource "test" {
 root@nemesis# service argus-pdp reloadpolicy
 
 
-2. Service Test
-   ------------
+-----------------------------------------------------------------------------------------------
+2. Service Test (pepcli)
+-----------------------------------------------------------------------------------------------
 
 [tschopp@nemesis ~]$ voms-proxy-info -all
 subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3/CN=proxy

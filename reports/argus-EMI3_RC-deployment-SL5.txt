@@ -1,0 +1,524 @@
+Argus EMI-3 local deployment
+============================
+
+Author: valery.tschopp@switch.ch
+Date: 2013-02-06
+Platform: SL5 (x86_64)
+Host: minerva.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Service Installation and Configuration
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Host Information
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# lsb_release -a
+LSB Version: :core-4.0-amd64:core-4.0-ia32:core-4.0-noarch:graphics-4.0-amd64:graphics-4.0-ia32:graphics-4.0-noarch:printing-4.0-amd64:printing-4.0-ia32:printing-4.0-noarch
+Distributor ID: Scientific
+Description: Scientific Linux release 5.9 (Boron)
+Release: 5.9
+Codename: Boron
+
+
+[root@minerva ~]# yum repolist
+Loaded plugins: kernel-module
+repo id                              repo name                                                  status
+EGI-trustanchors                     EGI-trustanchors                                            215
+EMI-3-testing-base                   EMI 3 Testing Base Repository                              1512
+EMI-3-testing-third-party            EMI 3 Testing Third-Party Repository                         76
+Oracle-11                            Oracle Repository (not for distribution)                      2
+core                                 name=SL 5 base                                             3772
+epel                                 Extra Packages for Enterprise Linux 5 - x86_64             7224
+eugridpma                            EUGridPMA                                                   227
+extras                               epel                                                       7224
+sl-base                              SL 5 base                                                  3772
+sl-security                          SL 5 security updates                                        52
+repolist: 24076
+
+
+-----------------------------------------------------------------------------------------------
+1.2 emi-argus Installation
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# yum install emi-argus
+Loaded plugins: kernel-module
+Setting up Install Process
+Resolving Dependencies
+--> Running transaction check
+---> Package emi-argus.noarch 0:1.6.0-1.el5 set to be updated
+--> Processing Dependency: emi-version for package: emi-argus
+--> Processing Dependency: argus-pepcli for package: emi-argus
+--> Processing Dependency: bdii for package: emi-argus
+--> Processing Dependency: argus-pap for package: emi-argus
+--> Processing Dependency: lcg-expiregridmapdir for package: emi-argus
+--> Processing Dependency: argus-pdp for package: emi-argus
+--> Processing Dependency: yaim-argus_server for package: emi-argus
+--> Processing Dependency: argus-pep-server for package: emi-argus
+--> Running transaction check
+---> Package argus-pap.noarch 0:1.6.0-1.el5 set to be updated
+--> Processing Dependency: voms-api-java3 for package: argus-pap
+--> Processing Dependency: java-1.6.0-openjdk for package: argus-pap
+---> Package argus-pdp.noarch 0:1.6.0-1.el5 set to be updated
+--> Processing Dependency: argus-pdp-pep-common >= 1.4 for package: argus-pdp
+---> Package argus-pep-server.noarch 0:1.6.0-3.el5 set to be updated
+--> Processing Dependency: argus-pep-common >= 2.3 for package: argus-pep-server
+---> Package argus-pepcli.x86_64 0:2.2.0-1.el5 set to be updated
+--> Processing Dependency: libargus-pep.so.2()(64bit) for package: argus-pepcli
+---> Package bdii.noarch 0:5.2.17-1.el5 set to be updated
+--> Processing Dependency: glue-schema >= 2.0.0 for package: bdii
+--> Processing Dependency: openldap2.4-servers for package: bdii
+--> Processing Dependency: openldap-clients for package: bdii
+--> Processing Dependency: openldap-servers for package: bdii
+--> Processing Dependency: expect for package: bdii
+--> Processing Dependency: openldap2.4-clients for package: bdii
+---> Package emi-version.x86_64 0:3.0.0-0.rc.sl5 set to be updated
+---> Package lcg-expiregridmapdir.noarch 0:3.0.1-1 set to be updated
+---> Package yaim-argus_server.noarch 0:1.6.0-1.el5 set to be updated
+--> Processing Dependency: glite-yaim-core for package: yaim-argus_server
+--> Processing Dependency: glite-yaim-bdii for package: yaim-argus_server
+--> Processing Dependency: glite-info-provider-service for package: yaim-argus_server
+--> Running transaction check
+---> Package argus-pdp-pep-common.noarch 0:1.4.0-2.el5 set to be updated
+--> Processing Dependency: canl-java for package: argus-pdp-pep-common
+---> Package argus-pep-api-c.x86_64 0:2.2.0-1.el5 set to be updated
+---> Package argus-pep-common.noarch 0:2.3.0-1.el5 set to be updated
+---> Package expect.x86_64 0:5.43.0-8.el5 set to be updated
+---> Package glite-info-provider-service.noarch 0:1.12.0-1.el5 set to be updated
+---> Package glite-yaim-bdii.noarch 0:4.3.13-1.el5 set to be updated
+---> Package glite-yaim-core.noarch 0:5.1.1-1.sl5 set to be updated
+---> Package glue-schema.noarch 0:2.0.10-1.el5 set to be updated
+---> Package java-1.6.0-openjdk.x86_64 1:1.6.0.0-1.30.1.11.5.el5 set to be updated
+--> Processing Dependency: tzdata-java for package: java-1.6.0-openjdk
+--> Processing Dependency: libgif.so.4()(64bit) for package: java-1.6.0-openjdk
+---> Package openldap-clients.x86_64 0:2.3.43-25.el5_8.1 set to be updated
+---> Package openldap-servers.x86_64 0:2.3.43-25.el5_8.1 set to be updated
+--> Processing Dependency: libltdl.so.3()(64bit) for package: openldap-servers
+---> Package openldap2.4-clients.x86_64 0:2.4.22-1.el5 set to be updated
+--> Processing Dependency: lib64ldap2.4_2 = 2.4.22-1.el5 for package: openldap2.4-clients
+--> Processing Dependency: liblber-2.4.so.2()(64bit) for package: openldap2.4-clients
+--> Processing Dependency: libldap-2.4.so.2()(64bit) for package: openldap2.4-clients
+---> Package openldap2.4-servers.x86_64 0:2.4.22-1.el5 set to be updated
+--> Processing Dependency: openldap2.4-extra-schemas >= 1.3-7 for package: openldap2.4-servers
+--> Processing Dependency: openldap2.4-extra-schemas >= 1.3-7 for package: openldap2.4-servers
+--> Processing Dependency: libodbc.so.1()(64bit) for package: openldap2.4-servers
+---> Package voms-api-java3.noarch 0:3.0.0-1.el5 set to be updated
+--> Processing Dependency: bouncycastle146-mail for package: voms-api-java3
+--> Running transaction check
+---> Package bouncycastle146-mail.noarch 0:1.46-1.sl5 set to be updated
+--> Processing Dependency: bouncycastle146 = 1.46 for package: bouncycastle146-mail
+---> Package canl-java.noarch 0:1.1.0-1.sl5 set to be updated
+--> Processing Dependency: jakarta-commons-io >= 1.4 for package: canl-java
+---> Package giflib.x86_64 0:4.1.3-7.3.3.el5 set to be updated
+---> Package lib64ldap2.4_2.x86_64 0:2.4.22-1.el5 set to be updated
+--> Processing Dependency: openldap2.4 >= 2.1.25-4mdk for package: lib64ldap2.4_2
+---> Package libtool-ltdl.x86_64 0:1.5.22-7.el5_4 set to be updated
+---> Package openldap2.4-extra-schemas.noarch 0:1.3-10.el5 set to be updated
+---> Package tzdata-java.x86_64 0:2012j-1.el5 set to be updated
+---> Package unixODBC-libs.x86_64 0:2.2.11-10.el5 set to be updated
+--> Running transaction check
+---> Package bouncycastle146.noarch 0:1.46-1.el5 set to be updated
+---> Package jakarta-commons-io.noarch 0:1.4-3.el5 set to be updated
+---> Package openldap2.4.x86_64 0:2.4.22-1.el5 set to be updated
+--> Finished Dependency Resolution
+Beginning Kernel Module Plugin
+Finished Kernel Module Plugin
+
+Dependencies Resolved
+
+======================================================================================================
+ Package                       Arch     Version                     Repository                   Size
+======================================================================================================
+Installing:
+ emi-argus                     noarch   1.6.0-1.el5                 EMI-3-testing-base          2.4 k
+Installing for dependencies:
+ argus-pap                     noarch   1.6.0-1.el5                 EMI-3-testing-base           17 M
+ argus-pdp                     noarch   1.6.0-1.el5                 EMI-3-testing-base           12 M
+ argus-pdp-pep-common          noarch   1.4.0-2.el5                 EMI-3-testing-base           78 k
+ argus-pep-api-c               x86_64   2.2.0-1.el5                 EMI-3-testing-base           54 k
+ argus-pep-common              noarch   2.3.0-1.el5                 EMI-3-testing-base          266 k
+ argus-pep-server              noarch   1.6.0-3.el5                 EMI-3-testing-base           13 M
+ argus-pepcli                  x86_64   2.2.0-1.el5                 EMI-3-testing-base           23 k
+ bdii                          noarch   5.2.17-1.el5                EMI-3-testing-base           23 k
+ bouncycastle146               noarch   1.46-1.el5                  EMI-3-testing-base          1.9 M
+ bouncycastle146-mail          noarch   1.46-1.sl5                  EMI-3-testing-third-party   476 k
+ canl-java                     noarch   1.1.0-1.sl5                 EMI-3-testing-base          263 k
+ emi-version                   x86_64   3.0.0-0.rc.sl5              EMI-3-testing-base          1.9 k
+ expect                        x86_64   5.43.0-8.el5                core                        160 k
+ giflib                        x86_64   4.1.3-7.3.3.el5             core                         39 k
+ glite-info-provider-service   noarch   1.12.0-1.el5                EMI-3-testing-base           67 k
+ glite-yaim-bdii               noarch   4.3.13-1.el5                EMI-3-testing-base           10 k
+ glite-yaim-core               noarch   5.1.1-1.sl5                 EMI-3-testing-base          118 k
+ glue-schema                   noarch   2.0.10-1.el5                EMI-3-testing-base           34 k
+ jakarta-commons-io            noarch   1.4-3.el5                   epel                        105 k
+ java-1.6.0-openjdk            x86_64   1:1.6.0.0-1.30.1.11.5.el5   core                         36 M
+ lcg-expiregridmapdir          noarch   3.0.1-1                     EMI-3-testing-base          6.5 k
+ lib64ldap2.4_2                x86_64   2.4.22-1.el5                EMI-3-testing-third-party   300 k
+ libtool-ltdl                  x86_64   1.5.22-7.el5_4              core                         38 k
+ openldap-clients              x86_64   2.3.43-25.el5_8.1           core                        224 k
+ openldap-servers              x86_64   2.3.43-25.el5_8.1           core                        2.2 M
+ openldap2.4                   x86_64   2.4.22-1.el5                EMI-3-testing-third-party    40 k
+ openldap2.4-clients           x86_64   2.4.22-1.el5                EMI-3-testing-third-party   298 k
+ openldap2.4-extra-schemas     noarch   1.3-10.el5                  EMI-3-testing-third-party    46 k
+ openldap2.4-servers           x86_64   2.4.22-1.el5                EMI-3-testing-third-party   2.1 M
+ tzdata-java                   x86_64   2012j-1.el5                 sl-security                 183 k
+ unixODBC-libs                 x86_64   2.2.11-10.el5               core                        554 k
+ voms-api-java3                noarch   3.0.0-1.el5                 EMI-3-testing-base          120 k
+ yaim-argus_server             noarch   1.6.0-1.el5                 EMI-3-testing-base           15 k
+
+Transaction Summary
+======================================================================================================
+Install      34 Package(s)
+Upgrade       0 Package(s)
+
+Total size: 88 M
+Total download size: 118 k
+Is this ok [y/N]: y
+Downloading Packages:
+(1/34): emi-version-3.0.0-0.rc.sl5.x86_64.rpm                                  | 1.9 kB     00:00     
+(2/34): emi-argus-1.6.0-1.el5.noarch.rpm                                       | 2.4 kB     00:00     
+(3/34): lcg-expiregridmapdir-3.0.1-1.noarch.rpm                                | 6.5 kB     00:00     
+(4/34): glite-yaim-bdii-4.3.13-1.el5.noarch.rpm                                |  10 kB     00:00     
+(5/34): yaim-argus_server-1.6.0-1.el5.noarch.rpm                               |  15 kB     00:00     
+(6/34): bdii-5.2.17-1.el5.noarch.rpm                                           |  23 kB     00:00     
+(7/34): argus-pepcli-2.2.0-1.el5.x86_64.rpm                                    |  23 kB     00:00     
+(8/34): glue-schema-2.0.10-1.el5.noarch.rpm                                    |  34 kB     00:00     
+(9/34): libtool-ltdl-1.5.22-7.el5_4.x86_64.rpm                                 |  38 kB     00:00     
+(10/34): giflib-4.1.3-7.3.3.el5.x86_64.rpm                                     |  39 kB     00:00     
+(11/34): openldap2.4-2.4.22-1.el5.x86_64.rpm                                   |  40 kB     00:00     
+(12/34): openldap2.4-extra-schemas-1.3-10.el5.noarch.rpm                       |  46 kB     00:00     
+(13/34): argus-pep-api-c-2.2.0-1.el5.x86_64.rpm                                |  54 kB     00:00     
+(14/34): glite-info-provider-service-1.12.0-1.el5.noarch.rpm                   |  67 kB     00:00     
+(15/34): argus-pdp-pep-common-1.4.0-2.el5.noarch.rpm                           |  78 kB     00:00     
+(16/34): jakarta-commons-io-1.4-3.el5.noarch.rpm                               | 105 kB     00:00     
+(17/34): glite-yaim-core-5.1.1-1.sl5.noarch.rpm                                | 118 kB     00:00     
+(18/34): voms-api-java3-3.0.0-1.el5.noarch.rpm                                 | 120 kB     00:00     
+(19/34): expect-5.43.0-8.el5.x86_64.rpm                                        | 160 kB     00:00     
+(20/34): tzdata-java-2012j-1.el5. (1%) 52% [============-           ] 102 kB/s |  96 kB     00:00 ETA 
+(20/34): tzdata-java-2012j-1.el5.x86_64.rpm                                    | 183 kB     00:00     
+(21/34): openldap-clients-2.3.43-25.el5_8.1.x86_64.rpm                         | 224 kB     00:00     
+(22/34): canl-java-1.1.0-1.sl5.noarch.rpm                                      | 263 kB     00:00     
+(23/34): argus-pep-common-2.3.0-1.el5.noarch.rpm                               | 266 kB     00:00     
+(24/34): openldap2.4-clients-2.4.22-1.el5.x86_64.rpm                           | 298 kB     00:00     
+(25/34): lib64ldap2.4_2-2.4.22-1.el5.x86_64.rpm                                | 300 kB     00:00     
+(26/34): bouncycastle146-mail-1.46-1.sl5.noarch.rpm                            | 476 kB     00:00     
+(27/34): unixODBC-libs-2.2.11-10.el5.x86_64.rpm                                | 554 kB     00:00     
+(28/34): bouncycastle146-1.46-1.el5.noarch.rpm                                 | 1.9 MB     00:00     
+(29/34): openldap2.4-servers-2.4.22-1.el5.x86_64.rpm                           | 2.1 MB     00:00     
+(30/34): openldap-servers-2.3.43-25.el5_8.1.x86_64.rpm                         | 2.2 MB     00:00     
+(31/34): argus-pdp-1.6.0-1.el5.noarch.rpm                                      |  12 MB     00:00     
+(32/34): argus-pep-server-1.6.0-3.el5.noarch.rpm                               |  13 MB     00:00     
+(33/34): argus-pap-1.6.0-1.el5.noarch.rpm                                      |  17 MB     00:01     
+(34/34): java-1.6.0-openjdk-1.6.0.0-1.30.1.11.5.el5.x86_64.rpm                 |  36 MB     00:01     
+------------------------------------------------------------------------------------------------------
+Total                                                                 7.0 MB/s |  88 MB     00:12     
+Running rpm_check_debug
+Running Transaction Test
+Finished Transaction Test
+Transaction Test Succeeded
+Running Transaction
+
+  Installing     : libtool-ltdl                                                                  1/34 
+  Installing     : openldap-servers                                                              2/34 
+  Installing     : argus-pep-api-c                                                               3/34 
+  Installing     : argus-pepcli                                                                  4/34 
+  Installing     : expect                                                                        5/34 
+  Installing     : giflib                                                                        6/34 
+  Installing     : openldap-clients                                                              7/34 
+  Installing     : unixODBC-libs                                                                 8/34 
+  Installing     : emi-version                                                                   9/34 
+  Installing     : tzdata-java                                                                  10/34 
+  Installing     : java-1.6.0-openjdk                                                           11/34 
+  Installing     : bouncycastle146                                                              12/34 
+  Installing     : bouncycastle146-mail                                                         13/34 
+  Installing     : argus-pep-common                                                             14/34 
+  Installing     : glite-yaim-core                                                              15/34 
+  Installing     : glite-info-provider-service                                                  16/34 
+  Installing     : jakarta-commons-io                                                           17/34 
+  Installing     : canl-java                                                                    18/34 
+  Installing     : argus-pdp-pep-common                                                         19/34 
+  Installing     : voms-api-java3                                                               20/34 
+  Installing     : argus-pap                                                                    21/34 
+  Installing     : argus-pep-server                                                             22/34 
+  Installing     : argus-pdp                                                                    23/34 
+  Installing     : glite-yaim-bdii                                                              24/34 
+  Installing     : yaim-argus_server                                                            25/34 
+  Installing     : glue-schema                                                                  26/34 
+  Installing     : lcg-expiregridmapdir                                                         27/34 
+  Installing     : lib64ldap2.4_2                                                               28/34 
+  Installing     : openldap2.4-clients                                                          29/34 
+  Installing     : openldap2.4                                                                  30/34 
+  Installing     : openldap2.4-extra-schemas                                                    31/34 
+useradd: user ldap exists
+Adding user ldap to group ldap
+  Installing     : openldap2.4-servers                                                          32/34 
+Generating self-signed certificate...
+To generate a self-signed certificate, you can use the utility
+/usr/share/openldap2.4/gencert.sh...
+  Installing     : bdii                                                                         33/34 
+  Installing     : emi-argus                                                                    34/34 
+
+Installed:
+  emi-argus.noarch 0:1.6.0-1.el5                                                                      
+
+Dependency Installed:
+  argus-pap.noarch 0:1.6.0-1.el5                                                                      
+  argus-pdp.noarch 0:1.6.0-1.el5                                                                      
+  argus-pdp-pep-common.noarch 0:1.4.0-2.el5                                                           
+  argus-pep-api-c.x86_64 0:2.2.0-1.el5                                                                
+  argus-pep-common.noarch 0:2.3.0-1.el5                                                               
+  argus-pep-server.noarch 0:1.6.0-3.el5                                                               
+  argus-pepcli.x86_64 0:2.2.0-1.el5                                                                   
+  bdii.noarch 0:5.2.17-1.el5                                                                          
+  bouncycastle146.noarch 0:1.46-1.el5                                                                 
+  bouncycastle146-mail.noarch 0:1.46-1.sl5                                                            
+  canl-java.noarch 0:1.1.0-1.sl5                                                                      
+  emi-version.x86_64 0:3.0.0-0.rc.sl5                                                                 
+  expect.x86_64 0:5.43.0-8.el5                                                                        
+  giflib.x86_64 0:4.1.3-7.3.3.el5                                                                     
+  glite-info-provider-service.noarch 0:1.12.0-1.el5                                                   
+  glite-yaim-bdii.noarch 0:4.3.13-1.el5                                                               
+  glite-yaim-core.noarch 0:5.1.1-1.sl5                                                                
+  glue-schema.noarch 0:2.0.10-1.el5                                                                   
+  jakarta-commons-io.noarch 0:1.4-3.el5                                                               
+  java-1.6.0-openjdk.x86_64 1:1.6.0.0-1.30.1.11.5.el5                                                 
+  lcg-expiregridmapdir.noarch 0:3.0.1-1                                                               
+  lib64ldap2.4_2.x86_64 0:2.4.22-1.el5                                                                
+  libtool-ltdl.x86_64 0:1.5.22-7.el5_4                                                                
+  openldap-clients.x86_64 0:2.3.43-25.el5_8.1                                                         
+  openldap-servers.x86_64 0:2.3.43-25.el5_8.1                                                         
+  openldap2.4.x86_64 0:2.4.22-1.el5                                                                   
+  openldap2.4-clients.x86_64 0:2.4.22-1.el5                                                           
+  openldap2.4-extra-schemas.noarch 0:1.3-10.el5                                                       
+  openldap2.4-servers.x86_64 0:2.4.22-1.el5                                                           
+  tzdata-java.x86_64 0:2012j-1.el5                                                                    
+  unixODBC-libs.x86_64 0:2.2.11-10.el5                                                                
+  voms-api-java3.noarch 0:3.0.0-1.el5                                                                 
+  yaim-argus_server.noarch 0:1.6.0-1.el5                                                              
+
+Complete!
+
+
+-----------------------------------------------------------------------------------------------
+1.3 emi-argus Configuration (YAIM)
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# cat site-info.def 
+#YAIM_DEBUG=yes
+#YAIM_LOGGING_LEVEL=DEBUG
+
+# Argus service hostname
+ARGUS_HOST=minerva.switch.ch
+
+# BDII site name
+SITE_NAME=SWITCH_EMI3_RC
+
+# PAP administrator DN allowed to use 'pap-admin' command
+PAP_ADMIN_DN="/DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3"
+
+# Users and Groups definition for grid and group mapfile
+USERS_CONF=/opt/glite/yaim/examples/users.conf
+GROUPS_CONF=/opt/glite/yaim/examples/groups.conf
+
+# Supported VOs
+VOS="dteam testers.eu-emi.eu"
+
+# VO definitions
+#
+VO_DTEAM_VOMSES="'dteam voms.hellasgrid.gr 15004 /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr dteam' 'dteam voms2.hellasgrid.gr 15004 /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms2.hellasgrid.gr dteam'"
+VO_DTEAM_VOMS_CA_DN="'/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006' '/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006'"
+
+VO_TESTERS_EU_EMI_EU_VOMSES="'testers.eu-emi.eu emitestbed07.cnaf.infn.it 15002 /C=IT/O=INFN/OU=Host/L=CNAF/CN=emitestbed07.cnaf.infn.it testers.eu-emi.eu' 'testers.eu-emi.eu emitestbed01.cnaf.infn.it 15002 /C=IT/O=INFN/OU=Host/L=CNAF/CN=emitestbed01.cnaf.infn.it testers.eu-emi.eu'"
+VO_TESTERS_EU_EMI_EU_VOMS_CA_DN="'/C=IT/O=INFN/CN=INFN CA' '/C=IT/O=INFN/CN=INFN CA'"
+
+
+
+[root@minerva ~]# /opt/glite/yaim/bin/yaim -c -s site-info.def -n ARGUS_server
+   INFO: Configuring HOST: minerva.switch.ch
+   INFO: Using site configuration file: site-info.def
+   INFO: 
+         ###################################################################
+         
+         .             /'.-. ')
+         .     yA,-"-,( ,m,:/ )   .oo.     oo    o      ooo  o.     .oo
+         .    /      .-Y a  a Y-.     8. .8'    8'8.     8    8b   d'8
+         .   /           ~ ~ /         8'    .8oo88.     8    8  8'  8
+         . (_/         '===='          8    .8'     8.   8    8  Y   8
+         .   Y,-''-,Yy,-.,/           o8o  o8o    o88o  o8o  o8o    o8o
+         .    I_))_) I_))_)
+         
+         
+         current working directory: /home/tschopp
+         site-info.def date: Feb 6 10:54 site-info.def
+         yaim command: -c -s site-info.def -n ARGUS_server
+         log file: /opt/glite/yaim/bin/../log/yaimlog
+         Wed Feb  6 13:06:31 CET 2013 : /opt/glite/yaim/bin/yaim
+         
+         Installed YAIM versions:
+         yaim-argus-server 1.6.0-1
+         glite-yaim-bdii 4.3.13-1
+         glite-yaim-core 5.1.1-1
+         
+         ####################################################################
+   INFO: The default location of the grid-env.(c)sh files will be: /usr/libexec
+   INFO: Sourcing the utilities in /opt/glite/yaim/functions/utils
+   INFO: Detecting environment
+   INFO: Executing function: config_host_certs_check 
+   INFO: Executing function: config_edgusers_check 
+   INFO: Executing function: config_vomsmap_check 
+   INFO: Executing function: config_vomsdir_check 
+   INFO: Executing function: config_pap_service_check 
+   INFO: Executing function: config_pdp_service_check 
+   INFO: Executing function: config_pep_service_check 
+   INFO: Executing function: config_info_glue2_service_argus_check 
+   INFO: Executing function: config_bdii_5.2_check 
+   INFO: Executing function: config_host_certs 
+   INFO: Executing function: config_edgusers 
+   INFO: Executing function: config_vomsmap_setenv 
+   INFO: Executing function: config_vomsmap 
+   INFO: Creating grid-map directory in /etc/grid-security/gridmapdir
+   INFO: Creating voms grid-map file in /etc/grid-security/voms-grid-mapfile
+   INFO: Creating voms groupmap file in /etc/grid-security/groupmapfile
+users_getvogroup: could not find group for "TESTERS.EU-EMI.EU".
+users_getvoprefix: could not find pool account prefix for TESTERS.EU-EMI.EU in /opt/glite/yaim/examples/users.conf
+   WARNING: VO 'TESTERS.EU-EMI.EU' not found in /opt/glite/yaim/examples/groups.conf
+   INFO: Copying the /etc/grid-security/voms-grid-mapfile in the standard location /etc/grid-security/grid-mapfile
+   INFO: Executing function: config_vomsdir_setenv 
+   INFO: Executing function: config_vomsdir 
+   INFO: Create the /etc/grid-security/vomsdir/ directory
+   INFO: Executing function: config_pap_service_setenv 
+   INFO: Executing function: config_pap_service 
+   INFO: Stopping Argus PAP service...
+PAP  server is not running!
+   INFO: Create the Argus PAP /usr/share/argus/pap/conf/pap_configuration.ini file
+   INFO: Create the Argus PAP /usr/share/argus/pap/conf/pap_authorization.ini file
+   INFO: Create the Argus PAP /usr/share/argus/pap/conf/pap-admin.properties file
+   INFO: Fixing files and directory permissions in /usr/share/argus/pap
+   INFO: Starting Argus PAP service...
+   INFO: Executing function: config_pdp_service_setenv 
+   INFO: Executing function: config_pdp_service 
+   INFO: Stopping Argus PDP service...
+Unable to connect to localhost:8153, perhaps the service is not running
+   INFO: Create the Argus PDP /etc/argus/pdp/pdp.ini file
+   INFO: Fixing files and directory permissions
+   INFO: Register /etc/init.d/argus-pdp...
+   INFO: Starting Argus PDP service...
+Starting argus-pdp... [OK]
+   INFO: Executing function: config_pep_service_setenv 
+   INFO: Executing function: config_pep_service 
+   INFO: Stopping Argus PEP Server service...
+Unable to connect to localhost:8155, perhaps the service is not running
+   INFO: Create the Argus PEP Server /etc/argus/pepd/pepd.ini file
+   INFO: Fixing files and directory permissions in /usr/share/argus/pepd
+   INFO: Starting Argus PEP Server service...
+Starting argus-pepd... [OK]
+   INFO: Executing function: config_info_glue2_service_argus_setenv 
+   INFO: Executing function: config_info_glue2_service_argus 
+   INFO: Create the GLUE2 info provider: /var/lib/bdii/gip/provider/glite-info-glue2-provider-service-argus
+   INFO: Executing function: config_bdii_5.2 
+Stopping BDII: BDII already stopped
+Starting BDII slapd: [OK]
+Starting BDII update process: [OK]
+   INFO: Configuration Complete.
+   INFO: YAIM terminated succesfully.
+
+
+-----------------------------------------------------------------------------------------------
+1.4 Service Checks
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# service argus-pap status
+PAP running!
+
+[root@minerva ~]# service argus-pdp status
+argus-pdp is running...
+
+[root@minerva ~]# service argus-pepd status                
+argus-pepd is running...
+
+
+-----------------------------------------------------------------------------------------------
+1.5 Argus Policies (Test)
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# pap-admin lp
+default (local):
+No policies has been found.
+
+[root@minerva ~]# cat dteam-policy.spl 
+resource "test" {
+    obligation "http://glite.org/xacml/obligation/local-environment-map" {
+    }
+    action "test" {
+        rule permit { vo="dteam" }
+    }
+}
+
+[root@minerva ~]# pap-admin apf dteam-policy.spl 
+[root@minerva ~]# pap-admin lp
+
+default (local):
+
+resource "test" {
+    obligation "http://glite.org/xacml/obligation/local-environment-map" {
+    }
+
+    action "test" {
+        rule permit { vo="dteam" }
+    }
+}
+
+[root@minerva ~]# service argus-pdp reloadpolicy
+
+
+-----------------------------------------------------------------------------------------------
+2. Service Test (pepcli)
+-----------------------------------------------------------------------------------------------
+
+[tschopp@minerva ~]$ voms-proxy-init -voms dteam
+Enter GRID pass phrase: ************
+Your identity: /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+Creating temporary proxy ................................................................................... Done
+Contacting  voms.hellasgrid.gr:15004 [/C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr] "dteam" Done
+Creating proxy ................................................ Done
+
+Your proxy is valid until Thu Feb  7 02:36:29 2013
+
+
+[tschopp@minerva ~]$ voms-proxy-info -all
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3/CN=proxy
+issuer    : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+identity  : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+type      : proxy
+strength  : 1024 bits
+path      : /tmp/x509up_u959
+timeleft  : 11:59:55
+key usage : Digital Signature, Key Encipherment
+=== VO dteam extension information ===
+VO        : dteam
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+issuer    : /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr
+attribute : /dteam/Role=NULL/Capability=NULL
+attribute : /dteam/NGI_CH/Role=NULL/Capability=NULL
+timeleft  : 11:59:55
+uri       : voms.hellasgrid.gr:15004
+
+
+[tschopp@minerva ~]$ pepcli -p https://minerva.switch.ch:8154/authz --capath /etc/grid-security/certificates --cert ~/.globus/usercert.pem --key ~/.globus/userkey.pem --keyinfo /tmp/x509up_u959 --resource test --action test
+Key password: ********
+Resource: test
+Decision: Permit
+Obligation: http://glite.org/xacml/obligation/local-environment-map/posix (caller should resolve POSIX account mapping)
+Username: dteam026
+Group: dteam
+Secondary Groups: dteam
+[tschopp@minerva ~]$ 
+
+
+
+
+
+
+
+
