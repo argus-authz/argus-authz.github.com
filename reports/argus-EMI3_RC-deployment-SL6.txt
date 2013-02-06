@@ -1,3 +1,11 @@
+Argus EMI-3 local deployment
+============================
+
+Deployment on SL6 x86_64
+
+1. Service Installation and Configuration
+   --------------------------------------
+
 root@nemesis# lsb_release -a
 LSB Version: :core-4.0-amd64:core-4.0-noarch:graphics-4.0-amd64:graphics-4.0-noarch:printing-4.0-amd64:printing-4.0-noarch
 Distributor ID: Scientific
@@ -524,4 +532,36 @@ resource "test" {
 root@nemesis# service argus-pdp reloadpolicy
 
 
-Script done on Tue Feb  5 11:11:55 2013
+2. Service Test
+   ------------
+
+[tschopp@nemesis ~]$ voms-proxy-info -all
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3/CN=proxy
+issuer    : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+identity  : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+type      : proxy
+strength  : 1024 bits
+path      : /tmp/x509up_u959
+timeleft  : 11:59:16
+key usage : Digital Signature, Key Encipherment
+=== VO dteam extension information ===
+VO        : dteam
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+issuer    : /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr
+attribute : /dteam/Role=NULL/Capability=NULL
+attribute : /dteam/NGI_CH/Role=NULL/Capability=NULL
+timeleft  : 11:59:15
+uri       : voms.hellasgrid.gr:15004
+
+
+[tschopp@nemesis ~]$ pepcli -p https://nemesis.switch.ch:8154/authz --capath /etc/grid-security/certificates --cert ~/.globus/usercert.pem --key ~/.globus/userkey.pem --keyinfo /tmp/x509up_u959 --resource test --action test
+Key password: *********
+Resource: test
+Decision: Permit
+Obligation: http://glite.org/xacml/obligation/local-environment-map/posix (caller should resolve POSIX account mapping)
+Username: dteam045
+Group: dteam
+Secondary Groups: dteam
+
+
+
