@@ -1,0 +1,733 @@
+Argus EMI-3 local deployment
+============================
+
+Author: valery.tschopp@switch.ch
+Date: 2013-02-07
+Platform: Debian6 (x86_64)
+Host: kronos.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Service Installation and Configuration
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Host Information
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# lsb_release -a
+No LSB modules are available.
+Distributor ID: Debian
+Description: Debian GNU/Linux 6.0.6 (squeeze)
+Release: 6.0.6
+Codename: squeeze
+
+root@kronos:~# apt-cache policy
+Package files:
+ 100 /var/lib/dpkg/status
+     release a=now
+ 990 http://ftp.ch.debian.org/debian/ squeeze/non-free amd64 Packages
+     release v=6.0.6,o=Debian,a=stable,n=squeeze,l=Debian,c=non-free
+     origin ftp.ch.debian.org
+ 990 http://ftp.ch.debian.org/debian/ squeeze/contrib amd64 Packages
+     release v=6.0.6,o=Debian,a=stable,n=squeeze,l=Debian,c=contrib
+     origin ftp.ch.debian.org
+ 990 http://ftp.ch.debian.org/debian/ squeeze/main amd64 Packages
+     release v=6.0.6,o=Debian,a=stable,n=squeeze,l=Debian,c=main
+     origin ftp.ch.debian.org
+ 990 ftp://mirror.switch.ch/mirror/debian/ squeeze/non-free amd64 Packages
+     release v=6.0.6,o=Debian,a=stable,n=squeeze,l=Debian,c=non-free
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian/ squeeze/contrib amd64 Packages
+     release v=6.0.6,o=Debian,a=stable,n=squeeze,l=Debian,c=contrib
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian/ squeeze/main amd64 Packages
+     release v=6.0.6,o=Debian,a=stable,n=squeeze,l=Debian,c=main
+     origin mirror.switch.ch
+ 990 http://security.debian.org/ squeeze/updates/non-free amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=non-free
+     origin security.debian.org
+ 990 http://security.debian.org/ squeeze/updates/contrib amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=contrib
+     origin security.debian.org
+ 990 http://security.debian.org/ squeeze/updates/main amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=main
+     origin security.debian.org
+ 990 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/non-free amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=non-free
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/contrib amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=contrib
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=main
+     origin mirror.switch.ch
+ 500 http://pkg.switch.ch/debian/internal/ squeeze/non-free amd64 Packages
+     release o=SWITCH,a=squeeze,n=squeeze,l=SWITCH-internal,c=non-free
+     origin pkg.switch.ch
+ 500 http://pkg.switch.ch/debian/internal/ squeeze/contrib amd64 Packages
+     release o=SWITCH,a=squeeze,n=squeeze,l=SWITCH-internal,c=contrib
+     origin pkg.switch.ch
+ 500 http://pkg.switch.ch/debian/internal/ squeeze/main amd64 Packages
+     release o=SWITCH,a=squeeze,n=squeeze,l=SWITCH-internal,c=main
+     origin pkg.switch.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/third-party amd64 Packages
+     origin emisoft.web.cern.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main amd64 Packages
+     origin emisoft.web.cern.ch
+ 500 http://dist.eugridpma.info/distribution/current/ igtf/accredited amd64 Packages
+     release o=International Grid Trust Federation,a=igtf,l=IGTF Trust Anchor Distribution,c=accredited
+     origin dist.eugridpma.info
+Pinned packages:
+
+-----------------------------------------------------------------------------------------------
+1.2 emi-argus Installation
+-----------------------------------------------------------------------------------------------
+
+The packages installation is a bit a hack, because the last updated versions are not yet 
+(as today 2013-02-07) available in the EMI-3 test repository.
+
+
+
+root@kronos:~# dpkg -i emi-argus_1.6.0_all.deb glite-yaim-argus-server_1.6.0-1_all.deb 
+Selecting previously deselected package emi-argus.
+(Reading database ... 23034 files and directories currently installed.)
+Unpacking emi-argus (from emi-argus_1.6.0_all.deb) ...
+Selecting previously deselected package glite-yaim-argus-server.
+Unpacking glite-yaim-argus-server (from glite-yaim-argus-server_1.6.0-1_all.deb) ...
+dpkg: dependency problems prevent configuration of emi-argus:
+ emi-argus depends on emi-version; however:
+  Package emi-version is not installed.
+ emi-argus depends on argus-pap; however:
+  Package argus-pap is not installed.
+ emi-argus depends on argus-pdp; however:
+  Package argus-pdp is not installed.
+ emi-argus depends on argus-pep-server; however:
+  Package argus-pep-server is not installed.
+dpkg: error processing emi-argus (--install):
+ dependency problems - leaving unconfigured
+dpkg: dependency problems prevent configuration of glite-yaim-argus-server:
+ glite-yaim-argus-server depends on glite-yaim-core; however:
+  Package glite-yaim-core is not installed.
+dpkg: error processing glite-yaim-argus-server (--install):
+ dependency problems - leaving unconfigured
+Errors were encountered while processing:
+ emi-argus
+ glite-yaim-argus-server
+1root@kronos:~# 
+
+100root@kronos:~# apt-get install -f
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+Correcting dependencies... Done
+The following packages were automatically installed and are no longer required:
+  libglobus-gsi-cert-utils0 slapd libglobus-common0 libglobus-openssl-module0 libslp1 whois bdii
+  libglobus-gsi-proxy-ssl1 libglobus-callout0 glue-schema libglobus-libtool
+  libglobus-gsi-credential1 globus-proxy-utils libglobus-gsi-sysconfig1 libglobus-gsi-proxy-core0
+  ldap-utils libperl5.10 libglobus-gss-assist3 libglobus-gsi-callback0 libglobus-gssapi-gsi4
+  libglobus-gsi-openssl-error0 libglobus-openssl
+Use 'apt-get autoremove' to remove them.
+The following extra packages will be installed:
+  argus-pap argus-pdp argus-pep-server avahi-daemon bdii ca-certificates-java dbus
+  default-jre-headless emi-version glite-yaim-core globus-proxy-utils glue-schema gsfonts
+  gsfonts-x11 java-common ldap-utils libargus-pdp-pep-common-java libargus-pep-common-java
+  libasound2 libavahi-client3 libavahi-common-data libavahi-common3 libavahi-core7 libbcmail146-java
+  libbcprov146-java libcanl-java libcommons-io-java libcups2 libdaemon0 libdbus-1-3 libgcj-common
+  libglobus-callout0 libglobus-common0 libglobus-gsi-callback0 libglobus-gsi-cert-utils0
+  libglobus-gsi-credential1 libglobus-gsi-openssl-error0 libglobus-gsi-proxy-core0
+  libglobus-gsi-proxy-ssl1 libglobus-gsi-sysconfig1 libglobus-gss-assist3 libglobus-gssapi-gsi4
+  libglobus-libtool libglobus-openssl libglobus-openssl-module0 libgnuinet-java libgnujaf-java
+  libgnumail-java libjpeg62 liblcms1 libltdl7 libnspr4-0d libnss-mdns libnss3-1d libperl5.10
+  libsasl2-modules libslp1 libvoms3-java libxfont1 odbcinst odbcinst1debian2 openjdk-6-jre-headless
+  openjdk-6-jre-lib slapd sun-java6-bin sun-java6-jre tzdata-java unixodbc whois xfonts-encodings
+  xfonts-utils
+Suggested packages:
+  avahi-autoipd dbus-x11 default-jre equivs libasound2-plugins libcommons-io-java-doc cups-common
+  libgnumail-java-doc liblcms-utils libsasl2-modules-otp libsasl2-modules-ldap libsasl2-modules-sql
+  libsasl2-modules-gssapi-mit libsasl2-modules-gssapi-heimdal slpd openslp-doc sun-java6-fonts
+  ttf-dejavu-extra ttf-baekmuk ttf-unfonts ttf-unfonts-core ttf-sazanami-gothic ttf-kochi-gothic
+  ttf-sazanami-mincho ttf-kochi-mincho ttf-wqy-microhei ttf-wqy-zenhei ttf-indic-fonts
+  binfmt-support sun-java6-plugin ia32-sun-java6-plugin ttf-arphic-uming libmyodbc odbc-postgresql
+  tdsodbc unixodbc-bin
+The following NEW packages will be installed:
+  argus-pap argus-pdp argus-pep-server avahi-daemon bdii ca-certificates-java dbus
+  default-jre-headless emi-version glite-yaim-core globus-proxy-utils glue-schema gsfonts
+  gsfonts-x11 java-common ldap-utils libargus-pdp-pep-common-java libargus-pep-common-java
+  libasound2 libavahi-client3 libavahi-common-data libavahi-common3 libavahi-core7 libbcmail146-java
+  libbcprov146-java libcanl-java libcommons-io-java libcups2 libdaemon0 libdbus-1-3 libgcj-common
+  libglobus-callout0 libglobus-common0 libglobus-gsi-callback0 libglobus-gsi-cert-utils0
+  libglobus-gsi-credential1 libglobus-gsi-openssl-error0 libglobus-gsi-proxy-core0
+  libglobus-gsi-proxy-ssl1 libglobus-gsi-sysconfig1 libglobus-gss-assist3 libglobus-gssapi-gsi4
+  libglobus-libtool libglobus-openssl libglobus-openssl-module0 libgnuinet-java libgnujaf-java
+  libgnumail-java libjpeg62 liblcms1 libltdl7 libnspr4-0d libnss-mdns libnss3-1d libperl5.10
+  libsasl2-modules libslp1 libvoms3-java libxfont1 odbcinst odbcinst1debian2 openjdk-6-jre-headless
+  openjdk-6-jre-lib slapd sun-java6-bin sun-java6-jre tzdata-java unixodbc whois xfonts-encodings
+  xfonts-utils
+0 upgraded, 71 newly installed, 0 to remove and 2 not upgraded.
+2 not fully installed or removed.
+Need to get 125 MB of archives.
+After this operation, 271 MB of additional disk space will be used.
+Do you want to continue [Y/n]? y
+WARNING: The following packages cannot be authenticated!
+  emi-version libbcprov146-java libbcmail146-java libcanl-java libvoms3-java argus-pap
+  libargus-pdp-pep-common-java argus-pdp libargus-pep-common-java argus-pep-server glite-yaim-core
+Install these packages without verification [y/N]? y
+Get:1 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main emi-version amd64 3.0.0-0.rc.deb6.1 [1,158 B]
+Get:2 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main libbcprov146-java all 1.46+dfsg-7 [1,521 kB]
+Get:3 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main openjdk-6-jre-lib all 6b18-1.8.13-0+squeeze2 [5,955 kB]
+Get:4 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/third-party libbcmail146-java all 1.46+dfsg-7 [454 kB]
+Get:5 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main libcanl-java all 1.1.0-1.deb6 [267 kB]
+Get:6 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main libvoms3-java all 3.0.0-1 [124 kB]
+Get:7 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main argus-pap all 1.6.0-1 [17.4 MB]
+Get:8 ftp://mirror.switch.ch/mirror/debian/ squeeze/main java-common all 0.40 [64.3 kB]
+Get:9 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libltdl7 amd64 2.2.6b-2 [296 kB]
+Get:10 ftp://mirror.switch.ch/mirror/debian/ squeeze/main odbcinst amd64 2.2.14p2-1 [39.0 kB]
+Get:11 ftp://mirror.switch.ch/mirror/debian/ squeeze/main odbcinst1debian2 amd64 2.2.14p2-1 [78.4 kB]
+Get:12 ftp://mirror.switch.ch/mirror/debian/ squeeze/main unixodbc amd64 2.2.14p2-1 [266 kB]
+Get:13 ftp://mirror.switch.ch/mirror/debian/ squeeze/non-free sun-java6-bin amd64 6.26-0squeeze1 [28.7 MB]
+Get:14 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main libargus-pdp-pep-common-java all 1.4.0-2 [73.5 kB]
+Get:15 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main argus-pdp all 1.6.0-1 [12.5 MB]
+Get:16 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main libargus-pep-common-java all 2.3.0-1 [265 kB]
+Get:17 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main argus-pep-server all 1.6.0-3 [13.9 MB]
+Get:18 ftp://mirror.switch.ch/mirror/debian/ squeeze/non-free sun-java6-jre all 6.26-0squeeze1 [6,513 kB]
+Get:19 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main glite-yaim-core all 5.1.0-2.deb6.1 [96.1 kB]
+Get:20 ftp://mirror.switch.ch/mirror/debian/ squeeze/main ca-certificates-java all 20100412 [101 kB]
+Get:21 ftp://mirror.switch.ch/mirror/debian/ squeeze/main tzdata-java all 2012c-0squeeze1 [148 kB]
+Get:22 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main libavahi-common-data amd64 0.6.27-2+squeeze1 [113 kB]
+Get:23 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main libavahi-common3 amd64 0.6.27-2+squeeze1 [52.7 kB]
+Get:24 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libdbus-1-3 amd64 1.2.24-4+squeeze1 [145 kB]
+Get:25 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main libavahi-client3 amd64 0.6.27-2+squeeze1 [57.2 kB]
+Get:26 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main libcups2 amd64 1.4.4-7+squeeze2 [234 kB]
+Get:27 ftp://mirror.switch.ch/mirror/debian/ squeeze/main liblcms1 amd64 1.18.dfsg-1.2+b3 [112 kB]
+Get:28 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libjpeg62 amd64 6b1-1 [94.0 kB]
+Get:29 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libnspr4-0d amd64 4.8.6-1 [139 kB]
+Get:30 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main libnss3-1d amd64 3.12.8-1+squeeze6 [1,116 kB]
+Get:31 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main openjdk-6-jre-headless amd64 6b18-1.8.13-0+squeeze2 [25.5 MB]
+Get:32 ftp://mirror.switch.ch/mirror/debian/ squeeze/main default-jre-headless amd64 1:1.6-40 [7,602 B]
+Get:33 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libgcj-common all 1:4.4.5-1 [121 kB]
+Get:34 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libgnujaf-java all 1.1.1-5 [63.0 kB]
+Get:35 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libgnuinet-java all 1.1.1-4 [398 kB]
+Get:36 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libgnumail-java all 1.1.2-5 [286 kB]
+Get:37 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libcommons-io-java all 1.4-3 [101 kB]
+Get:38 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main libperl5.10 amd64 5.10.1-17squeeze4 [1,154 B]
+Get:39 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libslp1 amd64 1.2.1-7.8 [55.7 kB]
+Get:40 ftp://mirror.switch.ch/mirror/debian/ squeeze/main slapd amd64 2.4.23-7.2 [1,589 kB]
+Get:41 ftp://mirror.switch.ch/mirror/debian/ squeeze/main whois amd64 5.0.10 [64.9 kB]
+Get:42 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main libavahi-core7 amd64 0.6.27-2+squeeze1 [127 kB]
+Get:43 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libdaemon0 amd64 0.14-2 [18.8 kB]
+Get:44 ftp://mirror.switch.ch/mirror/debian/ squeeze/main dbus amd64 1.2.24-4+squeeze1 [233 kB]
+Get:45 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main avahi-daemon amd64 0.6.27-2+squeeze1 [96.8 kB]
+Get:46 ftp://mirror.switch.ch/mirror/debian/ squeeze/main ldap-utils amd64 2.4.23-7.2 [329 kB]
+Get:47 ftp://mirror.switch.ch/mirror/debian/ squeeze/main glue-schema all 2.0.6-1 [32.0 kB]
+Get:48 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-libtool amd64 1.2-6 [2,586 B]
+Get:49 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-common0 amd64 11.5-2 [105 kB]
+Get:50 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-callout0 amd64 0.7-6 [9,264 B]
+Get:51 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-openssl amd64 5.1-1 [2,650 B]
+Get:52 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-gsi-openssl-error0 amd64 0.14-6 [8,372 B]
+Get:53 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-gsi-proxy-ssl1 amd64 2.3-1 [11.0 kB]
+Get:54 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-openssl-module0 amd64 1.3-1 [6,488 B]
+Get:55 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-gsi-cert-utils0 amd64 6.6-1 [11.2 kB]
+Get:56 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-gsi-sysconfig1 amd64 3.1-2 [20.9 kB]
+Get:57 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-gsi-callback0 amd64 2.7-1 [32.2 kB]
+Get:58 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-gsi-credential1 amd64 3.5-1 [26.3 kB]
+Get:59 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-gsi-proxy-core0 amd64 4.5-1 [26.9 kB]
+Get:60 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-gssapi-gsi4 amd64 7.5-2 [48.7 kB]
+Get:61 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libglobus-gss-assist3 amd64 5.9-1 [23.6 kB]
+Get:62 ftp://mirror.switch.ch/mirror/debian/ squeeze/main globus-proxy-utils amd64 3.9-1 [37.7 kB]
+Get:63 ftp://mirror.switch.ch/mirror/debian/ squeeze/main bdii all 5.1.7-1 [14.5 kB]
+Get:64 ftp://mirror.switch.ch/mirror/debian/ squeeze/main gsfonts all 1:8.11+urwcyr1.0.7~pre44-4.2 [3,364 kB]
+Get:65 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main libxfont1 amd64 1:1.4.1-3 [153 kB]
+Get:66 ftp://mirror.switch.ch/mirror/debian/ squeeze/main xfonts-encodings all 1:1.0.3-1 [584 kB]    
+Get:67 ftp://mirror.switch.ch/mirror/debian/ squeeze/main xfonts-utils amd64 1:7.5+2 [96.2 kB]       
+Get:68 ftp://mirror.switch.ch/mirror/debian/ squeeze/main gsfonts-x11 all 0.21 [10.4 kB]             
+Get:69 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libasound2 amd64 1.0.23-2.1 [421 kB]       
+Get:70 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libnss-mdns amd64 0.10-3.1 [26.8 kB]       
+Get:71 ftp://mirror.switch.ch/mirror/debian/ squeeze/main libsasl2-modules amd64 2.1.23.dfsg1-7 [155 kB]
+Fetched 125 MB in 6s (18.5 MB/s)                                                                     
+Extracting templates from packages: 100%
+Preconfiguring packages ...
+Selecting previously deselected package emi-version.
+(Reading database ... 23064 files and directories currently installed.)
+Unpacking emi-version (from .../emi-version_3.0.0-0.rc.deb6.1_amd64.deb) ...
+Selecting previously deselected package openjdk-6-jre-lib.
+Unpacking openjdk-6-jre-lib (from .../openjdk-6-jre-lib_6b18-1.8.13-0+squeeze2_all.deb) ...
+Selecting previously deselected package java-common.
+Unpacking java-common (from .../java-common_0.40_all.deb) ...
+Selecting previously deselected package libltdl7.
+Unpacking libltdl7 (from .../libltdl7_2.2.6b-2_amd64.deb) ...
+Selecting previously deselected package odbcinst.
+Unpacking odbcinst (from .../odbcinst_2.2.14p2-1_amd64.deb) ...
+Selecting previously deselected package odbcinst1debian2.
+Unpacking odbcinst1debian2 (from .../odbcinst1debian2_2.2.14p2-1_amd64.deb) ...
+Selecting previously deselected package unixodbc.
+Unpacking unixodbc (from .../unixodbc_2.2.14p2-1_amd64.deb) ...
+Selecting previously deselected package sun-java6-bin.
+Unpacking sun-java6-bin (from .../sun-java6-bin_6.26-0squeeze1_amd64.deb) ...
+Selecting previously deselected package sun-java6-jre.
+Unpacking sun-java6-jre (from .../sun-java6-jre_6.26-0squeeze1_all.deb) ...
+sun-dlj-v1-1 license has already been accepted
+Selecting previously deselected package ca-certificates-java.
+Unpacking ca-certificates-java (from .../ca-certificates-java_20100412_all.deb) ...
+Selecting previously deselected package tzdata-java.
+Unpacking tzdata-java (from .../tzdata-java_2012c-0squeeze1_all.deb) ...
+Selecting previously deselected package libavahi-common-data.
+Unpacking libavahi-common-data (from .../libavahi-common-data_0.6.27-2+squeeze1_amd64.deb) ...
+Selecting previously deselected package libavahi-common3.
+Unpacking libavahi-common3 (from .../libavahi-common3_0.6.27-2+squeeze1_amd64.deb) ...
+Selecting previously deselected package libdbus-1-3.
+Unpacking libdbus-1-3 (from .../libdbus-1-3_1.2.24-4+squeeze1_amd64.deb) ...
+Selecting previously deselected package libavahi-client3.
+Unpacking libavahi-client3 (from .../libavahi-client3_0.6.27-2+squeeze1_amd64.deb) ...
+Selecting previously deselected package libcups2.
+Unpacking libcups2 (from .../libcups2_1.4.4-7+squeeze2_amd64.deb) ...
+Selecting previously deselected package liblcms1.
+Unpacking liblcms1 (from .../liblcms1_1.18.dfsg-1.2+b3_amd64.deb) ...
+Selecting previously deselected package libjpeg62.
+Unpacking libjpeg62 (from .../libjpeg62_6b1-1_amd64.deb) ...
+Selecting previously deselected package libnspr4-0d.
+Unpacking libnspr4-0d (from .../libnspr4-0d_4.8.6-1_amd64.deb) ...
+Selecting previously deselected package libnss3-1d.
+Unpacking libnss3-1d (from .../libnss3-1d_3.12.8-1+squeeze6_amd64.deb) ...
+Selecting previously deselected package openjdk-6-jre-headless.
+Unpacking openjdk-6-jre-headless (from .../openjdk-6-jre-headless_6b18-1.8.13-0+squeeze2_amd64.deb) ...
+Selecting previously deselected package default-jre-headless.
+Unpacking default-jre-headless (from .../default-jre-headless_1%3a1.6-40_amd64.deb) ...
+Selecting previously deselected package libgcj-common.
+Unpacking libgcj-common (from .../libgcj-common_1%3a4.4.5-1_all.deb) ...
+Selecting previously deselected package libbcprov146-java.
+Unpacking libbcprov146-java (from .../libbcprov146-java_1.46+dfsg-7_all.deb) ...
+Selecting previously deselected package libgnujaf-java.
+Unpacking libgnujaf-java (from .../libgnujaf-java_1.1.1-5_all.deb) ...
+Selecting previously deselected package libgnuinet-java.
+Unpacking libgnuinet-java (from .../libgnuinet-java_1.1.1-4_all.deb) ...
+Selecting previously deselected package libgnumail-java.
+Unpacking libgnumail-java (from .../libgnumail-java_1.1.2-5_all.deb) ...
+Selecting previously deselected package libbcmail146-java.
+Unpacking libbcmail146-java (from .../libbcmail146-java_1.46+dfsg-7_all.deb) ...
+Selecting previously deselected package libcommons-io-java.
+Unpacking libcommons-io-java (from .../libcommons-io-java_1.4-3_all.deb) ...
+Selecting previously deselected package libcanl-java.
+Unpacking libcanl-java (from .../libcanl-java_1.1.0-1.deb6_all.deb) ...
+Selecting previously deselected package libvoms3-java.
+Unpacking libvoms3-java (from .../libvoms3-java_3.0.0-1_all.deb) ...
+Selecting previously deselected package argus-pap.
+Unpacking argus-pap (from .../argus-pap_1.6.0-1_all.deb) ...
+Selecting previously deselected package libargus-pdp-pep-common-java.
+Unpacking libargus-pdp-pep-common-java (from .../libargus-pdp-pep-common-java_1.4.0-2_all.deb) ...
+Selecting previously deselected package argus-pdp.
+Unpacking argus-pdp (from .../argus-pdp_1.6.0-1_all.deb) ...
+Selecting previously deselected package libargus-pep-common-java.
+Unpacking libargus-pep-common-java (from .../libargus-pep-common-java_2.3.0-1_all.deb) ...
+Selecting previously deselected package argus-pep-server.
+Unpacking argus-pep-server (from .../argus-pep-server_1.6.0-3_all.deb) ...
+Selecting previously deselected package glite-yaim-core.
+Unpacking glite-yaim-core (from .../glite-yaim-core_5.1.0-2.deb6.1_all.deb) ...
+Selecting previously deselected package libperl5.10.
+Unpacking libperl5.10 (from .../libperl5.10_5.10.1-17squeeze4_amd64.deb) ...
+Selecting previously deselected package libslp1.
+Unpacking libslp1 (from .../libslp1_1.2.1-7.8_amd64.deb) ...
+Selecting previously deselected package slapd.
+Unpacking slapd (from .../slapd_2.4.23-7.2_amd64.deb) ...
+Selecting previously deselected package whois.
+Unpacking whois (from .../whois_5.0.10_amd64.deb) ...
+Selecting previously deselected package libavahi-core7.
+Unpacking libavahi-core7 (from .../libavahi-core7_0.6.27-2+squeeze1_amd64.deb) ...
+Selecting previously deselected package libdaemon0.
+Unpacking libdaemon0 (from .../libdaemon0_0.14-2_amd64.deb) ...
+Selecting previously deselected package dbus.
+Unpacking dbus (from .../dbus_1.2.24-4+squeeze1_amd64.deb) ...
+Selecting previously deselected package avahi-daemon.
+Unpacking avahi-daemon (from .../avahi-daemon_0.6.27-2+squeeze1_amd64.deb) ...
+Selecting previously deselected package ldap-utils.
+Unpacking ldap-utils (from .../ldap-utils_2.4.23-7.2_amd64.deb) ...
+Selecting previously deselected package glue-schema.
+Unpacking glue-schema (from .../glue-schema_2.0.6-1_all.deb) ...
+Selecting previously deselected package libglobus-libtool.
+Unpacking libglobus-libtool (from .../libglobus-libtool_1.2-6_amd64.deb) ...
+Selecting previously deselected package libglobus-common0.
+Unpacking libglobus-common0 (from .../libglobus-common0_11.5-2_amd64.deb) ...
+Selecting previously deselected package libglobus-callout0.
+Unpacking libglobus-callout0 (from .../libglobus-callout0_0.7-6_amd64.deb) ...
+Selecting previously deselected package libglobus-openssl.
+Unpacking libglobus-openssl (from .../libglobus-openssl_5.1-1_amd64.deb) ...
+Selecting previously deselected package libglobus-gsi-openssl-error0.
+Unpacking libglobus-gsi-openssl-error0 (from .../libglobus-gsi-openssl-error0_0.14-6_amd64.deb) ...
+Selecting previously deselected package libglobus-gsi-proxy-ssl1.
+Unpacking libglobus-gsi-proxy-ssl1 (from .../libglobus-gsi-proxy-ssl1_2.3-1_amd64.deb) ...
+Selecting previously deselected package libglobus-openssl-module0.
+Unpacking libglobus-openssl-module0 (from .../libglobus-openssl-module0_1.3-1_amd64.deb) ...
+Selecting previously deselected package libglobus-gsi-cert-utils0.
+Unpacking libglobus-gsi-cert-utils0 (from .../libglobus-gsi-cert-utils0_6.6-1_amd64.deb) ...
+Selecting previously deselected package libglobus-gsi-sysconfig1.
+Unpacking libglobus-gsi-sysconfig1 (from .../libglobus-gsi-sysconfig1_3.1-2_amd64.deb) ...
+Selecting previously deselected package libglobus-gsi-callback0.
+Unpacking libglobus-gsi-callback0 (from .../libglobus-gsi-callback0_2.7-1_amd64.deb) ...
+Selecting previously deselected package libglobus-gsi-credential1.
+Unpacking libglobus-gsi-credential1 (from .../libglobus-gsi-credential1_3.5-1_amd64.deb) ...
+Selecting previously deselected package libglobus-gsi-proxy-core0.
+Unpacking libglobus-gsi-proxy-core0 (from .../libglobus-gsi-proxy-core0_4.5-1_amd64.deb) ...
+Selecting previously deselected package libglobus-gssapi-gsi4.
+Unpacking libglobus-gssapi-gsi4 (from .../libglobus-gssapi-gsi4_7.5-2_amd64.deb) ...
+Selecting previously deselected package libglobus-gss-assist3.
+Unpacking libglobus-gss-assist3 (from .../libglobus-gss-assist3_5.9-1_amd64.deb) ...
+Selecting previously deselected package globus-proxy-utils.
+Unpacking globus-proxy-utils (from .../globus-proxy-utils_3.9-1_amd64.deb) ...
+Selecting previously deselected package bdii.
+Unpacking bdii (from .../archives/bdii_5.1.7-1_all.deb) ...
+Selecting previously deselected package gsfonts.
+Unpacking gsfonts (from .../gsfonts_1%3a8.11+urwcyr1.0.7~pre44-4.2_all.deb) ...
+Selecting previously deselected package libxfont1.
+Unpacking libxfont1 (from .../libxfont1_1%3a1.4.1-3_amd64.deb) ...
+Selecting previously deselected package xfonts-encodings.
+Unpacking xfonts-encodings (from .../xfonts-encodings_1%3a1.0.3-1_all.deb) ...
+Selecting previously deselected package xfonts-utils.
+Unpacking xfonts-utils (from .../xfonts-utils_1%3a7.5+2_amd64.deb) ...
+Selecting previously deselected package gsfonts-x11.
+Unpacking gsfonts-x11 (from .../gsfonts-x11_0.21_all.deb) ...
+Selecting previously deselected package libasound2.
+Unpacking libasound2 (from .../libasound2_1.0.23-2.1_amd64.deb) ...
+Selecting previously deselected package libnss-mdns.
+Unpacking libnss-mdns (from .../libnss-mdns_0.10-3.1_amd64.deb) ...
+Selecting previously deselected package libsasl2-modules.
+Unpacking libsasl2-modules (from .../libsasl2-modules_2.1.23.dfsg1-7_amd64.deb) ...
+Processing triggers for man-db ...
+Setting up emi-version (3.0.0-0.rc.deb6.1) ...
+Setting up java-common (0.40) ...
+Setting up libltdl7 (2.2.6b-2) ...
+Setting up tzdata-java (2012c-0squeeze1) ...
+Setting up libavahi-common-data (0.6.27-2+squeeze1) ...
+Setting up libavahi-common3 (0.6.27-2+squeeze1) ...
+Setting up libdbus-1-3 (1.2.24-4+squeeze1) ...
+Setting up libavahi-client3 (0.6.27-2+squeeze1) ...
+Setting up libcups2 (1.4.4-7+squeeze2) ...
+Setting up liblcms1 (1.18.dfsg-1.2+b3) ...
+Setting up libjpeg62 (6b1-1) ...
+Setting up libnspr4-0d (4.8.6-1) ...
+Setting up libnss3-1d (3.12.8-1+squeeze6) ...
+Setting up libgcj-common (1:4.4.5-1) ...
+Setting up libbcprov146-java (1.46+dfsg-7) ...
+Setting up libcommons-io-java (1.4-3) ...
+Setting up libargus-pep-common-java (2.3.0-1) ...
+Setting up glite-yaim-core (5.1.0-2.deb6.1) ...
+Setting up glite-yaim-argus-server (1.6.0-1) ...
+Setting up libperl5.10 (5.10.1-17squeeze4) ...
+Setting up libslp1 (1.2.1-7.8) ...
+Setting up whois (5.0.10) ...
+Setting up libavahi-core7 (0.6.27-2+squeeze1) ...
+Setting up libdaemon0 (0.14-2) ...
+Setting up dbus (1.2.24-4+squeeze1) ...
+Starting system message bus: dbus.
+Setting up avahi-daemon (0.6.27-2+squeeze1) ...
+Reloading system message bus config...done.
+Starting Avahi mDNS/DNS-SD Daemon: avahi-daemon.
+Setting up ldap-utils (2.4.23-7.2) ...
+Setting up glue-schema (2.0.6-1) ...
+Setting up libglobus-libtool (1.2-6) ...
+Setting up libglobus-common0 (11.5-2) ...
+Setting up libglobus-callout0 (0.7-6) ...
+Setting up libglobus-openssl (5.1-1) ...
+Setting up libglobus-gsi-openssl-error0 (0.14-6) ...
+Setting up libglobus-gsi-proxy-ssl1 (2.3-1) ...
+Setting up libglobus-openssl-module0 (1.3-1) ...
+Setting up libglobus-gsi-cert-utils0 (6.6-1) ...
+Setting up libglobus-gsi-sysconfig1 (3.1-2) ...
+Setting up libglobus-gsi-callback0 (2.7-1) ...
+Setting up libglobus-gsi-credential1 (3.5-1) ...
+Setting up libglobus-gsi-proxy-core0 (4.5-1) ...
+Setting up libglobus-gssapi-gsi4 (7.5-2) ...
+Setting up libglobus-gss-assist3 (5.9-1) ...
+Setting up globus-proxy-utils (3.9-1) ...
+Setting up gsfonts (1:8.11+urwcyr1.0.7~pre44-4.2) ...
+Setting up libxfont1 (1:1.4.1-3) ...
+Setting up xfonts-encodings (1:1.0.3-1) ...
+Setting up xfonts-utils (1:7.5+2) ...
+Setting up gsfonts-x11 (0.21) ...
+Setting up libasound2 (1.0.23-2.1) ...
+Setting up libnss-mdns (0.10-3.1) ...
+First installation detected...
+Checking NSS setup...
+Setting up libsasl2-modules (2.1.23.dfsg1-7) ...
+Setting up ca-certificates-java (20100412) ...
+creating /etc/ssl/certs/java/cacerts...
+  removed untrusted certificate mozilla/DigiNotar_Root_CA.crt
+done.
+Setting up openjdk-6-jre-headless (6b18-1.8.13-0+squeeze2) ...
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/bin/java to provide /usr/bin/java (java) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/bin/keytool to provide /usr/bin/keytool (keytool) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/bin/pack200 to provide /usr/bin/pack200 (pack200) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/bin/rmid to provide /usr/bin/rmid (rmid) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/bin/rmiregistry to provide /usr/bin/rmiregistry (rmiregistry) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/bin/unpack200 to provide /usr/bin/unpack200 (unpack200) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/bin/orbd to provide /usr/bin/orbd (orbd) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/bin/servertool to provide /usr/bin/servertool (servertool) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/bin/tnameserv to provide /usr/bin/tnameserv (tnameserv) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-openjdk/jre/lib/jexec to provide /usr/bin/jexec (jexec) in auto mode.
+Setting up openjdk-6-jre-lib (6b18-1.8.13-0+squeeze2) ...
+Setting up libgnujaf-java (1.1.1-5) ...
+Setting up libgnuinet-java (1.1.1-4) ...
+Setting up libgnumail-java (1.1.2-5) ...
+Setting up libbcmail146-java (1.46+dfsg-7) ...
+Setting up odbcinst (2.2.14p2-1) ...
+Setting up odbcinst1debian2 (2.2.14p2-1) ...
+Setting up unixodbc (2.2.14p2-1) ...
+Setting up sun-java6-jre (6.26-0squeeze1) ...
+Setting up default-jre-headless (1:1.6-40) ...
+Setting up libcanl-java (1.1.0-1.deb6) ...
+Setting up libvoms3-java (3.0.0-1) ...
+Setting up argus-pap (1.6.0-1) ...
+update-rc.d: warning: argus-pap start runlevel arguments (2 3 4 5) do not match LSB Default-Start values (3 4 5)
+Setting up libargus-pdp-pep-common-java (1.4.0-2) ...
+Setting up argus-pdp (1.6.0-1) ...
+update-rc.d: warning: argus-pdp start runlevel arguments (2 3 4 5) do not match LSB Default-Start values (3 4 5)
+Setting up argus-pep-server (1.6.0-3) ...
+update-rc.d: warning: argus-pepd start runlevel arguments (2 3 4 5) do not match LSB Default-Start values (3 4 5)
+Setting up emi-argus (1.6.0) ...
+Setting up slapd (2.4.23-7.2) ...
+  Creating new user openldap... done.
+  Creating initial configuration... done.
+  Creating LDAP directory... done.
+Starting OpenLDAP: slapd.
+Setting up bdii (5.1.7-1) ...
+bdii disabled, please adjust the configuration to your needs 
+and then set RUN to 'yes' in /etc/default/bdii to enable it.
+Setting up sun-java6-bin (6.26-0squeeze1) ...
+update-alternatives: using /usr/lib/jvm/java-6-sun/jre/bin/ControlPanel to provide /usr/bin/ControlPanel (ControlPanel) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-sun/jre/bin/java_vm to provide /usr/bin/java_vm (java_vm) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-sun/jre/bin/javaws to provide /usr/bin/javaws (javaws) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-sun/jre/bin/jcontrol to provide /usr/bin/jcontrol (jcontrol) in auto mode.
+update-alternatives: using /usr/lib/jvm/java-6-sun/jre/bin/policytool to provide /usr/bin/policytool (policytool) in auto mode.
+
+
+
+
+
+-----------------------------------------------------------------------------------------------
+1.3 emi-argus Configuration (YAIM)
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# cat site-info.def 
+# Argus service hostname
+ARGUS_HOST=kronos.switch.ch
+
+# BDII site name
+SITE_NAME=SWITCH_EMI3_RC
+
+# PAP administrator DN allowed to use 'pap-admin' command
+PAP_ADMIN_DN="/DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3"
+
+# Users and Groups definition for grid and group mapfile
+USERS_CONF=/opt/glite/yaim/examples/users.conf
+GROUPS_CONF=/opt/glite/yaim/examples/groups.conf
+
+# Supported VOs
+VOS="dteam testers.eu-emi.eu"
+
+# VO definitions
+#
+VO_DTEAM_VOMSES="'dteam voms.hellasgrid.gr 15004 /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr dteam' 'dteam voms2.hellasgrid.gr 15004 /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms2.hellasgrid.gr dteam'"
+VO_DTEAM_VOMS_CA_DN="'/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006' '/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006'"
+
+VO_TESTERS_EU_EMI_EU_VOMSES="'testers.eu-emi.eu emitestbed07.cnaf.infn.it 15002 /C=IT/O=INFN/OU=Host/L=CNAF/CN=emitestbed07.cnaf.infn.it testers.eu-emi.eu' 'testers.eu-emi.eu emitestbed01.cnaf.infn.it 15002 /C=IT/O=INFN/OU=Host/L=CNAF/CN=emitestbed01.cnaf.infn.it testers.eu-emi.eu'"
+VO_TESTERS_EU_EMI_EU_VOMS_CA_DN="'/C=IT/O=INFN/CN=INFN CA' '/C=IT/O=INFN/CN=INFN CA'"
+
+
+root@kronos:~# apt-get install gawk
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following NEW packages will be installed:
+  gawk
+0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
+Need to get 806 kB of archives.
+After this operation, 2,224 kB of additional disk space will be used.
+Get:1 ftp://mirror.switch.ch/mirror/debian/ squeeze/main gawk amd64 1:3.1.7.dfsg-5 [806 kB]
+Fetched 806 kB in 0s (2,146 kB/s)
+Selecting previously deselected package gawk.
+(Reading database ... 26613 files and directories currently installed.)
+Unpacking gawk (from .../gawk_1%3a3.1.7.dfsg-5_amd64.deb) ...
+Processing triggers for man-db ...
+Setting up gawk (1:3.1.7.dfsg-5) ...
+
+
+root@kronos:~# /opt/glite/yaim/bin/yaim -c -s site-info.def -n ARGUS_server
+   INFO: Configuring HOST: kronos.switch.ch
+   INFO: Using site configuration file: site-info.def
+   INFO: 
+         ###################################################################
+         
+         .             /'.-. ')
+         .     yA,-"-,( ,m,:/ )   .oo.     oo    o      ooo  o.     .oo
+         .    /      .-Y a  a Y-.     8. .8'    8'8.     8    8b   d'8
+         .   /           ~ ~ /         8'    .8oo88.     8    8  8'  8
+         . (_/         '===='          8    .8'     8.   8    8  Y   8
+         .   Y,-''-,Yy,-.,/           o8o  o8o    o88o  o8o  o8o    o8o
+         .    I_))_) I_))_)
+         
+         
+         current working directory: /root
+         site-info.def date: Feb 7 14:35 site-info.def
+         yaim command: -c -s site-info.def -n ARGUS_server
+         log file: /opt/glite/yaim/bin/../log/yaimlog
+         Thu Feb  7 14:38:44 CET 2013 : /opt/glite/yaim/bin/yaim
+         
+         Installed YAIM versions:
+         yaim-argus-server 1.6.0-1
+         glite-yaim-core 5.1.0-1
+         
+         ####################################################################
+   INFO: The default location of the grid-env.(c)sh files will be: /usr/libexec
+   INFO: Sourcing the utilities in /opt/glite/yaim/functions/utils
+   INFO: Detecting environment
+   INFO: Executing function: config_host_certs_check 
+   INFO: Executing function: config_edgusers_check 
+   INFO: Executing function: config_vomsmap_check 
+   INFO: Executing function: config_vomsdir_check 
+   INFO: Executing function: config_pap_service_check 
+   INFO: Executing function: config_pdp_service_check 
+   INFO: Executing function: config_pep_service_check 
+   INFO: Executing function: config_host_certs 
+   INFO: Executing function: config_edgusers 
+   INFO: Executing function: config_vomsmap_setenv 
+   INFO: Executing function: config_vomsmap 
+   INFO: Creating grid-map directory in /etc/grid-security/gridmapdir
+   INFO: Creating voms grid-map file in /etc/grid-security/voms-grid-mapfile
+   INFO: Creating voms groupmap file in /etc/grid-security/groupmapfile
+users_getvogroup: could not find group for "TESTERS.EU-EMI.EU".
+users_getvoprefix: could not find pool account prefix for TESTERS.EU-EMI.EU in /opt/glite/yaim/examples/users.conf
+   WARNING: VO 'TESTERS.EU-EMI.EU' not found in /opt/glite/yaim/examples/groups.conf
+   INFO: Copying the /etc/grid-security/voms-grid-mapfile in the standard location /etc/grid-security/grid-mapfile
+   INFO: Executing function: config_vomsdir_setenv 
+   INFO: Executing function: config_vomsdir 
+   INFO: Executing function: config_pap_service_setenv 
+   INFO: Executing function: config_pap_service 
+   INFO: Stopping Argus PAP service...
+PAP  server is not running!
+   INFO: Create the Argus PAP /usr/share/argus/pap/conf/pap_configuration.ini file
+   INFO: Create the Argus PAP /usr/share/argus/pap/conf/pap_authorization.ini file
+   INFO: Create the Argus PAP /usr/share/argus/pap/conf/pap-admin.properties file
+   INFO: Fixing files and directory permissions in /usr/share/argus/pap
+update-rc.d: warning: argus-pap start runlevel arguments (2 3 4 5) do not match LSB Default-Start values (3 4 5)
+update-rc.d: using dependency based boot sequencing
+   INFO: Starting Argus PAP service...
+   INFO: Executing function: config_pdp_service_setenv 
+   INFO: Executing function: config_pdp_service 
+   INFO: Stopping Argus PDP service...
+Unable to connect to localhost:8153, perhaps the service is not running
+   INFO: Create the Argus PDP /etc/argus/pdp/pdp.ini file
+   INFO: Fixing files and directory permissions
+   INFO: Register /etc/init.d/argus-pdp...
+update-rc.d: warning: argus-pdp start runlevel arguments (2 3 4 5) do not match LSB Default-Start values (3 4 5)
+update-rc.d: using dependency based boot sequencing
+   INFO: Starting Argus PDP service...
+Starting argus-pdp... .
+   INFO: Executing function: config_pep_service_setenv 
+   INFO: Executing function: config_pep_service 
+   INFO: Stopping Argus PEP Server service...
+Unable to connect to localhost:8155, perhaps the service is not running
+   INFO: Create the Argus PEP Server /etc/argus/pepd/pepd.ini file
+   INFO: Fixing files and directory permissions in /usr/share/argus/pepd
+update-rc.d: warning: argus-pepd start runlevel arguments (2 3 4 5) do not match LSB Default-Start values (3 4 5)
+update-rc.d: using dependency based boot sequencing
+   INFO: Starting Argus PEP Server service...
+Starting argus-pepd... .
+   INFO: Configuration Complete.                                               [  OK  ]
+   INFO: YAIM terminated succesfully.
+   
+
+-----------------------------------------------------------------------------------------------
+1.4 Service Checks
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# service argus-pap status
+PAP running!
+
+root@kronos:~# service argus-pdp status
+argus-pdp is running...
+
+root@kronos:~# service argus-pepd status
+argus-pepd is running...
+
+-----------------------------------------------------------------------------------------------
+1.5 Argus Policies (Test)
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# pap-admin lp
+default (local):
+No policies has been found.
+
+
+root@kronos:~# cat dteam-policy.spl 
+resource "test" {
+    obligation "http://glite.org/xacml/obligation/local-environment-map" {
+    }
+    action "test" {
+        rule permit { vo="dteam" }
+    }
+}
+
+root@kronos:~# pap-admin apf dteam-policy.spl 
+root@kronos:~# pap-admin lp
+default (local):
+resource "test" {
+    obligation "http://glite.org/xacml/obligation/local-environment-map" {
+    }
+
+    action "test" {
+        rule permit { vo="dteam" }
+    }
+}
+
+root@kronos:~# service argus-pdp reloadpolicy
+
+root@kronos:~# service argus-pdp info
+Status: OK
+Service: Argus PDP
+ServiceVersion: 1.6.0
+ServiceStartupTime: 2013-02-07T15:05:26.010Z
+ServiceStartupTimeMillis: 1360249526010
+NumberOfProcessors: 1
+MaxMemory: 129761280 bytes
+UsedMemory: 27246208 bytes
+TotalRequests: 0
+TotalCompletedRequests: 0
+TotalRequestErrors: 0
+PolicyLoadTime: 2013-02-07T15:05:48.123Z
+PolicyLoadTimeMillis: 1360249548123
+CurrentPolicy: root-default-ca6cff75-bec7-4b71-9719-bf340e974cec
+CurrentPolicyVersion: 1
+
+
+-----------------------------------------------------------------------------------------------
+2. Service Test (pepcli)
+-----------------------------------------------------------------------------------------------
+
+[tschopp@kronos ~]$ voms-proxy-info -all
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3/CN=proxy
+issuer    : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+identity  : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+type      : proxy
+strength  : 1024 bits
+path      : /tmp/x509up_u959
+timeleft  : 11:58:36
+key usage : Digital Signature, Key Encipherment
+=== VO dteam extension information ===
+VO        : dteam
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+issuer    : /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr
+attribute : /dteam/Role=NULL/Capability=NULL
+attribute : /dteam/NGI_CH/Role=NULL/Capability=NULL
+timeleft  : 11:58:34
+uri       : voms.hellasgrid.gr:15004
+
+
+[tschopp@kronos ~]$ pepcli -p https://kronos.switch.ch:8154/authz --capath /etc/grid-security/certificates --cert ~/.globus/usercert.pem --key ~/.globus/userkey.pem --keyinfo /tmp/x509up_u959 --resource test --action test
+Key password: 
+Resource: test
+Decision: Permit
+Obligation: http://glite.org/xacml/obligation/local-environment-map/posix (caller should resolve POSIX account mapping)
+Username: dteam031
+Group: dteam
+Secondary Groups: dteam
+
+
+
