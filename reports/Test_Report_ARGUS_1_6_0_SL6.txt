@@ -1,0 +1,60 @@
+*********************************
+EMI Test Report Argus 1.6.0 
+*********************************
+
+- Product: ARGUS
+- Release Task: https://savannah.cern.ch/task/?34031
+- ETICS Subsystem Configuration Name: emi-argus_R_1_6_0_EMI3
+- VCS Tag: N/A (source packages)
+- EMI Major Release: EMI-3
+- Platforms: SL6/x86_64
+- Author: Valery Tschopp
+- Date: 13-Feb-2013
+- Test Report Template : v. 3.2
+
+*************
+Summary 
+*************
+
+1. Deployment tests: 
+   1.1. Clean Installation - PASS
+   1.2. Upgrade Installation - NA 
+2. Static Code Analysis - NA
+3. Unit Tests Execution - YES
+4. System tests:
+  4.1. Functionality tests - PASS
+  4.2. Regression tests - PASS
+  4.3. Standard Conformance tests - NA
+  4.4. Performance tests - NA
+  4.5. Scalability tests - NA
+  4.6. Integration tests - NA
+
+REMARKS:
+
+*************************** Detailed Testing Report ***************************************
+
+1. Deployment log 
+************************
+
+1.1. Clean Installation
+-----------------------------
+URL of a clean installation report: http://argus-authz.github.com/reports/ argus-EMI3_RC-deployment-SL6.txt
+
+1.2. Upgrade Installation
+--------------------------------
+N/A
+
+2. Static Code Analysis
+******************************
+- URL where static code analysis results can be accessed: NA
+
+3. Unit Tests
+*****************
+- URL pointing to the results of the Unit Tests: JUnit are run automatically when the source package is built.
+- Code Coverage %, if available: N/A
+
+4. System tests 
+*********************
+- URL where the tests/testsuite can be accessed: https://github.com/argus-authz/argus-testsuites
+- URL where the test results can be accessed: http://argus-authz.github.com/reports/argus-EMI3_RC-testsuites-SL6.txt
+
