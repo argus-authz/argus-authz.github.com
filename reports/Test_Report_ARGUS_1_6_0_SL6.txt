@@ -38,7 +38,7 @@ REMARKS:
 
 1.1. Clean Installation
 -----------------------------
-URL of a clean installation report: http://argus-authz.github.com/reports/ argus-EMI3_RC-deployment-SL6.txt
+URL of a clean installation report: http://argus-authz.github.com/reports/argus-EMI3_RC-deployment-SL6.txt
 
 1.2. Upgrade Installation
 --------------------------------
