@@ -1,0 +1,88 @@
+tschopp@kronos:~/argus-testsuites$ sudo ./ARGUS-certtest.sh 
+[sudo] password for tschopp: 
+Using ./ARGUS-certconfig
+START Wed Feb 13 15:24:23 CET 2013 
+------------------------------------------------
+Log files will be stored in /tmp/argus-testsuites_20130213_152423
+Backup files will be stored in /tmp/argus-testsuites_20130213_152423/script_backup
+*Running PAP-CLI tests
+test-PAP-FUNC-2.sh PASSED
+test-list-policies.sh PASSED
+test-ban-unban.sh PASSED
+test-ban-unban-fqan.sh PASSED
+test-remove-all-policies.sh PASSED
+test-remove-policies.sh PASSED
+test-policy-from-file.sh PASSED
+test-upp-from-file.sh PASSED
+*Running PAP-management tests
+add-remove-localpap.sh PASSED
+en-disable-pap.sh PASSED
+pap-ping.sh PASSED
+refresh-cache.sh PASSED
+set-get-pap-orders.sh PASSED
+set-get-poll-interval.sh PASSED
+test-authz.sh PASSED
+update-pap.sh PASSED
+*Running PDP tests
+test-configuration.sh PASSED
+*Running PEP tests
+test-configuration.sh PASSED
+*Running Patch_4367 tests
+test_bug_60044.sh PASSED
+test_bug_63180.sh PASSED
+test_bug_64340.sh PASSED
+test_bug_65542.sh PASSED
+test_bug_65802.sh PASSED
+test_bug_66669.sh PASSED
+test_bug_68595.sh PASSED
+test_bug_68599.sh PASSED
+test_bug_68805.sh PASSED
+test_bug_69197_1.sh PASSED
+test_bug_69197_2.sh PASSED
+test_bug_69197_3.sh PASSED
+test_bug_69197_4.sh PASSED
+test_bug_69197_5a.sh PASSED
+test_bug_69197_5.sh PASSED
+test_bug_69197_6a.sh PASSED
+test_bug_69197_6.sh PASSED
+test_bug_69197_7a.sh PASSED
+test_bug_69197_7.sh PASSED
+test_bug_69197_8a.sh PASSED
+test_bug_69197_8.sh PASSED
+test_bug_69197.sh PASSED
+test_bug_69263.sh PASSED
+*Running Task_18586 tests
+test_rfc_71796.sh PASSED
+test_rfc_75538.sh PASSED
+test_rfc_75860.sh PASSED
+test_rfc_77429.sh PASSED
+test_rfc_77522.sh PASSED
+test_rfc_77524.sh PASSED
+test_rfc_77525.sh PASSED
+test_rfc_77527.sh PASSED
+test_rfc_77528.sh PASSED
+test_rfc_77532.sh PASSED
+test_rfc_77584.sh PASSED
+test_rfc_77739.sh PASSED
+test_rfc_78414.sh PASSED
+test_rfc_78751.sh PASSED
+test_rfc_78831.sh PASSED
+test_rfc_79412.sh PASSED
+test_rfc_80510.sh PASSED
+test_rfc_80526.sh PASSED
+*Running Task_20989 tests
+test_bug_81738.sh PASSED
+test_bug_82193.sh PASSED
+test_bug_83281.sh PASSED
+test_bug_83317.sh PASSED
+test_bug_83419.sh PASSED
+test_hyphen.sh PASSED
+*Running Task_21931 tests
+test_bug_83544.sh PASSED
+test_bug_83835.sh PASSED
+test_bug_84844.sh PASSED
+test_bug_84846.sh PASSED
+test_bug_84848.sh PASSED
+------------------------------------------------
+DONE
+tschopp@kronos:~/argus-testsuites$ 
