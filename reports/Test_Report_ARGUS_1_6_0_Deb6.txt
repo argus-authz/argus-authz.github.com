@@ -7,7 +7,7 @@ EMI Test Report Argus 1.6.0
 - ETICS Subsystem Configuration Name: emi-argus_R_1_6_0_EMI3
 - VCS Tag: N/A (source packages)
 - EMI Major Release: EMI-3
-- Platforms: SL6/x86_64
+- Platforms: Deb6/x86_64
 - Author: Valery Tschopp
 - Date: 13-Feb-2013
 - Test Report Template : v. 3.2
@@ -38,7 +38,7 @@ REMARKS:
 
 1.1. Clean Installation
 -----------------------------
-URL of a clean installation report: http://argus-authz.github.com/reports/argus-EMI3_RC-deployment-SL6.txt
+URL of a clean installation report: http://argus-authz.github.com/reports/argus-EMI3_RC-deployment-Deb6.txt
 
 1.2. Upgrade Installation
 --------------------------------
@@ -56,5 +56,5 @@ N/A
 4. System tests 
 *********************
 - URL where the tests/testsuite can be accessed: https://github.com/argus-authz/argus-testsuites
-- URL where the test results can be accessed: http://argus-authz.github.com/reports/argus-EMI3_RC-testsuites-SL6.txt
+- URL where the test results can be accessed: http://argus-authz.github.com/reports/argus-EMI3_RC-testsuites-Deb6.txt
 
