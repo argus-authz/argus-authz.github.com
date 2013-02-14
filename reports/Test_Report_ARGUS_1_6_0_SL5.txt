@@ -18,7 +18,7 @@ Summary
 
 1. Deployment tests: 
    1.1. Clean Installation - PASS
-   1.2. Upgrade Installation - NA 
+   1.2. Upgrade Installation - PASS
 2. Static Code Analysis - NA
 3. Unit Tests Execution - YES (at build time)
 4. System tests:
@@ -42,7 +42,7 @@ URL of a clean installation report: http://argus-authz.github.com/reports/argus-
 
 1.2. Upgrade Installation
 --------------------------------
-N/A
+URL of an upgrade report: http://argus-authz.github.com/reports/argus-EMI3_RC-upgrade-SL5.txt
 
 2. Static Code Analysis
 ******************************
