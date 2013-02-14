@@ -1,0 +1,1838 @@
+Argus EMI-3 upgrade installation
+================================
+
+Author: valery.tschopp@switch.ch
+Date: 2013-02-14
+Platform: SL6 (x86_64)
+Host: nemesis.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Service Upgrade
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Host Information
+-----------------------------------------------------------------------------------------------
+
+root@nemesis# lsb_release -a
+LSB Version: :core-4.0-amd64:core-4.0-noarch:graphics-4.0-amd64:graphics-4.0-noarch:printing-4.0-amd64:printing-4.0-noarch
+Distributor ID: Scientific
+Description: Scientific Linux release 6.3 (Carbon)
+Release: 6.3
+Codename: Carbon
+
+
+-----------------------------------------------------------------------------------------------
+1.2 YUM Repositories (EMI-2)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # yum repolist
+Loaded plugins: priorities, protectbase, security
+EMI-2-base                                                                   | 1.9 kB     00:00     
+EMI-2-base/primary_db                                                        | 250 kB     00:00     
+EMI-2-contribs                                                               | 1.9 kB     00:00     
+EMI-2-contribs/primary_db                                                    | 1.1 kB     00:00     
+EMI-2-third-party                                                            | 1.9 kB     00:00     
+EMI-2-third-party/primary_db                                                 |  71 kB     00:00     
+EMI-2-updates                                                                | 1.9 kB     00:00     
+EMI-2-updates/primary_db                                                     | 281 kB     00:00     
+205 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+repo id                       repo name                                                     status
+EMI-2-base                    EMI 2 base                                                         579
+EMI-2-contribs                EMI 2 contribs                                                       0
+EMI-2-third-party             EMI 2 third-party                                                   97
+EMI-2-updates                 EMI 2 updates                                                      593
+epel                          Extra Packages for Enterprise Linux 6 - x86_64                8154+200
+eugridpma                     EUGridPMA                                                      115+112
+sl                            Scientific Linux 6.0 - x86_64                                     6080
+sl-security                   Scientific Linux 6.0 - x86_64 - security updates                  3577
+repolist: 19195
+
+
+-----------------------------------------------------------------------------------------------
+1.3 Argus Information (EMI-2)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # yum info emi-argus argus-pap argus-pdp argus-pep-server
+Loaded plugins: priorities, protectbase, security
+205 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Installed Packages
+Name       : argus-pap
+Arch       : noarch
+Version    : 1.5.1
+Release    : 1.el6
+Size       : 14 M
+Repo       : installed
+From repo  : EMI-2-base
+Summary    : Argus PAP service
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: 
+           : Argus is a system meant to render consistent authorization decisions for
+           : distributed services (e.g. compute elements, portals). In order to achieve
+           : this consistency a number of points must be addressed. First, it must be
+           : possible to author and maintain consistent authorization policies. This is
+           : handled by the Policy Administration Point (PAP) component in the service.
+           : Second, authored policies must be evaluated in a consistent manner, a task
+           : performed by the Policy Decision Point (PDP). Finally, the data provided for
+           : evaluation against policies must be consistent (in form and definition) and
+           : this is done by the Policy Enforcement Point (PEP).
+           : 
+           : This package provides the Argus PAP service.
+
+Name       : argus-pdp
+Arch       : noarch
+Version    : 1.5.1
+Release    : 2.sl6
+Size       : 11 M
+Repo       : installed
+From repo  : EMI-2-base
+Summary    : Argus PDP
+License    : ASL 2.0
+Description: Argus PDP service (EMI)
+
+Name       : argus-pep-server
+Arch       : noarch
+Version    : 1.5.1
+Release    : 2.sl6
+Size       : 12 M
+Repo       : installed
+From repo  : EMI-2-base
+Summary    : Argus PEP Server
+License    : ASL 2.0
+Description: Argus PEP Server (EMI)
+
+Name       : emi-argus
+Arch       : x86_64
+Version    : 1.5.0
+Release    : 1.sl6
+Size       : 0.0  
+Repo       : installed
+From repo  : EMI-2-base
+Summary    : Emi-argus metapackage
+License    : ASL 2.0
+Description: Metapackage for the Argus authorization service (EMI)
+
+
+-----------------------------------------------------------------------------------------------
+1.4 Upgrading YUM Repositories (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # cd /etc/yum.repos.d/
+
+root@nemesis (yum.repos.d) # rm -f emi2-*.repo
+
+root@nemesis (yum.repos.d) # wget http://eticssoft.web.cern.ch/eticssoft/mock/emi-3-rc-sl6.repo
+--2013-02-14 14:28:38--  http://eticssoft.web.cern.ch/eticssoft/mock/emi-3-rc-sl6.repo
+Resolving eticssoft.web.cern.ch... 137.138.139.19
+Connecting to eticssoft.web.cern.ch|137.138.139.19|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1567 (1.5K) [text/plain]
+Saving to: `emi-3-rc-sl6.repo'
+
+100%[==========================================================>] 1,567       --.-K/s   in 0s      
+
+2013-02-14 14:28:38 (168 MB/s) - `emi-3-rc-sl6.repo' saved [1567/1567]
+
+root@nemesis (~) # yum clean all
+Loaded plugins: priorities, protectbase, security
+Cleaning up Everything
+
+
+-----------------------------------------------------------------------------------------------
+1.5 Upgrade to EMI-3
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # yum update
+Loaded plugins: priorities, protectbase, security
+EGI-trustanchors                                                             |  951 B     00:00     
+EGI-trustanchors/primary                                                     |  31 kB     00:00     
+EGI-trustanchors                                                                            215/215
+EMI-3-testing-base                                                           | 1.9 kB     00:00     
+EMI-3-testing-base/primary_db                                                | 722 kB     00:00     
+EMI-3-testing-third-party                                                    | 1.9 kB     00:00     
+EMI-3-testing-third-party/primary_db                                         |  54 kB     00:00     
+Oracle-11                                                                    | 1.9 kB     00:00     
+Oracle-11/primary_db                                                         | 3.3 kB     00:00     
+core                                                                         | 3.2 kB     00:00     
+core/primary_db                                                              | 4.2 MB     00:00     
+epel/metalink                                                                |  18 kB     00:00     
+epel                                                                         | 4.3 kB     00:00     
+epel/primary_db                                                              | 5.0 MB     00:02     
+eugridpma                                                                    |  951 B     00:00     
+eugridpma/primary                                                            |  29 kB     00:00     
+eugridpma                                                                                   227/227
+extras                                                                       | 4.3 kB     00:00     
+extras/primary_db                                                            | 5.0 MB     00:01     
+sl                                                                           | 3.2 kB     00:00     
+sl/primary_db                                                                | 3.8 MB     00:02     
+sl-security                                                                  | 1.9 kB     00:00     
+sl-security/primary_db                                                       |  15 MB     00:03     
+322 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Skipping security plugin, no data
+Setting up Update Process
+Resolving Dependencies
+Skipping security plugin, no data
+--> Running transaction check
+---> Package acl.x86_64 0:2.2.49-6.el6 set to be updated
+---> Package alsa-lib.x86_64 0:1.0.22-3.el6 set to be updated
+---> Package argus-pap.noarch 0:1.6.0-1.el6 set to be updated
+--> Processing Dependency: voms-api-java3 for package: argus-pap-1.6.0-1.el6.noarch
+---> Package argus-pdp.noarch 0:1.6.0-1.el6 set to be updated
+---> Package argus-pdp-pep-common.noarch 0:1.4.0-2.el6 set to be updated
+--> Processing Dependency: canl-java for package: argus-pdp-pep-common-1.4.0-2.el6.noarch
+---> Package argus-pep-api-c.x86_64 0:2.2.0-1.el6 set to be updated
+---> Package argus-pep-common.noarch 0:2.3.0-1.el6 set to be updated
+---> Package argus-pep-server.noarch 0:1.6.0-3.el6 set to be updated
+---> Package argus-pepcli.x86_64 0:2.2.0-1.el6 set to be updated
+---> Package at.x86_64 0:3.1.10-43.el6_2.1 set to be updated
+---> Package attr.x86_64 0:2.4.44-7.el6 set to be updated
+---> Package audit.x86_64 0:2.2-2.el6 set to be updated
+---> Package audit-libs.x86_64 0:2.2-2.el6 set to be updated
+---> Package audit-libs-python.x86_64 0:2.2-2.el6 set to be updated
+---> Package authconfig.x86_64 0:6.1.12-10.el6 set to be updated
+---> Package bash.x86_64 0:4.1.2-9.el6_2 set to be updated
+---> Package bdii.noarch 0:5.2.17-1.el6 set to be updated
+---> Package bfa-firmware.noarch 0:3.0.0.0-1.el6 set to be updated
+---> Package binutils.x86_64 0:2.20.51.0.2-5.34.el6 set to be updated
+---> Package chkconfig.x86_64 0:1.3.49.3-2.el6 set to be updated
+---> Package coreutils.x86_64 0:8.4-19.el6 set to be updated
+---> Package coreutils-libs.x86_64 0:8.4-19.el6 set to be updated
+---> Package cpio.x86_64 0:2.10-10.el6 set to be updated
+---> Package cronie.x86_64 0:1.4.4-7.el6 set to be updated
+---> Package cronie-anacron.x86_64 0:1.4.4-7.el6 set to be updated
+---> Package crontabs.noarch 0:1.10-33.el6 set to be updated
+---> Package cups-libs.x86_64 1:1.4.2-48.el6 set to be updated
+---> Package curl.x86_64 0:7.19.7-26.el6_2.4 set to be updated
+---> Package cyrus-sasl.x86_64 0:2.1.23-13.el6 set to be updated
+---> Package cyrus-sasl-lib.x86_64 0:2.1.23-13.el6 set to be updated
+---> Package db4.x86_64 0:4.7.25-17.el6 set to be updated
+---> Package db4-utils.x86_64 0:4.7.25-17.el6 set to be updated
+---> Package device-mapper.x86_64 0:1.02.74-10.el6 set to be updated
+---> Package device-mapper-event.x86_64 0:1.02.74-10.el6 set to be updated
+---> Package device-mapper-event-libs.x86_64 0:1.02.74-10.el6 set to be updated
+---> Package device-mapper-libs.x86_64 0:1.02.74-10.el6 set to be updated
+---> Package dracut.noarch 0:004-283.el6 set to be updated
+---> Package dracut-kernel.noarch 0:004-283.el6 set to be updated
+---> Package e2fsprogs.x86_64 0:1.41.12-12.el6 set to be updated
+---> Package e2fsprogs-libs.x86_64 0:1.41.12-12.el6 set to be updated
+---> Package efibootmgr.x86_64 0:0.5.4-10.el6 set to be updated
+---> Package emi-argus.noarch 0:1.6.0-1.el6 set to be updated
+---> Package emi-release.noarch 0:3.0.0-1.el6 set to be updated
+---> Package emi-version.x86_64 0:3.0.0-0.rc.sl6 set to be updated
+---> Package expect.x86_64 0:5.44.1.15-4.el6 set to be updated
+---> Package file.x86_64 0:5.04-13.el6 set to be updated
+---> Package file-libs.x86_64 0:5.04-13.el6 set to be updated
+---> Package filesystem.x86_64 0:2.4.30-3.el6 set to be updated
+---> Package gawk.x86_64 0:3.1.7-9.el6 set to be updated
+---> Package glib2.x86_64 0:2.22.5-7.el6 set to be updated
+---> Package glite-ce-common-java.noarch 0:1.15.1-2.sl6 set to be updated
+--> Processing Dependency: tomcat6 for package: glite-ce-common-java-1.15.1-2.sl6.noarch
+--> Processing Dependency: axis2 for package: glite-ce-common-java-1.15.1-2.sl6.noarch
+--> Processing Dependency: mysql-connector-java for package: glite-ce-common-java-1.15.1-2.sl6.noarch
+--> Processing Dependency: jclassads for package: glite-ce-common-java-1.15.1-2.sl6.noarch
+---> Package glite-info-provider-service.noarch 0:1.12.0-1.el6 set to be updated
+---> Package glite-yaim-bdii.noarch 0:4.3.13-1.el6 set to be updated
+---> Package glite-yaim-core.noarch 0:5.1.1-1.sl6 set to be updated
+---> Package glue-schema.noarch 0:2.0.10-1.el6 set to be updated
+---> Package gmp.x86_64 0:4.3.1-7.el6_2.2 set to be updated
+---> Package grep.x86_64 0:2.6.3-3.el6 set to be updated
+---> Package grub.x86_64 1:0.97-77.el6 set to be updated
+---> Package grubby.x86_64 0:7.0.15-3.el6 set to be updated
+---> Package hwdata.noarch 0:0.233-7.8.el6 set to be updated
+---> Package initscripts.x86_64 0:9.03.31-2.el6 set to be updated
+---> Package iproute.x86_64 0:2.6.32-20.el6 set to be updated
+---> Package iptables.x86_64 0:1.4.7-5.1.el6_2 set to be updated
+---> Package iptables-ipv6.x86_64 0:1.4.7-5.1.el6_2 set to be updated
+---> Package iputils.x86_64 0:20071127-16.el6 set to be updated
+---> Package iwl1000-firmware.noarch 1:39.31.5.1-1.el6 set to be updated
+---> Package iwl5000-firmware.noarch 0:8.83.5.1_1-1.el6_1.1 set to be updated
+---> Package iwl6000-firmware.noarch 0:9.221.4.1-1.el6 set to be updated
+---> Package iwl6050-firmware.noarch 0:41.28.5.1-2.el6 set to be updated
+---> Package keyutils-libs.x86_64 0:1.4-4.el6 set to be updated
+---> Package less.x86_64 0:436-10.el6 set to be updated
+---> Package libacl.x86_64 0:2.2.49-6.el6 set to be updated
+---> Package libattr.x86_64 0:2.4.44-7.el6 set to be updated
+---> Package libblkid.x86_64 0:2.17.2-12.7.el6 set to be updated
+---> Package libcap-ng.x86_64 0:0.6.4-3.el6_0.1 set to be updated
+---> Package libcgroup.x86_64 0:0.37-4.el6 set to be updated
+---> Package libcom_err.x86_64 0:1.41.12-12.el6 set to be updated
+---> Package libcurl.x86_64 0:7.19.7-26.el6_2.4 set to be updated
+---> Package libgcc.x86_64 0:4.4.6-4.el6 set to be updated
+---> Package libgcj.x86_64 0:4.4.6-4.el6 set to be updated
+---> Package libgcrypt.x86_64 0:1.4.5-9.el6_2.2 set to be updated
+---> Package libgomp.x86_64 0:4.4.6-4.el6 set to be updated
+---> Package libgpg-error.x86_64 0:1.7-4.el6 set to be updated
+---> Package libnih.x86_64 0:1.0.1-7.el6 set to be updated
+---> Package libselinux.x86_64 0:2.0.94-5.3.el6 set to be updated
+---> Package libselinux-python.x86_64 0:2.0.94-5.3.el6 set to be updated
+---> Package libselinux-utils.x86_64 0:2.0.94-5.3.el6 set to be updated
+---> Package libsemanage.x86_64 0:2.0.43-4.1.el6 set to be updated
+---> Package libsemanage-python.x86_64 0:2.0.43-4.1.el6 set to be updated
+---> Package libsepol.x86_64 0:2.0.41-4.el6 set to be updated
+---> Package libsndfile.x86_64 0:1.0.20-5.el6 set to be updated
+--> Processing Dependency: libogg.so.0()(64bit) for package: libsndfile-1.0.20-5.el6.x86_64
+--> Processing Dependency: libvorbisenc.so.2()(64bit) for package: libsndfile-1.0.20-5.el6.x86_64
+--> Processing Dependency: libFLAC.so.8()(64bit) for package: libsndfile-1.0.20-5.el6.x86_64
+--> Processing Dependency: libvorbis.so.0()(64bit) for package: libsndfile-1.0.20-5.el6.x86_64
+---> Package libss.x86_64 0:1.41.12-12.el6 set to be updated
+---> Package libssh2.x86_64 0:1.2.2-7.el6_2.3 set to be updated
+---> Package libstdc++.x86_64 0:4.4.6-4.el6 set to be updated
+---> Package libudev.x86_64 0:147-2.41.el6 set to be updated
+---> Package libuser.x86_64 0:0.56.13-5.el6 set to be updated
+---> Package libuuid.x86_64 0:2.17.2-12.7.el6 set to be updated
+---> Package logrotate.x86_64 0:3.7.8-15.el6 set to be updated
+---> Package lvm2.x86_64 0:2.02.95-10.el6 set to be updated
+---> Package lvm2-libs.x86_64 0:2.02.95-10.el6 set to be updated
+---> Package mailcap.noarch 0:2.1.31-2.el6 set to be updated
+---> Package make.x86_64 1:3.81-20.el6 set to be updated
+---> Package man.x86_64 0:1.6f-30.el6 set to be updated
+---> Package mingetty.x86_64 0:1.08-5.el6 set to be updated
+---> Package module-init-tools.x86_64 0:3.9-20.el6 set to be updated
+---> Package net-tools.x86_64 0:1.60-110.el6_2 set to be updated
+---> Package newt.x86_64 0:0.52.11-3.el6 set to be updated
+---> Package newt-python.x86_64 0:0.52.11-3.el6 set to be updated
+---> Package nss-softokn.x86_64 0:3.12.9-11.el6 set to be updated
+---> Package nss-softokn-freebl.i686 0:3.12.9-11.el6 set to be updated
+---> Package nss-softokn-freebl.x86_64 0:3.12.9-11.el6 set to be updated
+---> Package pam.x86_64 0:1.1.1-10.el6_2.1 set to be updated
+---> Package passwd.x86_64 0:0.77-4.el6_2.2 set to be updated
+---> Package pciutils-libs.x86_64 0:3.1.4-11.el6 set to be updated
+---> Package pcre.x86_64 0:7.8-4.el6 set to be updated
+---> Package perl.x86_64 4:5.10.1-127.el6 set to be updated
+---> Package perl-Compress-Raw-Zlib.x86_64 1:2.020-127.el6 set to be updated
+---> Package perl-Compress-Zlib.x86_64 0:2.020-127.el6 set to be updated
+---> Package perl-IO-Compress-Base.x86_64 0:2.020-127.el6 set to be updated
+---> Package perl-IO-Compress-Zlib.x86_64 0:2.020-127.el6 set to be updated
+---> Package perl-Module-Pluggable.x86_64 1:3.90-127.el6 set to be updated
+---> Package perl-Pod-Escapes.x86_64 1:1.04-127.el6 set to be updated
+---> Package perl-Pod-Simple.x86_64 1:3.13-127.el6 set to be updated
+---> Package perl-libs.x86_64 4:5.10.1-127.el6 set to be updated
+---> Package perl-version.x86_64 3:0.77-127.el6 set to be updated
+---> Package pinentry.x86_64 0:0.7.6-6.el6 set to be updated
+---> Package plymouth.x86_64 0:0.8.3-24.sl6 set to be updated
+---> Package plymouth-core-libs.x86_64 0:0.8.3-24.sl6 set to be updated
+---> Package plymouth-scripts.x86_64 0:0.8.3-24.sl6 set to be updated
+---> Package policycoreutils.x86_64 0:2.0.83-19.24.el6 set to be updated
+---> Package policycoreutils-python.x86_64 0:2.0.83-19.24.el6 set to be updated
+---> Package portreserve.x86_64 0:0.0.4-9.el6 set to be updated
+---> Package procps.x86_64 0:3.2.8-23.el6 set to be updated
+---> Package psmisc.x86_64 0:22.6-15.el6_0.1 set to be updated
+---> Package python-pycurl.x86_64 0:7.19.0-8.el6 set to be updated
+---> Package python-urlgrabber.noarch 0:3.9.1-8.el6 set to be updated
+---> Package ql2400-firmware.noarch 0:5.06.05-1.el6 set to be updated
+---> Package ql2500-firmware.noarch 0:5.06.05-1.el6 set to be updated
+---> Package readline.x86_64 0:6.0-4.el6 set to be updated
+---> Package redhat-logos.noarch 0:60.0.14-2.sl6.5 set to be updated
+---> Package redhat-lsb.x86_64 0:4.0-3.el6 set to be updated
+--> Processing Dependency: perl-Test-Harness for package: redhat-lsb-4.0-3.el6.x86_64
+--> Processing Dependency: redhat-lsb-graphics for package: redhat-lsb-4.0-3.el6.x86_64
+--> Processing Dependency: redhat-lsb-printing for package: redhat-lsb-4.0-3.el6.x86_64
+--> Processing Dependency: perl-CGI for package: redhat-lsb-4.0-3.el6.x86_64
+--> Processing Dependency: perl-Test-Simple for package: redhat-lsb-4.0-3.el6.x86_64
+--> Processing Dependency: perl-ExtUtils-MakeMaker for package: redhat-lsb-4.0-3.el6.x86_64
+---> Package rpm.x86_64 0:4.8.0-27.el6 set to be updated
+---> Package rpm-libs.x86_64 0:4.8.0-27.el6 set to be updated
+---> Package rpm-python.x86_64 0:4.8.0-27.el6 set to be updated
+---> Package sed.x86_64 0:4.2.1-10.el6 set to be updated
+---> Package setup.noarch 0:2.8.14-16.el6 set to be updated
+---> Package shadow-utils.x86_64 2:4.1.4.2-13.el6 set to be updated
+---> Package sl-release.x86_64 0:6.3-1 set to be updated
+---> Package system-config-firewall-base.noarch 0:1.2.27-5.el6 set to be updated
+---> Package sysvinit-tools.x86_64 0:2.87-4.dsf.el6 set to be updated
+---> Package tar.x86_64 2:1.23-7.el6 set to be updated
+---> Package tcp_wrappers-libs.x86_64 0:7.6-57.el6 set to be updated
+---> Package udev.x86_64 0:147-2.41.el6 set to be updated
+---> Package upstart.x86_64 0:0.6.5-12.el6 set to be updated
+---> Package util-linux-ng.x86_64 0:2.17.2-12.7.el6 set to be updated
+---> Package vim-minimal.x86_64 2:7.2.411-1.8.el6 set to be updated
+---> Package which.x86_64 0:2.19-6.el6 set to be updated
+---> Package yaim-argus_server.noarch 0:1.6.0-1.el6 set to be updated
+---> Package yum.noarch 0:3.2.29-30.el6 set to be updated
+---> Package yum-metadata-parser.x86_64 0:1.1.2-16.el6 set to be updated
+---> Package yum-plugin-priorities.noarch 0:1.1.30-14.el6 set to be updated
+---> Package yum-plugin-protectbase.noarch 0:1.1.30-14.el6 set to be updated
+---> Package yum-plugin-security.noarch 0:1.1.30-14.el6 set to be updated
+---> Package zlib.x86_64 0:1.2.3-27.el6 set to be updated
+--> Running transaction check
+---> Package axis2.noarch 0:1.6.1-1.emi set to be updated
+---> Package canl-java.noarch 0:1.1.0-1.sl6 set to be updated
+--> Processing Dependency: jakarta-commons-io >= 1.4 for package: canl-java-1.1.0-1.sl6.noarch
+---> Package flac.x86_64 0:1.2.1-6.1.el6 set to be updated
+---> Package jclassads.noarch 0:2.4.0-3.sl6 set to be updated
+---> Package libogg.x86_64 2:1.1.4-2.1.el6 set to be updated
+---> Package libvorbis.x86_64 1:1.2.3-4.el6_2.1 set to be updated
+---> Package mysql-connector-java.noarch 1:5.1.17-6.el6 set to be updated
+--> Processing Dependency: jta >= 1.0 for package: 1:mysql-connector-java-5.1.17-6.el6.noarch
+--> Processing Dependency: slf4j for package: 1:mysql-connector-java-5.1.17-6.el6.noarch
+---> Package perl-CGI.x86_64 0:3.51-127.el6 set to be updated
+---> Package perl-ExtUtils-MakeMaker.x86_64 0:6.55-127.el6 set to be updated
+--> Processing Dependency: perl-devel for package: perl-ExtUtils-MakeMaker-6.55-127.el6.x86_64
+---> Package perl-Test-Harness.x86_64 0:3.17-127.el6 set to be updated
+---> Package perl-Test-Simple.x86_64 0:0.92-127.el6 set to be updated
+---> Package redhat-lsb-graphics.x86_64 0:4.0-3.el6 set to be updated
+--> Processing Dependency: libQtCore.so.4()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libGLU.so.1()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libqt-mt.so.3()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libQtSql.so.4()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libQtSvg.so.4()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libXt.so.6()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libQtXml.so.4()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libQtNetwork.so.4()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libGL.so.1()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libQtOpenGL.so.4()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+--> Processing Dependency: libQtGui.so.4()(64bit) for package: redhat-lsb-graphics-4.0-3.el6.x86_64
+---> Package redhat-lsb-printing.x86_64 0:4.0-3.el6 set to be updated
+--> Processing Dependency: /usr/bin/gs for package: redhat-lsb-printing-4.0-3.el6.x86_64
+--> Processing Dependency: /usr/bin/lp for package: redhat-lsb-printing-4.0-3.el6.x86_64
+--> Processing Dependency: /usr/bin/foomatic-rip for package: redhat-lsb-printing-4.0-3.el6.x86_64
+--> Processing Dependency: /usr/bin/lpr for package: redhat-lsb-printing-4.0-3.el6.x86_64
+---> Package tomcat6.noarch 0:6.0.24-45.el6 set to be updated
+EGI-trustanchors/filelists                                                   |  15 kB     00:00     
+EMI-3-testing-base/filelists_db                                              | 518 kB     00:00     
+EMI-3-testing-third-party/filelists_db                                       | 137 kB     00:00     
+Oracle-11/filelists_db                                                       | 1.9 kB     00:00     
+core/filelists_db                                                            | 5.1 MB     00:00     
+epel/filelists_db                                                            | 6.9 MB     00:05     
+eugridpma/filelists                                                          |  15 kB     00:00     
+extras/filelists_db                                                          | 6.9 MB     00:00     
+sl/filelists_db                                                              | 4.8 MB     00:02     
+sl-security/filelists_db                                                     |  11 MB     00:07     
+--> Processing Dependency: tomcat6-lib = 6.0.24-45.el6 for package: tomcat6-6.0.24-45.el6.noarch
+--> Processing Dependency: mx4j for package: tomcat6-6.0.24-45.el6.noarch
+--> Processing Dependency: jakarta-commons-pool for package: tomcat6-6.0.24-45.el6.noarch
+--> Processing Dependency: jakarta-commons-dbcp for package: tomcat6-6.0.24-45.el6.noarch
+--> Processing Dependency: jakarta-commons-daemon for package: tomcat6-6.0.24-45.el6.noarch
+--> Processing Dependency: jakarta-commons-collections for package: tomcat6-6.0.24-45.el6.noarch
+---> Package voms-api-java3.noarch 0:3.0.0-1.el6 set to be updated
+--> Processing Dependency: bouncycastle-mail for package: voms-api-java3-3.0.0-1.el6.noarch
+--> Running transaction check
+---> Package bouncycastle-mail.noarch 0:1.46-1.sl6 set to be updated
+---> Package cups.x86_64 1:1.4.2-48.el6 set to be updated
+--> Processing Dependency: dbus >= 0.90 for package: 1:cups-1.4.2-48.el6.x86_64
+--> Processing Dependency: tmpwatch for package: 1:cups-1.4.2-48.el6.x86_64
+--> Processing Dependency: poppler-utils for package: 1:cups-1.4.2-48.el6.x86_64
+---> Package foomatic.x86_64 0:4.0.4-1.el6_1.1 set to be updated
+--> Processing Dependency: foomatic-db for package: foomatic-4.0.4-1.el6_1.1.x86_64
+---> Package geronimo-specs-compat.noarch 0:1.0-3.4.M2.el6 set to be updated
+--> Processing Dependency: geronimo-specs = 1.0-3.4.M2.el6 for package: geronimo-specs-compat-1.0-3.4.M2.el6.noarch
+---> Package ghostscript.x86_64 0:8.70-14.el6_3.1 set to be updated
+--> Processing Dependency: urw-fonts >= 1.1 for package: ghostscript-8.70-14.el6_3.1.x86_64
+--> Processing Dependency: ghostscript-fonts for package: ghostscript-8.70-14.el6_3.1.x86_64
+---> Package jakarta-commons-collections.noarch 0:3.2.1-3.4.el6 set to be updated
+---> Package jakarta-commons-daemon.x86_64 1:1.0.1-8.9.el6 set to be updated
+---> Package jakarta-commons-dbcp.noarch 0:1.2.1-13.8.el6 set to be updated
+---> Package jakarta-commons-io.noarch 0:1.4-3.el6 set to be updated
+---> Package jakarta-commons-pool.x86_64 0:1.3-12.7.el6 set to be updated
+---> Package libXt.x86_64 0:1.0.7-1.el6 set to be updated
+---> Package mesa-libGL.x86_64 0:7.11-5.el6 set to be updated
+--> Processing Dependency: mesa-dri-drivers(x86-64) = 7.11-5.el6 for package: mesa-libGL-7.11-5.el6.x86_64
+--> Processing Dependency: libXxf86vm.so.1()(64bit) for package: mesa-libGL-7.11-5.el6.x86_64
+---> Package mesa-libGLU.x86_64 0:7.11-5.el6 set to be updated
+---> Package mx4j.noarch 1:3.0.1-9.13.el6 set to be updated
+--> Processing Dependency: bcel >= 5.0 for package: 1:mx4j-3.0.1-9.13.el6.noarch
+--> Processing Dependency: xml-commons-resolver for package: 1:mx4j-3.0.1-9.13.el6.noarch
+---> Package perl-devel.x86_64 4:5.10.1-127.el6 set to be updated
+--> Processing Dependency: perl(ExtUtils::ParseXS) for package: 4:perl-devel-5.10.1-127.el6.x86_64
+---> Package qt.x86_64 1:4.6.2-24.el6 set to be updated
+---> Package qt-x11.x86_64 1:4.6.2-24.el6 set to be updated
+--> Processing Dependency: qt-sqlite(x86-64) = 1:4.6.2-24.el6 for package: 1:qt-x11-4.6.2-24.el6.x86_64
+--> Processing Dependency: phonon-backend(x86-64) >= 4.3 for package: 1:qt-x11-4.6.2-24.el6.x86_64
+--> Processing Dependency: libmng.so.1()(64bit) for package: 1:qt-x11-4.6.2-24.el6.x86_64
+--> Processing Dependency: libgstvideo-0.10.so.0()(64bit) for package: 1:qt-x11-4.6.2-24.el6.x86_64
+--> Processing Dependency: libgstreamer-0.10.so.0()(64bit) for package: 1:qt-x11-4.6.2-24.el6.x86_64
+--> Processing Dependency: libgstinterfaces-0.10.so.0()(64bit) for package: 1:qt-x11-4.6.2-24.el6.x86_64
+--> Processing Dependency: libgstbase-0.10.so.0()(64bit) for package: 1:qt-x11-4.6.2-24.el6.x86_64
+---> Package qt3.x86_64 0:3.3.8b-30.el6 set to be updated
+---> Package slf4j.noarch 0:1.5.8-7.el6 set to be updated
+---> Package tomcat6-lib.noarch 0:6.0.24-45.el6 set to be updated
+--> Processing Dependency: tomcat6-servlet-2.5-api = 6.0.24-45.el6 for package: tomcat6-lib-6.0.24-45.el6.noarch
+--> Processing Dependency: tomcat6-jsp-2.1-api = 6.0.24-45.el6 for package: tomcat6-lib-6.0.24-45.el6.noarch
+--> Processing Dependency: tomcat6-el-2.1-api = 6.0.24-45.el6 for package: tomcat6-lib-6.0.24-45.el6.noarch
+--> Processing Dependency: ecj for package: tomcat6-lib-6.0.24-45.el6.noarch
+--> Running transaction check
+---> Package bcel.x86_64 0:5.2-7.2.el6 set to be updated
+--> Processing Dependency: regexp for package: bcel-5.2-7.2.el6.x86_64
+---> Package dbus.x86_64 1:1.2.24-7.el6_3 set to be updated
+---> Package ecj.x86_64 1:3.4.2-6.el6 set to be updated
+---> Package foomatic-db.noarch 0:4.0-7.20091126.el6 set to be updated
+--> Processing Dependency: foomatic-db-ppds = 4.0-7.20091126.el6 for package: foomatic-db-4.0-7.20091126.el6.noarch
+--> Processing Dependency: foomatic-db-filesystem = 4.0-7.20091126.el6 for package: foomatic-db-4.0-7.20091126.el6.noarch
+---> Package geronimo-specs.noarch 0:1.0-3.4.M2.el6 set to be updated
+--> Processing Dependency: apache-tomcat-apis for package: geronimo-specs-1.0-3.4.M2.el6.noarch
+---> Package ghostscript-fonts.noarch 0:5.50-23.1.el6 set to be updated
+--> Processing Dependency: xorg-x11-font-utils for package: ghostscript-fonts-5.50-23.1.el6.noarch
+---> Package gstreamer.x86_64 0:0.10.29-1.el6 set to be updated
+--> Processing Dependency: gstreamer-tools >= 0.10.29 for package: gstreamer-0.10.29-1.el6.x86_64
+---> Package gstreamer-plugins-base.x86_64 0:0.10.29-1.el6 set to be updated
+--> Processing Dependency: liboil >= 0.3.12-9 for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: libtheoraenc.so.1(libtheoraenc_1.0)(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: libtheoradec.so.1(libtheoradec_1.0)(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: iso-codes for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: libtheoradec.so.1()(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: libcdda_interface.so.0()(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: libXv.so.1()(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: libgudev-1.0.so.0()(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: libtheoraenc.so.1()(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: libcdda_paranoia.so.0()(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: libvisual-0.4.so.0()(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+--> Processing Dependency: liboil-0.3.so.0()(64bit) for package: gstreamer-plugins-base-0.10.29-1.el6.x86_64
+---> Package libXxf86vm.x86_64 0:1.1.0-1.el6 set to be updated
+---> Package libmng.x86_64 0:1.0.10-4.1.el6 set to be updated
+--> Processing Dependency: liblcms.so.1()(64bit) for package: libmng-1.0.10-4.1.el6.x86_64
+---> Package mesa-dri-drivers.x86_64 0:7.11-5.el6 set to be updated
+---> Package perl-ExtUtils-ParseXS.x86_64 1:2.2003.0-127.el6 set to be updated
+---> Package phonon-backend-gstreamer.x86_64 1:4.6.2-24.el6 set to be updated
+---> Package poppler-utils.x86_64 0:0.12.4-3.el6_0.1 set to be updated
+--> Processing Dependency: poppler = 0.12.4-3.el6_0.1 for package: poppler-utils-0.12.4-3.el6_0.1.x86_64
+--> Processing Dependency: libopenjpeg.so.2()(64bit) for package: poppler-utils-0.12.4-3.el6_0.1.x86_64
+--> Processing Dependency: libpoppler.so.5()(64bit) for package: poppler-utils-0.12.4-3.el6_0.1.x86_64
+---> Package qt-sqlite.x86_64 1:4.6.2-24.el6 set to be updated
+---> Package tmpwatch.x86_64 0:2.9.16-4.el6 set to be updated
+---> Package tomcat6-el-2.1-api.noarch 0:6.0.24-45.el6 set to be updated
+---> Package tomcat6-jsp-2.1-api.noarch 0:6.0.24-45.el6 set to be updated
+---> Package tomcat6-servlet-2.5-api.noarch 0:6.0.24-45.el6 set to be updated
+---> Package urw-fonts.noarch 0:2.4-10.el6 set to be updated
+---> Package xml-commons-resolver.x86_64 0:1.1-4.18.el6 set to be updated
+--> Running transaction check
+---> Package apache-tomcat-apis.noarch 0:0.1-1.el6 set to be updated
+---> Package cdparanoia-libs.x86_64 0:10.2-5.1.el6 set to be updated
+---> Package foomatic-db-filesystem.noarch 0:4.0-7.20091126.el6 set to be updated
+---> Package foomatic-db-ppds.noarch 0:4.0-7.20091126.el6 set to be updated
+---> Package gstreamer-tools.x86_64 0:0.10.29-1.el6 set to be updated
+--> Processing Dependency: pkgconfig for package: gstreamer-tools-0.10.29-1.el6.x86_64
+---> Package iso-codes.noarch 0:3.16-2.el6 set to be updated
+--> Processing Dependency: xml-common for package: iso-codes-3.16-2.el6.noarch
+---> Package lcms-libs.x86_64 0:1.19-1.el6 set to be updated
+---> Package libXv.x86_64 0:1.0.5-1.el6 set to be updated
+---> Package libgudev1.x86_64 0:147-2.41.el6 set to be updated
+---> Package liboil.x86_64 0:0.3.16-4.1.el6 set to be updated
+---> Package libtheora.x86_64 1:1.1.0-2.el6 set to be updated
+---> Package libvisual.x86_64 0:0.4.0-9.1.el6 set to be updated
+---> Package openjpeg-libs.x86_64 0:1.3-9.el6_3 set to be updated
+---> Package poppler.x86_64 0:0.12.4-3.el6_0.1 set to be updated
+--> Processing Dependency: poppler-data >= 0.4.0 for package: poppler-0.12.4-3.el6_0.1.x86_64
+---> Package regexp.x86_64 0:1.5-4.4.el6 set to be updated
+---> Package xorg-x11-font-utils.x86_64 1:7.2-11.el6 set to be updated
+--> Processing Dependency: libfontenc.so.1()(64bit) for package: 1:xorg-x11-font-utils-7.2-11.el6.x86_64
+--> Processing Dependency: libXfont.so.1()(64bit) for package: 1:xorg-x11-font-utils-7.2-11.el6.x86_64
+--> Running transaction check
+---> Package libXfont.x86_64 0:1.4.1-2.el6_1 set to be updated
+---> Package libfontenc.x86_64 0:1.0.5-2.el6 set to be updated
+---> Package pkgconfig.x86_64 1:0.23-9.1.el6 set to be updated
+---> Package poppler-data.noarch 0:0.4.0-1.el6 set to be updated
+---> Package xml-common.noarch 0:0.6.3-32.el6 set to be updated
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+====================================================================================================
+ Package                       Arch     Version                   Repository                   Size
+====================================================================================================
+Installing:
+ glite-ce-common-java          noarch   1.15.1-2.sl6              EMI-3-testing-base          632 k
+     replacing  emi-trustmanager.noarch 3.1.4-1.sl6
+Updating:
+ acl                           x86_64   2.2.49-6.el6              core                         74 k
+ alsa-lib                      x86_64   1.0.22-3.el6              core                        369 k
+ argus-pap                     noarch   1.6.0-1.el6               EMI-3-testing-base           16 M
+ argus-pdp                     noarch   1.6.0-1.el6               EMI-3-testing-base           12 M
+ argus-pdp-pep-common          noarch   1.4.0-2.el6               EMI-3-testing-base           77 k
+ argus-pep-api-c               x86_64   2.2.0-1.el6               EMI-3-testing-base           49 k
+ argus-pep-common              noarch   2.3.0-1.el6               EMI-3-testing-base          264 k
+ argus-pep-server              noarch   1.6.0-3.el6               EMI-3-testing-base           13 M
+ argus-pepcli                  x86_64   2.2.0-1.el6               EMI-3-testing-base           21 k
+ at                            x86_64   3.1.10-43.el6_2.1         core                         59 k
+ attr                          x86_64   2.4.44-7.el6              core                         59 k
+ audit                         x86_64   2.2-2.el6                 core                        224 k
+ audit-libs                    x86_64   2.2-2.el6                 core                         59 k
+ audit-libs-python             x86_64   2.2-2.el6                 core                         58 k
+ authconfig                    x86_64   6.1.12-10.el6             core                        370 k
+ bash                          x86_64   4.1.2-9.el6_2             core                        902 k
+ bdii                          noarch   5.2.17-1.el6              EMI-3-testing-base           23 k
+ bfa-firmware                  noarch   3.0.0.0-1.el6             core                        441 k
+ binutils                      x86_64   2.20.51.0.2-5.34.el6      core                        2.8 M
+ chkconfig                     x86_64   1.3.49.3-2.el6            core                        158 k
+ coreutils                     x86_64   8.4-19.el6                core                        3.0 M
+ coreutils-libs                x86_64   8.4-19.el6                core                         46 k
+ cpio                          x86_64   2.10-10.el6               core                        190 k
+ cronie                        x86_64   1.4.4-7.el6               core                         70 k
+ cronie-anacron                x86_64   1.4.4-7.el6               core                         28 k
+ crontabs                      noarch   1.10-33.el6               core                        9.3 k
+ cups-libs                     x86_64   1:1.4.2-48.el6            core                        315 k
+ curl                          x86_64   7.19.7-26.el6_2.4         core                        191 k
+ cyrus-sasl                    x86_64   2.1.23-13.el6             core                         77 k
+ cyrus-sasl-lib                x86_64   2.1.23-13.el6             core                        135 k
+ db4                           x86_64   4.7.25-17.el6             core                        562 k
+ db4-utils                     x86_64   4.7.25-17.el6             core                        129 k
+ device-mapper                 x86_64   1.02.74-10.el6            core                        134 k
+ device-mapper-event           x86_64   1.02.74-10.el6            core                         87 k
+ device-mapper-event-libs      x86_64   1.02.74-10.el6            core                         82 k
+ device-mapper-libs            x86_64   1.02.74-10.el6            core                        161 k
+ dracut                        noarch   004-283.el6               core                        111 k
+ dracut-kernel                 noarch   004-283.el6               core                         20 k
+ e2fsprogs                     x86_64   1.41.12-12.el6            core                        550 k
+ e2fsprogs-libs                x86_64   1.41.12-12.el6            core                        118 k
+ efibootmgr                    x86_64   0.5.4-10.el6              core                         37 k
+ emi-argus                     noarch   1.6.0-1.el6               EMI-3-testing-base          2.5 k
+ emi-release                   noarch   3.0.0-1.el6               EMI-3-testing-base          5.1 k
+ emi-version                   x86_64   3.0.0-0.rc.sl6            EMI-3-testing-base          2.1 k
+ expect                        x86_64   5.44.1.15-4.el6           core                        255 k
+ file                          x86_64   5.04-13.el6               core                         45 k
+ file-libs                     x86_64   5.04-13.el6               core                        309 k
+ filesystem                    x86_64   2.4.30-3.el6              core                        1.0 M
+ gawk                          x86_64   3.1.7-9.el6               core                        773 k
+ glib2                         x86_64   2.22.5-7.el6              core                        1.1 M
+ glite-info-provider-service   noarch   1.12.0-1.el6              EMI-3-testing-base           62 k
+ glite-yaim-bdii               noarch   4.3.13-1.el6              EMI-3-testing-base           11 k
+ glite-yaim-core               noarch   5.1.1-1.sl6               EMI-3-testing-base          102 k
+ glue-schema                   noarch   2.0.10-1.el6              EMI-3-testing-base           31 k
+ gmp                           x86_64   4.3.1-7.el6_2.2           core                        206 k
+ grep                          x86_64   2.6.3-3.el6               core                        227 k
+ grub                          x86_64   1:0.97-77.el6             core                        919 k
+ grubby                        x86_64   7.0.15-3.el6              core                         41 k
+ hwdata                        noarch   0.233-7.8.el6             core                        1.0 M
+ initscripts                   x86_64   9.03.31-2.el6             core                        933 k
+ iproute                       x86_64   2.6.32-20.el6             core                        336 k
+ iptables                      x86_64   1.4.7-5.1.el6_2           core                        245 k
+ iptables-ipv6                 x86_64   1.4.7-5.1.el6_2           core                         92 k
+ iputils                       x86_64   20071127-16.el6           core                        119 k
+ iwl1000-firmware              noarch   1:39.31.5.1-1.el6         core                        188 k
+ iwl5000-firmware              noarch   8.83.5.1_1-1.el6_1.1      core                        269 k
+ iwl6000-firmware              noarch   9.221.4.1-1.el6           core                        141 k
+ iwl6050-firmware              noarch   41.28.5.1-2.el6           core                        217 k
+ keyutils-libs                 x86_64   1.4-4.el6                 core                         19 k
+ less                          x86_64   436-10.el6                core                        106 k
+ libacl                        x86_64   2.2.49-6.el6              core                         23 k
+ libattr                       x86_64   2.4.44-7.el6              core                         14 k
+ libblkid                      x86_64   2.17.2-12.7.el6           core                        111 k
+ libcap-ng                     x86_64   0.6.4-3.el6_0.1           core                         20 k
+ libcgroup                     x86_64   0.37-4.el6                core                        103 k
+ libcom_err                    x86_64   1.41.12-12.el6            core                         35 k
+ libcurl                       x86_64   7.19.7-26.el6_2.4         core                        162 k
+ libgcc                        x86_64   4.4.6-4.el6               core                         99 k
+ libgcj                        x86_64   4.4.6-4.el6               core                         19 M
+ libgcrypt                     x86_64   1.4.5-9.el6_2.2           core                        227 k
+ libgomp                       x86_64   4.4.6-4.el6               core                        116 k
+ libgpg-error                  x86_64   1.7-4.el6                 core                         58 k
+ libnih                        x86_64   1.0.1-7.el6               core                        137 k
+ libselinux                    x86_64   2.0.94-5.3.el6            core                        106 k
+ libselinux-python             x86_64   2.0.94-5.3.el6            core                        201 k
+ libselinux-utils              x86_64   2.0.94-5.3.el6            core                         80 k
+ libsemanage                   x86_64   2.0.43-4.1.el6            core                        103 k
+ libsemanage-python            x86_64   2.0.43-4.1.el6            core                         80 k
+ libsepol                      x86_64   2.0.41-4.el6              core                        127 k
+ libsndfile                    x86_64   1.0.20-5.el6              core                        232 k
+ libss                         x86_64   1.41.12-12.el6            core                         39 k
+ libssh2                       x86_64   1.2.2-7.el6_2.3           core                         74 k
+ libstdc++                     x86_64   4.4.6-4.el6               core                        291 k
+ libudev                       x86_64   147-2.41.el6              core                         74 k
+ libuser                       x86_64   0.56.13-5.el6             core                        367 k
+ libuuid                       x86_64   2.17.2-12.7.el6           core                         64 k
+ logrotate                     x86_64   3.7.8-15.el6              core                         54 k
+ lvm2                          x86_64   2.02.95-10.el6            core                        612 k
+ lvm2-libs                     x86_64   2.02.95-10.el6            core                        677 k
+ mailcap                       noarch   2.1.31-2.el6              core                         26 k
+ make                          x86_64   1:3.81-20.el6             core                        388 k
+ man                           x86_64   1.6f-30.el6               core                        262 k
+ mingetty                      x86_64   1.08-5.el6                core                         20 k
+ module-init-tools             x86_64   3.9-20.el6                core                        463 k
+ net-tools                     x86_64   1.60-110.el6_2            core                        267 k
+ newt                          x86_64   0.52.11-3.el6             core                         96 k
+ newt-python                   x86_64   0.52.11-3.el6             core                         47 k
+ nss-softokn                   x86_64   3.12.9-11.el6             core                        169 k
+ nss-softokn-freebl            i686     3.12.9-11.el6             core                        115 k
+ nss-softokn-freebl            x86_64   3.12.9-11.el6             core                        122 k
+ pam                           x86_64   1.1.1-10.el6_2.1          core                        655 k
+ passwd                        x86_64   0.77-4.el6_2.2            core                         88 k
+ pciutils-libs                 x86_64   3.1.4-11.el6              core                         33 k
+ pcre                          x86_64   7.8-4.el6                 core                        194 k
+ perl                          x86_64   4:5.10.1-127.el6          core                         10 M
+ perl-Compress-Raw-Zlib        x86_64   1:2.020-127.el6           core                         67 k
+ perl-Compress-Zlib            x86_64   2.020-127.el6             core                         42 k
+ perl-IO-Compress-Base         x86_64   2.020-127.el6             core                         66 k
+ perl-IO-Compress-Zlib         x86_64   2.020-127.el6             core                        133 k
+ perl-Module-Pluggable         x86_64   1:3.90-127.el6            core                         37 k
+ perl-Pod-Escapes              x86_64   1:1.04-127.el6            core                         30 k
+ perl-Pod-Simple               x86_64   1:3.13-127.el6            core                        209 k
+ perl-libs                     x86_64   4:5.10.1-127.el6          core                        575 k
+ perl-version                  x86_64   3:0.77-127.el6            core                         48 k
+ pinentry                      x86_64   0.7.6-6.el6               core                         64 k
+ plymouth                      x86_64   0.8.3-24.sl6              core                         88 k
+ plymouth-core-libs            x86_64   0.8.3-24.sl6              core                         87 k
+ plymouth-scripts              x86_64   0.8.3-24.sl6              core                         30 k
+ policycoreutils               x86_64   2.0.83-19.24.el6          core                        645 k
+ policycoreutils-python        x86_64   2.0.83-19.24.el6          core                        339 k
+ portreserve                   x86_64   0.0.4-9.el6               core                         22 k
+ procps                        x86_64   3.2.8-23.el6              core                        211 k
+ psmisc                        x86_64   22.6-15.el6_0.1           core                         80 k
+ python-pycurl                 x86_64   7.19.0-8.el6              core                         76 k
+ python-urlgrabber             noarch   3.9.1-8.el6               core                         84 k
+ ql2400-firmware               noarch   5.06.05-1.el6             core                         91 k
+ ql2500-firmware               noarch   5.06.05-1.el6             core                        110 k
+ readline                      x86_64   6.0-4.el6                 core                        177 k
+ redhat-logos                  noarch   60.0.14-2.sl6.5           core                        8.3 M
+ redhat-lsb                    x86_64   4.0-3.el6                 core                         23 k
+ rpm                           x86_64   4.8.0-27.el6              core                        898 k
+ rpm-libs                      x86_64   4.8.0-27.el6              core                        309 k
+ rpm-python                    x86_64   4.8.0-27.el6              core                         54 k
+ sed                           x86_64   4.2.1-10.el6              core                        215 k
+ setup                         noarch   2.8.14-16.el6             core                        149 k
+ shadow-utils                  x86_64   2:4.1.4.2-13.el6          core                        896 k
+ sl-release                    x86_64   6.3-1                     core                         35 k
+ system-config-firewall-base   noarch   1.2.27-5.el6              core                        417 k
+ sysvinit-tools                x86_64   2.87-4.dsf.el6            core                         58 k
+ tar                           x86_64   2:1.23-7.el6              core                        807 k
+ tcp_wrappers-libs             x86_64   7.6-57.el6                core                         61 k
+ udev                          x86_64   147-2.41.el6              core                        360 k
+ upstart                       x86_64   0.6.5-12.el6              core                        175 k
+ util-linux-ng                 x86_64   2.17.2-12.7.el6           core                        1.5 M
+ vim-minimal                   x86_64   2:7.2.411-1.8.el6         core                        363 k
+ which                         x86_64   2.19-6.el6                core                         38 k
+ yaim-argus_server             noarch   1.6.0-1.el6               EMI-3-testing-base           15 k
+ yum                           noarch   3.2.29-30.el6             core                        989 k
+ yum-metadata-parser           x86_64   1.1.2-16.el6              core                         26 k
+ yum-plugin-priorities         noarch   1.1.30-14.el6             core                         21 k
+ yum-plugin-protectbase        noarch   1.1.30-14.el6             core                         19 k
+ yum-plugin-security           noarch   1.1.30-14.el6             core                         37 k
+ zlib                          x86_64   1.2.3-27.el6              core                         71 k
+Installing for dependencies:
+ apache-tomcat-apis            noarch   0.1-1.el6                 core                        163 k
+ axis2                         noarch   1.6.1-1.emi               EMI-3-testing-third-party    19 M
+ bcel                          x86_64   5.2-7.2.el6               core                        1.4 M
+ bouncycastle-mail             noarch   1.46-1.sl6                EMI-3-testing-third-party   468 k
+ canl-java                     noarch   1.1.0-1.sl6               EMI-3-testing-base          261 k
+ cdparanoia-libs               x86_64   10.2-5.1.el6              core                         47 k
+ cups                          x86_64   1:1.4.2-48.el6            core                        2.3 M
+ dbus                          x86_64   1:1.2.24-7.el6_3          sl-security                 206 k
+ ecj                           x86_64   1:3.4.2-6.el6             core                        2.8 M
+ flac                          x86_64   1.2.1-6.1.el6             core                        242 k
+ foomatic                      x86_64   4.0.4-1.el6_1.1           core                        250 k
+ foomatic-db                   noarch   4.0-7.20091126.el6        core                        979 k
+ foomatic-db-filesystem        noarch   4.0-7.20091126.el6        core                        3.4 k
+ foomatic-db-ppds              noarch   4.0-7.20091126.el6        core                         19 M
+ geronimo-specs                noarch   1.0-3.4.M2.el6            core                        109 k
+ geronimo-specs-compat         noarch   1.0-3.4.M2.el6            core                        6.0 k
+ ghostscript                   x86_64   8.70-14.el6_3.1           sl-security                 4.4 M
+ ghostscript-fonts             noarch   5.50-23.1.el6             core                        749 k
+ gstreamer                     x86_64   0.10.29-1.el6             core                        763 k
+ gstreamer-plugins-base        x86_64   0.10.29-1.el6             core                        942 k
+ gstreamer-tools               x86_64   0.10.29-1.el6             core                         22 k
+ iso-codes                     noarch   3.16-2.el6                core                        2.4 M
+ jakarta-commons-collections   noarch   3.2.1-3.4.el6             core                        522 k
+ jakarta-commons-daemon        x86_64   1:1.0.1-8.9.el6           core                         44 k
+ jakarta-commons-dbcp          noarch   1.2.1-13.8.el6            core                        115 k
+ jakarta-commons-io            noarch   1.4-3.el6                 core                        104 k
+ jakarta-commons-pool          x86_64   1.3-12.7.el6              core                        121 k
+ jclassads                     noarch   2.4.0-3.sl6               EMI-3-testing-third-party    95 k
+ lcms-libs                     x86_64   1.19-1.el6                core                         99 k
+ libXfont                      x86_64   1.4.1-2.el6_1             core                        127 k
+ libXt                         x86_64   1.0.7-1.el6               core                        173 k
+ libXv                         x86_64   1.0.5-1.el6               core                         20 k
+ libXxf86vm                    x86_64   1.1.0-1.el6               core                         18 k
+ libfontenc                    x86_64   1.0.5-2.el6               core                         24 k
+ libgudev1                     x86_64   147-2.41.el6              core                         58 k
+ libmng                        x86_64   1.0.10-4.1.el6            core                        164 k
+ libogg                        x86_64   2:1.1.4-2.1.el6           core                         20 k
+ liboil                        x86_64   0.3.16-4.1.el6            core                        120 k
+ libtheora                     x86_64   1:1.1.0-2.el6             core                        128 k
+ libvisual                     x86_64   0.4.0-9.1.el6             core                        134 k
+ libvorbis                     x86_64   1:1.2.3-4.el6_2.1         core                        167 k
+ mesa-dri-drivers              x86_64   7.11-5.el6                core                         11 M
+ mesa-libGL                    x86_64   7.11-5.el6                core                        144 k
+ mesa-libGLU                   x86_64   7.11-5.el6                core                        200 k
+ mx4j                          noarch   1:3.0.1-9.13.el6          core                        1.1 M
+ mysql-connector-java          noarch   1:5.1.17-6.el6            core                        1.4 M
+ openjpeg-libs                 x86_64   1.3-9.el6_3               sl-security                  58 k
+ perl-CGI                      x86_64   3.51-127.el6              core                        206 k
+ perl-ExtUtils-MakeMaker       x86_64   6.55-127.el6              core                        290 k
+ perl-ExtUtils-ParseXS         x86_64   1:2.2003.0-127.el6        core                         42 k
+ perl-Test-Harness             x86_64   3.17-127.el6              core                        229 k
+ perl-Test-Simple              x86_64   0.92-127.el6              core                        110 k
+ perl-devel                    x86_64   4:5.10.1-127.el6          core                        420 k
+ phonon-backend-gstreamer      x86_64   1:4.6.2-24.el6            core                        125 k
+ pkgconfig                     x86_64   1:0.23-9.1.el6            core                         69 k
+ poppler                       x86_64   0.12.4-3.el6_0.1          core                        556 k
+ poppler-data                  noarch   0.4.0-1.el6               core                        2.2 M
+ poppler-utils                 x86_64   0.12.4-3.el6_0.1          core                         72 k
+ qt                            x86_64   1:4.6.2-24.el6            core                        4.0 M
+ qt-sqlite                     x86_64   1:4.6.2-24.el6            core                         50 k
+ qt-x11                        x86_64   1:4.6.2-24.el6            core                         12 M
+ qt3                           x86_64   3.3.8b-30.el6             core                        3.5 M
+ redhat-lsb-graphics           x86_64   4.0-3.el6                 core                         11 k
+ redhat-lsb-printing           x86_64   4.0-3.el6                 core                        9.6 k
+ regexp                        x86_64   1.5-4.4.el6               core                        104 k
+ slf4j                         noarch   1.5.8-7.el6               core                        131 k
+ tmpwatch                      x86_64   2.9.16-4.el6              core                         30 k
+ tomcat6                       noarch   6.0.24-45.el6             core                         86 k
+ tomcat6-el-2.1-api            noarch   6.0.24-45.el6             core                         42 k
+ tomcat6-jsp-2.1-api           noarch   6.0.24-45.el6             core                         79 k
+ tomcat6-lib                   noarch   6.0.24-45.el6             core                        2.8 M
+ tomcat6-servlet-2.5-api       noarch   6.0.24-45.el6             core                         93 k
+ urw-fonts                     noarch   2.4-10.el6                core                        3.0 M
+ voms-api-java3                noarch   3.0.0-1.el6               EMI-3-testing-base          118 k
+ xml-common                    noarch   0.6.3-32.el6              core                        8.4 k
+ xml-commons-resolver          x86_64   1.1-4.18.el6              core                        144 k
+ xorg-x11-font-utils           x86_64   1:7.2-11.el6              core                         74 k
+
+Transaction Summary
+====================================================================================================
+Install      78 Package(s)
+Upgrade     163 Package(s)
+
+Total download size: 220 M
+Is this ok [y/N]: y
+Downloading Packages:
+(1/241): acl-2.2.49-6.el6.x86_64.rpm                                         |  74 kB     00:00     
+(2/241): alsa-lib-1.0.22-3.el6.x86_64.rpm                                    | 369 kB     00:00     
+(3/241): apache-tomcat-apis-0.1-1.el6.noarch.rpm                             | 163 kB     00:00     
+(4/241): argus-pap-1.6.0-1.el6.noarch.rpm                                    |  16 MB     00:00     
+(5/241): argus-pdp-1.6.0-1.el6.noarch.rpm                                    |  12 MB     00:00     
+(6/241): argus-pdp-pep-common-1.4.0-2.el6.noarch.rpm                         |  77 kB     00:00     
+(7/241): argus-pep-api-c-2.2.0-1.el6.x86_64.rpm                              |  49 kB     00:00     
+(8/241): argus-pep-common-2.3.0-1.el6.noarch.rpm                             | 264 kB     00:00     
+(9/241): argus-pep-server-1.6.0-3.el6.noarch.rpm                             |  13 MB     00:00     
+(10/241): argus-pepcli-2.2.0-1.el6.x86_64.rpm                                |  21 kB     00:00     
+(11/241): at-3.1.10-43.el6_2.1.x86_64.rpm                                    |  59 kB     00:00     
+(12/241): attr-2.4.44-7.el6.x86_64.rpm                                       |  59 kB     00:00     
+(13/241): audit-2.2-2.el6.x86_64.rpm                                         | 224 kB     00:00     
+(14/241): audit-libs-2.2-2.el6.x86_64.rpm                                    |  59 kB     00:00     
+(15/241): audit-libs-python-2.2-2.el6.x86_64.rpm                             |  58 kB     00:00     
+(16/241): authconfig-6.1.12-10.el6.x86_64.rpm                                | 370 kB     00:00     
+(17/241): axis2-1.6.1-1.emi.noarch.rpm                                       |  19 MB     00:00     
+(18/241): bash-4.1.2-9.el6_2.x86_64.rpm                                      | 902 kB     00:00     
+(19/241): bcel-5.2-7.2.el6.x86_64.rpm                                        | 1.4 MB     00:00     
+(20/241): bdii-5.2.17-1.el6.noarch.rpm                                       |  23 kB     00:00     
+(21/241): bfa-firmware-3.0.0.0-1.el6.noarch.rpm                              | 441 kB     00:00     
+(22/241): binutils-2.20.51.0.2-5.34.el6.x86_64.rpm                           | 2.8 MB     00:00     
+(23/241): bouncycastle-mail-1.46-1.sl6.noarch.rpm                            | 468 kB     00:00     
+(24/241): canl-java-1.1.0-1.sl6.noarch.rpm                                   | 261 kB     00:00     
+(25/241): cdparanoia-libs-10.2-5.1.el6.x86_64.rpm                            |  47 kB     00:00     
+(26/241): chkconfig-1.3.49.3-2.el6.x86_64.rpm                                | 158 kB     00:00     
+(27/241): coreutils-8.4-19.el6.x86_64.rpm                                    | 3.0 MB     00:00     
+(28/241): coreutils-libs-8.4-19.el6.x86_64.rpm                               |  46 kB     00:00     
+(29/241): cpio-2.10-10.el6.x86_64.rpm                                        | 190 kB     00:00     
+(30/241): cronie-1.4.4-7.el6.x86_64.rpm                                      |  70 kB     00:00     
+(31/241): cronie-anacron-1.4.4-7.el6.x86_64.rpm                              |  28 kB     00:00     
+(32/241): crontabs-1.10-33.el6.noarch.rpm                                    | 9.3 kB     00:00     
+(33/241): cups-1.4.2-48.el6.x86_64.rpm                                       | 2.3 MB     00:00     
+(34/241): cups-libs-1.4.2-48.el6.x86_64.rpm                                  | 315 kB     00:00     
+(35/241): curl-7.19.7-26.el6_2.4.x86_64.rpm                                  | 191 kB     00:00     
+(36/241): cyrus-sasl-2.1.23-13.el6.x86_64.rpm                                |  77 kB     00:00     
+(37/241): cyrus-sasl-lib-2.1.23-13.el6.x86_64.rpm                            | 135 kB     00:00     
+(38/241): db4-4.7.25-17.el6.x86_64.rpm                                       | 562 kB     00:00     
+(39/241): db4-utils-4.7.25-17.el6.x86_64.rpm                                 | 129 kB     00:00     
+(40/241): dbus-1.2.24-7.el6_3.x86_64.rpm                                     | 206 kB     00:00     
+(41/241): device-mapper-1.02.74-10.el6.x86_64.rpm                            | 134 kB     00:00     
+(42/241): device-mapper-event-1.02.74-10.el6.x86_64.rpm                      |  87 kB     00:00     
+(43/241): device-mapper-event-libs-1.02.74-10.el6.x86_64.rpm                 |  82 kB     00:00     
+(44/241): device-mapper-libs-1.02.74-10.el6.x86_64.rpm                       | 161 kB     00:00     
+(45/241): dracut-004-283.el6.noarch.rpm                                      | 111 kB     00:00     
+(46/241): dracut-kernel-004-283.el6.noarch.rpm                               |  20 kB     00:00     
+(47/241): e2fsprogs-1.41.12-12.el6.x86_64.rpm                                | 550 kB     00:00     
+(48/241): e2fsprogs-libs-1.41.12-12.el6.x86_64.rpm                           | 118 kB     00:00     
+(49/241): ecj-3.4.2-6.el6.x86_64.rpm                                         | 2.8 MB     00:00     
+(50/241): efibootmgr-0.5.4-10.el6.x86_64.rpm                                 |  37 kB     00:00     
+(51/241): emi-argus-1.6.0-1.el6.noarch.rpm                                   | 2.5 kB     00:00     
+(52/241): emi-release-3.0.0-1.el6.noarch.rpm                                 | 5.1 kB     00:00     
+(53/241): emi-version-3.0.0-0.rc.sl6.x86_64.rpm                              | 2.1 kB     00:00     
+(54/241): expect-5.44.1.15-4.el6.x86_64.rpm                                  | 255 kB     00:00     
+(55/241): file-5.04-13.el6.x86_64.rpm                                        |  45 kB     00:00     
+(56/241): file-libs-5.04-13.el6.x86_64.rpm                                   | 309 kB     00:00     
+(57/241): filesystem-2.4.30-3.el6.x86_64.rpm                                 | 1.0 MB     00:00     
+(58/241): flac-1.2.1-6.1.el6.x86_64.rpm                                      | 242 kB     00:00     
+(59/241): foomatic-4.0.4-1.el6_1.1.x86_64.rpm                                | 250 kB     00:00     
+(60/241): foomatic-db-4.0-7.20091126.el6.noarch.rpm                          | 979 kB     00:00     
+(61/241): foomatic-db-filesystem-4.0-7.20091126.el6.noarch.rpm               | 3.4 kB     00:00     
+(62/241): foomatic-db-ppds-4.0-7.20091126.el6.noarch.rpm                     |  19 MB     00:00     
+(63/241): gawk-3.1.7-9.el6.x86_64.rpm                                        | 773 kB     00:00     
+(64/241): geronimo-specs-1.0-3.4.M2.el6.noarch.rpm                           | 109 kB     00:00     
+(65/241): geronimo-specs-compat-1.0-3.4.M2.el6.noarch.rpm                    | 6.0 kB     00:00     
+(66/241): ghostscript-8.70-14.el6_3.1.x86_64.rpm                             | 4.4 MB     00:03     
+(67/241): ghostscript-fonts-5.50-23.1.el6.noarch.rpm                         | 749 kB     00:00     
+(68/241): glib2-2.22.5-7.el6.x86_64.rpm                                      | 1.1 MB     00:00     
+(69/241): glite-ce-common-java-1.15.1-2.sl6.noarch.rpm                       | 632 kB     00:00     
+(70/241): glite-info-provider-service-1.12.0-1.el6.noarch.rpm                |  62 kB     00:00     
+(71/241): glite-yaim-bdii-4.3.13-1.el6.noarch.rpm                            |  11 kB     00:00     
+(72/241): glite-yaim-core-5.1.1-1.sl6.noarch.rpm                             | 102 kB     00:00     
+(73/241): glue-schema-2.0.10-1.el6.noarch.rpm                                |  31 kB     00:00     
+(74/241): gmp-4.3.1-7.el6_2.2.x86_64.rpm                                     | 206 kB     00:00     
+(75/241): grep-2.6.3-3.el6.x86_64.rpm                                        | 227 kB     00:00     
+(76/241): grub-0.97-77.el6.x86_64.rpm                                        | 919 kB     00:00     
+(77/241): grubby-7.0.15-3.el6.x86_64.rpm                                     |  41 kB     00:00     
+(78/241): gstreamer-0.10.29-1.el6.x86_64.rpm                                 | 763 kB     00:00     
+(79/241): gstreamer-plugins-base-0.10.29-1.el6.x86_64.rpm                    | 942 kB     00:00     
+(80/241): gstreamer-tools-0.10.29-1.el6.x86_64.rpm                           |  22 kB     00:00     
+(81/241): hwdata-0.233-7.8.el6.noarch.rpm                                    | 1.0 MB     00:00     
+(82/241): initscripts-9.03.31-2.el6.x86_64.rpm                               | 933 kB     00:00     
+(83/241): iproute-2.6.32-20.el6.x86_64.rpm                                   | 336 kB     00:00     
+(84/241): iptables-1.4.7-5.1.el6_2.x86_64.rpm                                | 245 kB     00:00     
+(85/241): iptables-ipv6-1.4.7-5.1.el6_2.x86_64.rpm                           |  92 kB     00:00     
+(86/241): iputils-20071127-16.el6.x86_64.rpm                                 | 119 kB     00:00     
+(87/241): iso-codes-3.16-2.el6.noarch.rpm                                    | 2.4 MB     00:00     
+(88/241): iwl1000-firmware-39.31.5.1-1.el6.noarch.rpm                        | 188 kB     00:00     
+(89/241): iwl5000-firmware-8.83.5.1_1-1.el6_1.1.noarch.rpm                   | 269 kB     00:00     
+(90/241): iwl6000-firmware-9.221.4.1-1.el6.noarch.rpm                        | 141 kB     00:00     
+(91/241): iwl6050-firmware-41.28.5.1-2.el6.noarch.rpm                        | 217 kB     00:00     
+(92/241): jakarta-commons-collections-3.2.1-3.4.el6.noarch.rpm               | 522 kB     00:00     
+(93/241): jakarta-commons-daemon-1.0.1-8.9.el6.x86_64.rpm                    |  44 kB     00:00     
+(94/241): jakarta-commons-dbcp-1.2.1-13.8.el6.noarch.rpm                     | 115 kB     00:00     
+(95/241): jakarta-commons-io-1.4-3.el6.noarch.rpm                            | 104 kB     00:00     
+(96/241): jakarta-commons-pool-1.3-12.7.el6.x86_64.rpm                       | 121 kB     00:00     
+(97/241): jclassads-2.4.0-3.sl6.noarch.rpm                                   |  95 kB     00:00     
+(98/241): keyutils-libs-1.4-4.el6.x86_64.rpm                                 |  19 kB     00:00     
+(99/241): lcms-libs-1.19-1.el6.x86_64.rpm                                    |  99 kB     00:00     
+(100/241): less-436-10.el6.x86_64.rpm                                        | 106 kB     00:00     
+(101/241): libXfont-1.4.1-2.el6_1.x86_64.rpm                                 | 127 kB     00:00     
+(102/241): libXt-1.0.7-1.el6.x86_64.rpm                                      | 173 kB     00:00     
+(103/241): libXv-1.0.5-1.el6.x86_64.rpm                                      |  20 kB     00:00     
+(104/241): libXxf86vm-1.1.0-1.el6.x86_64.rpm                                 |  18 kB     00:00     
+(105/241): libacl-2.2.49-6.el6.x86_64.rpm                                    |  23 kB     00:00     
+(106/241): libattr-2.4.44-7.el6.x86_64.rpm                                   |  14 kB     00:00     
+(107/241): libblkid-2.17.2-12.7.el6.x86_64.rpm                               | 111 kB     00:00     
+(108/241): libcap-ng-0.6.4-3.el6_0.1.x86_64.rpm                              |  20 kB     00:00     
+(109/241): libcgroup-0.37-4.el6.x86_64.rpm                                   | 103 kB     00:00     
+(110/241): libcom_err-1.41.12-12.el6.x86_64.rpm                              |  35 kB     00:00     
+(111/241): libcurl-7.19.7-26.el6_2.4.x86_64.rpm                              | 162 kB     00:00     
+(112/241): libfontenc-1.0.5-2.el6.x86_64.rpm                                 |  24 kB     00:00     
+(113/241): libgcc-4.4.6-4.el6.x86_64.rpm                                     |  99 kB     00:00     
+(114/241): libgcj-4.4.6-4.el6.x86_64.rpm                                     |  19 MB     00:00     
+(115/241): libgcrypt-1.4.5-9.el6_2.2.x86_64.rpm                              | 227 kB     00:00     
+(116/241): libgomp-4.4.6-4.el6.x86_64.rpm                                    | 116 kB     00:00     
+(117/241): libgpg-error-1.7-4.el6.x86_64.rpm                                 |  58 kB     00:00     
+(118/241): libgudev1-147-2.41.el6.x86_64.rpm                                 |  58 kB     00:00     
+(119/241): libmng-1.0.10-4.1.el6.x86_64.rpm                                  | 164 kB     00:00     
+(120/241): libnih-1.0.1-7.el6.x86_64.rpm                                     | 137 kB     00:00     
+(121/241): libogg-1.1.4-2.1.el6.x86_64.rpm                                   |  20 kB     00:00     
+(122/241): liboil-0.3.16-4.1.el6.x86_64.rpm                                  | 120 kB     00:00     
+(123/241): libselinux-2.0.94-5.3.el6.x86_64.rpm                              | 106 kB     00:00     
+(124/241): libselinux-python-2.0.94-5.3.el6.x86_64.rpm                       | 201 kB     00:00     
+(125/241): libselinux-utils-2.0.94-5.3.el6.x86_64.rpm                        |  80 kB     00:00     
+(126/241): libsemanage-2.0.43-4.1.el6.x86_64.rpm                             | 103 kB     00:00     
+(127/241): libsemanage-python-2.0.43-4.1.el6.x86_64.rpm                      |  80 kB     00:00     
+(128/241): libsepol-2.0.41-4.el6.x86_64.rpm                                  | 127 kB     00:00     
+(129/241): libsndfile-1.0.20-5.el6.x86_64.rpm                                | 232 kB     00:00     
+(130/241): libss-1.41.12-12.el6.x86_64.rpm                                   |  39 kB     00:00     
+(131/241): libssh2-1.2.2-7.el6_2.3.x86_64.rpm                                |  74 kB     00:00     
+(132/241): libstdc++-4.4.6-4.el6.x86_64.rpm                                  | 291 kB     00:00     
+(133/241): libtheora-1.1.0-2.el6.x86_64.rpm                                  | 128 kB     00:00     
+(134/241): libudev-147-2.41.el6.x86_64.rpm                                   |  74 kB     00:00     
+(135/241): libuser-0.56.13-5.el6.x86_64.rpm                                  | 367 kB     00:00     
+(136/241): libuuid-2.17.2-12.7.el6.x86_64.rpm                                |  64 kB     00:00     
+(137/241): libvisual-0.4.0-9.1.el6.x86_64.rpm                                | 134 kB     00:00     
+(138/241): libvorbis-1.2.3-4.el6_2.1.x86_64.rpm                              | 167 kB     00:00     
+(139/241): logrotate-3.7.8-15.el6.x86_64.rpm                                 |  54 kB     00:00     
+(140/241): lvm2-2.02.95-10.el6.x86_64.rpm                                    | 612 kB     00:00     
+(141/241): lvm2-libs-2.02.95-10.el6.x86_64.rpm                               | 677 kB     00:00     
+(142/241): mailcap-2.1.31-2.el6.noarch.rpm                                   |  26 kB     00:00     
+(143/241): make-3.81-20.el6.x86_64.rpm                                       | 388 kB     00:00     
+(144/241): man-1.6f-30.el6.x86_64.rpm                                        | 262 kB     00:00     
+(145/241): mesa-dri-drivers-7.11-5.el6.x86_64.rpm                            |  11 MB     00:00     
+(146/241): mesa-libGL-7.11-5.el6.x86_64.rpm                                  | 144 kB     00:00     
+(147/241): mesa-libGLU-7.11-5.el6.x86_64.rpm                                 | 200 kB     00:00     
+(148/241): mingetty-1.08-5.el6.x86_64.rpm                                    |  20 kB     00:00     
+(149/241): module-init-tools-3.9-20.el6.x86_64.rpm                           | 463 kB     00:00     
+(150/241): mx4j-3.0.1-9.13.el6.noarch.rpm                                    | 1.1 MB     00:00     
+(151/241): mysql-connector-java-5.1.17-6.el6.noarch.rpm                      | 1.4 MB     00:00     
+(152/241): net-tools-1.60-110.el6_2.x86_64.rpm                               | 267 kB     00:00     
+(153/241): newt-0.52.11-3.el6.x86_64.rpm                                     |  96 kB     00:00     
+(154/241): newt-python-0.52.11-3.el6.x86_64.rpm                              |  47 kB     00:00     
+(155/241): nss-softokn-3.12.9-11.el6.x86_64.rpm                              | 169 kB     00:00     
+(156/241): nss-softokn-freebl-3.12.9-11.el6.i686.rpm                         | 115 kB     00:00     
+(157/241): nss-softokn-freebl-3.12.9-11.el6.x86_64.rpm                       | 122 kB     00:00     
+(158/241): openjpeg-libs-1.3-9.el6_3.x86_64.rpm                              |  58 kB     00:00     
+(159/241): pam-1.1.1-10.el6_2.1.x86_64.rpm                                   | 655 kB     00:00     
+(160/241): passwd-0.77-4.el6_2.2.x86_64.rpm                                  |  88 kB     00:00     
+(161/241): pciutils-libs-3.1.4-11.el6.x86_64.rpm                             |  33 kB     00:00     
+(162/241): pcre-7.8-4.el6.x86_64.rpm                                         | 194 kB     00:00     
+(163/241): perl-5.10.1-127.el6.x86_64.rpm                                    |  10 MB     00:00     
+(164/241): perl-CGI-3.51-127.el6.x86_64.rpm                                  | 206 kB     00:00     
+(165/241): perl-Compress-Raw-Zlib-2.020-127.el6.x86_64.rpm                   |  67 kB     00:00     
+(166/241): perl-Compress-Zlib-2.020-127.el6.x86_64.rpm                       |  42 kB     00:00     
+(167/241): perl-ExtUtils-MakeMaker-6.55-127.el6.x86_64.rpm                   | 290 kB     00:00     
+(168/241): perl-ExtUtils-ParseXS-2.2003.0-127.el6.x86_64.rpm                 |  42 kB     00:00     
+(169/241): perl-IO-Compress-Base-2.020-127.el6.x86_64.rpm                    |  66 kB     00:00     
+(170/241): perl-IO-Compress-Zlib-2.020-127.el6.x86_64.rpm                    | 133 kB     00:00     
+(171/241): perl-Module-Pluggable-3.90-127.el6.x86_64.rpm                     |  37 kB     00:00     
+(172/241): perl-Pod-Escapes-1.04-127.el6.x86_64.rpm                          |  30 kB     00:00     
+(173/241): perl-Pod-Simple-3.13-127.el6.x86_64.rpm                           | 209 kB     00:00     
+(174/241): perl-Test-Harness-3.17-127.el6.x86_64.rpm                         | 229 kB     00:00     
+(175/241): perl-Test-Simple-0.92-127.el6.x86_64.rpm                          | 110 kB     00:00     
+(176/241): perl-devel-5.10.1-127.el6.x86_64.rpm                              | 420 kB     00:00     
+(177/241): perl-libs-5.10.1-127.el6.x86_64.rpm                               | 575 kB     00:00     
+(178/241): perl-version-0.77-127.el6.x86_64.rpm                              |  48 kB     00:00     
+(179/241): phonon-backend-gstreamer-4.6.2-24.el6.x86_64.rpm                  | 125 kB     00:00     
+(180/241): pinentry-0.7.6-6.el6.x86_64.rpm                                   |  64 kB     00:00     
+(181/241): pkgconfig-0.23-9.1.el6.x86_64.rpm                                 |  69 kB     00:00     
+(182/241): plymouth-0.8.3-24.sl6.x86_64.rpm                                  |  88 kB     00:00     
+(183/241): plymouth-core-libs-0.8.3-24.sl6.x86_64.rpm                        |  87 kB     00:00     
+(184/241): plymouth-scripts-0.8.3-24.sl6.x86_64.rpm                          |  30 kB     00:00     
+(185/241): policycoreutils-2.0.83-19.24.el6.x86_64.rpm                       | 645 kB     00:00     
+(186/241): policycoreutils-python-2.0.83-19.24.el6.x86_64.rpm                | 339 kB     00:00     
+(187/241): poppler-0.12.4-3.el6_0.1.x86_64.rpm                               | 556 kB     00:00     
+(188/241): poppler-data-0.4.0-1.el6.noarch.rpm                               | 2.2 MB     00:00     
+(189/241): poppler-utils-0.12.4-3.el6_0.1.x86_64.rpm                         |  72 kB     00:00     
+(190/241): portreserve-0.0.4-9.el6.x86_64.rpm                                |  22 kB     00:00     
+(191/241): procps-3.2.8-23.el6.x86_64.rpm                                    | 211 kB     00:00     
+(192/241): psmisc-22.6-15.el6_0.1.x86_64.rpm                                 |  80 kB     00:00     
+(193/241): python-pycurl-7.19.0-8.el6.x86_64.rpm                             |  76 kB     00:00     
+(194/241): python-urlgrabber-3.9.1-8.el6.noarch.rpm                          |  84 kB     00:00     
+(195/241): ql2400-firmware-5.06.05-1.el6.noarch.rpm                          |  91 kB     00:00     
+(196/241): ql2500-firmware-5.06.05-1.el6.noarch.rpm                          | 110 kB     00:00     
+(197/241): qt-4.6.2-24.el6.x86_64.rpm                                        | 4.0 MB     00:00     
+(198/241): qt-sqlite-4.6.2-24.el6.x86_64.rpm                                 |  50 kB     00:00     
+(199/241): qt-x11-4.6.2-24.el6.x86_64.rpm                                    |  12 MB     00:00     
+(200/241): qt3-3.3.8b-30.el6.x86_64.rpm                                      | 3.5 MB     00:00     
+(201/241): readline-6.0-4.el6.x86_64.rpm                                     | 177 kB     00:00     
+(202/241): redhat-logos-60.0.14-2.sl6.5.noarch.rpm                           | 8.3 MB     00:00     
+(203/241): redhat-lsb-4.0-3.el6.x86_64.rpm                                   |  23 kB     00:00     
+(204/241): redhat-lsb-graphics-4.0-3.el6.x86_64.rpm                          |  11 kB     00:00     
+(205/241): redhat-lsb-printing-4.0-3.el6.x86_64.rpm                          | 9.6 kB     00:00     
+(206/241): regexp-1.5-4.4.el6.x86_64.rpm                                     | 104 kB     00:00     
+(207/241): rpm-4.8.0-27.el6.x86_64.rpm                                       | 898 kB     00:00     
+(208/241): rpm-libs-4.8.0-27.el6.x86_64.rpm                                  | 309 kB     00:00     
+(209/241): rpm-python-4.8.0-27.el6.x86_64.rpm                                |  54 kB     00:00     
+(210/241): sed-4.2.1-10.el6.x86_64.rpm                                       | 215 kB     00:00     
+(211/241): setup-2.8.14-16.el6.noarch.rpm                                    | 149 kB     00:00     
+(212/241): shadow-utils-4.1.4.2-13.el6.x86_64.rpm                            | 896 kB     00:00     
+(213/241): sl-release-6.3-1.x86_64.rpm                                       |  35 kB     00:00     
+(214/241): slf4j-1.5.8-7.el6.noarch.rpm                                      | 131 kB     00:00     
+(215/241): system-config-firewall-base-1.2.27-5.el6.noarch.rpm               | 417 kB     00:00     
+(216/241): sysvinit-tools-2.87-4.dsf.el6.x86_64.rpm                          |  58 kB     00:00     
+(217/241): tar-1.23-7.el6.x86_64.rpm                                         | 807 kB     00:00     
+(218/241): tcp_wrappers-libs-7.6-57.el6.x86_64.rpm                           |  61 kB     00:00     
+(219/241): tmpwatch-2.9.16-4.el6.x86_64.rpm                                  |  30 kB     00:00     
+(220/241): tomcat6-6.0.24-45.el6.noarch.rpm                                  |  86 kB     00:00     
+(221/241): tomcat6-el-2.1-api-6.0.24-45.el6.noarch.rpm                       |  42 kB     00:00     
+(222/241): tomcat6-jsp-2.1-api-6.0.24-45.el6.noarch.rpm                      |  79 kB     00:00     
+(223/241): tomcat6-lib-6.0.24-45.el6.noarch.rpm                              | 2.8 MB     00:00     
+(224/241): tomcat6-servlet-2.5-api-6.0.24-45.el6.noarch.rpm                  |  93 kB     00:00     
+(225/241): udev-147-2.41.el6.x86_64.rpm                                      | 360 kB     00:00     
+(226/241): upstart-0.6.5-12.el6.x86_64.rpm                                   | 175 kB     00:00     
+(227/241): urw-fonts-2.4-10.el6.noarch.rpm                                   | 3.0 MB     00:00     
+(228/241): util-linux-ng-2.17.2-12.7.el6.x86_64.rpm                          | 1.5 MB     00:00     
+(229/241): vim-minimal-7.2.411-1.8.el6.x86_64.rpm                            | 363 kB     00:00     
+(230/241): voms-api-java3-3.0.0-1.el6.noarch.rpm                             | 118 kB     00:00     
+(231/241): which-2.19-6.el6.x86_64.rpm                                       |  38 kB     00:00     
+(232/241): xml-common-0.6.3-32.el6.noarch.rpm                                | 8.4 kB     00:00     
+(233/241): xml-commons-resolver-1.1-4.18.el6.x86_64.rpm                      | 144 kB     00:00     
+(234/241): xorg-x11-font-utils-7.2-11.el6.x86_64.rpm                         |  74 kB     00:00     
+(235/241): yaim-argus_server-1.6.0-1.el6.noarch.rpm                          |  15 kB     00:00     
+(236/241): yum-3.2.29-30.el6.noarch.rpm                                      | 989 kB     00:00     
+(237/241): yum-metadata-parser-1.1.2-16.el6.x86_64.rpm                       |  26 kB     00:00     
+(238/241): yum-plugin-priorities-1.1.30-14.el6.noarch.rpm                    |  21 kB     00:00     
+(239/241): yum-plugin-protectbase-1.1.30-14.el6.noarch.rpm                   |  19 kB     00:00     
+(240/241): yum-plugin-security-1.1.30-14.el6.noarch.rpm                      |  37 kB     00:00     
+(241/241): zlib-1.2.3-27.el6.x86_64.rpm                                      |  71 kB     00:00     
+----------------------------------------------------------------------------------------------------
+Total                                                                16 MB/s | 220 MB     00:13     
+Running rpm_check_debug
+Running Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Updating       : bash-4.1.2-9.el6_2.x86_64                                                  1/405 
+  Updating       : zlib-1.2.3-27.el6.x86_64                                                   2/405 
+  Updating       : libgcc-4.4.6-4.el6.x86_64                                                  3/405 
+  Updating       : chkconfig-1.3.49.3-2.el6.x86_64                                            4/405 
+  Updating       : libstdc++-4.4.6-4.el6.x86_64                                               5/405 
+  Updating       : audit-libs-2.2-2.el6.x86_64                                                6/405 
+  Updating       : libcom_err-1.41.12-12.el6.x86_64                                           7/405 
+  Updating       : db4-4.7.25-17.el6.x86_64                                                   8/405 
+  Updating       : 1:perl-Pod-Escapes-1.04-127.el6.x86_64                                     9/405 
+  Updating       : 1:perl-Module-Pluggable-3.90-127.el6.x86_64                               10/405 
+  Updating       : 3:perl-version-0.77-127.el6.x86_64                                        11/405 
+  Updating       : 4:perl-libs-5.10.1-127.el6.x86_64                                         12/405 
+  Updating       : 1:perl-Pod-Simple-3.13-127.el6.x86_64                                     13/405 
+  Updating       : 4:perl-5.10.1-127.el6.x86_64                                              14/405 
+  Updating       : libsepol-2.0.41-4.el6.x86_64                                              15/405 
+  Updating       : libselinux-2.0.94-5.3.el6.x86_64                                          16/405 
+  Updating       : glib2-2.22.5-7.el6.x86_64                                                 17/405 
+  Updating       : sed-4.2.1-10.el6.x86_64                                                   18/405 
+  Updating       : libudev-147-2.41.el6.x86_64                                               19/405 
+  Installing     : 2:libogg-1.1.4-2.1.el6.x86_64                                             20/405 
+  Installing     : 1:qt-4.6.2-24.el6.x86_64                                                  21/405 
+  Updating       : 1:cups-libs-1.4.2-48.el6.x86_64                                           22/405 
+  Updating       : file-libs-5.04-13.el6.x86_64                                              23/405 
+  Updating       : gawk-3.1.7-9.el6.x86_64                                                   24/405 
+  Updating       : libattr-2.4.44-7.el6.x86_64                                               25/405 
+  Updating       : libacl-2.2.49-6.el6.x86_64                                                26/405 
+  Updating       : procps-3.2.8-23.el6.x86_64                                                27/405 
+  Updating       : psmisc-22.6-15.el6_0.1.x86_64                                             28/405 
+  Updating       : iptables-1.4.7-5.1.el6_2.x86_64                                           29/405 
+  Updating       : cpio-2.10-10.el6.x86_64                                                   30/405 
+  Installing     : lcms-libs-1.19-1.el6.x86_64                                               31/405 
+  Updating       : libuuid-2.17.2-12.7.el6.x86_64                                            32/405 
+  Updating       : libblkid-2.17.2-12.7.el6.x86_64                                           33/405 
+  Installing     : jakarta-commons-collections-3.2.1-3.4.el6.noarch                          34/405 
+  Updating       : sysvinit-tools-2.87-4.dsf.el6.x86_64                                      35/405 
+  Installing     : libmng-1.0.10-4.1.el6.x86_64                                              36/405 
+  Updating       : 2:tar-1.23-7.el6.x86_64                                                   37/405 
+  Updating       : file-5.04-13.el6.x86_64                                                   38/405 
+  Installing     : 1:libvorbis-1.2.3-4.el6_2.1.x86_64                                        39/405 
+  Updating       : libsemanage-2.0.43-4.1.el6.x86_64                                         40/405 
+  Updating       : libselinux-utils-2.0.94-5.3.el6.x86_64                                    41/405 
+  Updating       : net-tools-1.60-110.el6_2.x86_64                                           42/405 
+  Installing     : perl-Test-Harness-3.17-127.el6.x86_64                                     43/405 
+  Installing     : perl-ExtUtils-MakeMaker-6.55-127.el6.x86_64                               44/405 
+  Installing     : 4:perl-devel-5.10.1-127.el6.x86_64                                        45/405 
+  Installing     : 1:perl-ExtUtils-ParseXS-2.2003.0-127.el6.x86_64                           46/405 
+  Updating       : perl-IO-Compress-Base-2.020-127.el6.x86_64                                47/405 
+  Updating       : 1:perl-Compress-Raw-Zlib-2.020-127.el6.x86_64                             48/405 
+  Updating       : pcre-7.8-4.el6.x86_64                                                     49/405 
+  Updating       : grep-2.6.3-3.el6.x86_64                                                   50/405 
+  Updating       : gmp-4.3.1-7.el6_2.2.x86_64                                                51/405 
+  Updating       : coreutils-libs-8.4-19.el6.x86_64                                          52/405 
+  Updating       : coreutils-8.4-19.el6.x86_64                                               53/405 
+  Updating       : pam-1.1.1-10.el6_2.1.x86_64                                               54/405 
+  Updating       : alsa-lib-1.0.22-3.el6.x86_64                                              55/405 
+  Updating       : libgcj-4.4.6-4.el6.x86_64                                                 56/405 
+  Installing     : jakarta-commons-pool-1.3-12.7.el6.x86_64                                  57/405 
+  Installing     : jakarta-commons-dbcp-1.2.1-13.8.el6.noarch                                58/405 
+  Updating       : redhat-logos-60.0.14-2.sl6.5.noarch                                       59/405 
+  Updating       : plymouth-scripts-0.8.3-24.sl6.x86_64                                      60/405 
+  Installing     : tomcat6-servlet-2.5-api-6.0.24-45.el6.noarch                              61/405 
+  Installing     : libfontenc-1.0.5-2.el6.x86_64                                             62/405 
+  Updating       : binutils-2.20.51.0.2-5.34.el6.x86_64                                      63/405 
+  Updating       : module-init-tools-3.9-20.el6.x86_64                                       64/405 
+  Updating       : libssh2-1.2.2-7.el6_2.3.x86_64                                            65/405 
+  Updating       : libcurl-7.19.7-26.el6_2.4.x86_64                                          66/405 
+  Updating       : which-2.19-6.el6.x86_64                                                   67/405 
+  Updating       : 1:make-3.81-20.el6.x86_64                                                 68/405 
+  Installing     : 1:pkgconfig-0.23-9.1.el6.x86_64                                           69/405 
+  Updating       : setup-2.8.14-16.el6.noarch                                                70/405 
+warning: /etc/group created as /etc/group.rpmnew
+warning: /etc/gshadow created as /etc/gshadow.rpmnew
+warning: /etc/shadow created as /etc/shadow.rpmnew
+  Updating       : 2:shadow-utils-4.1.4.2-13.el6.x86_64                                      71/405 
+  Installing     : openjpeg-libs-1.3-9.el6_3.x86_64                                          72/405 
+  Installing     : foomatic-db-filesystem-4.0-7.20091126.el6.noarch                          73/405 
+  Installing     : libXt-1.0.7-1.el6.x86_64                                                  74/405 
+  Updating       : filesystem-2.4.30-3.el6.x86_64                                            75/405 
+  Installing     : gstreamer-tools-0.10.29-1.el6.x86_64                                      76/405 
+  Installing     : gstreamer-0.10.29-1.el6.x86_64                                            77/405 
+  Updating       : curl-7.19.7-26.el6_2.4.x86_64                                             78/405 
+  Updating       : argus-pep-api-c-2.2.0-1.el6.x86_64                                        79/405 
+  Updating       : argus-pepcli-2.2.0-1.el6.x86_64                                           80/405 
+  Updating       : python-pycurl-7.19.0-8.el6.x86_64                                         81/405 
+  Updating       : python-urlgrabber-3.9.1-8.el6.noarch                                      82/405 
+  Updating       : hwdata-0.233-7.8.el6.noarch                                               83/405 
+  Installing     : libXfont-1.4.1-2.el6_1.x86_64                                             84/405 
+  Installing     : 1:xorg-x11-font-utils-7.2-11.el6.x86_64                                   85/405 
+  Installing     : ghostscript-fonts-5.50-23.1.el6.noarch                                    86/405 
+  Installing     : tomcat6-jsp-2.1-api-6.0.24-45.el6.noarch                                  87/405 
+  Installing     : 1:ecj-3.4.2-6.el6.x86_64                                                  88/405 
+  Installing     : regexp-1.5-4.4.el6.x86_64                                                 89/405 
+  Installing     : bcel-5.2-7.2.el6.x86_64                                                   90/405 
+  Installing     : xml-commons-resolver-1.1-4.18.el6.x86_64                                  91/405 
+  Installing     : 1:mx4j-3.0.1-9.13.el6.noarch                                              92/405 
+  Installing     : 1:jakarta-commons-daemon-1.0.1-8.9.el6.x86_64                             93/405 
+  Updating       : at-3.1.10-43.el6_2.1.x86_64                                               94/405 
+  Updating       : libuser-0.56.13-5.el6.x86_64                                              95/405 
+  Updating       : passwd-0.77-4.el6_2.2.x86_64                                              96/405 
+  Installing     : qt3-3.3.8b-30.el6.x86_64                                                  97/405 
+  Updating       : less-436-10.el6.x86_64                                                    98/405 
+  Updating       : perl-IO-Compress-Zlib-2.020-127.el6.x86_64                                99/405 
+  Installing     : perl-Test-Simple-0.92-127.el6.x86_64                                     100/405 
+  Updating       : libsemanage-python-2.0.43-4.1.el6.x86_64                                 101/405 
+  Updating       : iproute-2.6.32-20.el6.x86_64                                             102/405 
+  Updating       : iptables-ipv6-1.4.7-5.1.el6_2.x86_64                                     103/405 
+  Installing     : tmpwatch-2.9.16-4.el6.x86_64                                             104/405 
+  Updating       : acl-2.2.49-6.el6.x86_64                                                  105/405 
+  Installing     : 1:qt-sqlite-4.6.2-24.el6.x86_64                                          106/405 
+  Installing     : 1:libtheora-1.1.0-2.el6.x86_64                                           107/405 
+  Installing     : flac-1.2.1-6.1.el6.x86_64                                                108/405 
+  Installing     : libgudev1-147-2.41.el6.x86_64                                            109/405 
+  Updating       : yum-metadata-parser-1.1.2-16.el6.x86_64                                  110/405 
+  Updating       : libselinux-python-2.0.94-5.3.el6.x86_64                                  111/405 
+  Installing     : mesa-dri-drivers-7.11-5.el6.x86_64                                       112/405 
+  Installing     : perl-CGI-3.51-127.el6.x86_64                                             113/405 
+  Updating       : glite-info-provider-service-1.12.0-1.el6.noarch                          114/405 
+  Updating       : db4-utils-4.7.25-17.el6.x86_64                                           115/405 
+  Updating       : rpm-4.8.0-27.el6.x86_64                                                  116/405 
+  Updating       : rpm-libs-4.8.0-27.el6.x86_64                                             117/405 
+  Updating       : rpm-python-4.8.0-27.el6.x86_64                                           118/405 
+  Updating       : yum-3.2.29-30.el6.noarch                                                 119/405 
+  Updating       : yum-plugin-priorities-1.1.30-14.el6.noarch                               120/405 
+  Updating       : yum-plugin-protectbase-1.1.30-14.el6.noarch                              121/405 
+  Updating       : man-1.6f-30.el6.x86_64                                                   122/405 
+  Updating       : cyrus-sasl-lib-2.1.23-13.el6.x86_64                                      123/405 
+  Updating       : e2fsprogs-libs-1.41.12-12.el6.x86_64                                     124/405 
+  Updating       : libss-1.41.12-12.el6.x86_64                                              125/405 
+  Updating       : audit-libs-python-2.2-2.el6.x86_64                                       126/405 
+  Installing     : tomcat6-el-2.1-api-6.0.24-45.el6.noarch                                  127/405 
+  Installing     : tomcat6-lib-6.0.24-45.el6.noarch                                         128/405 
+  Updating       : portreserve-0.0.4-9.el6.x86_64                                           129/405 
+  Updating       : libnih-1.0.1-7.el6.x86_64                                                130/405 
+  Updating       : upstart-0.6.5-12.el6.x86_64                                              131/405 
+  Installing     : urw-fonts-2.4-10.el6.noarch                                              132/405 
+  Installing     : ghostscript-8.70-14.el6_3.1.x86_64                                       133/405 
+  Installing     : cdparanoia-libs-10.2-5.1.el6.x86_64                                      134/405 
+  Updating       : sl-release-6.3-1.x86_64                                                  135/405 
+  Updating       : expect-5.44.1.15-4.el6.x86_64                                            136/405 
+  Updating       : readline-6.0-4.el6.x86_64                                                137/405 
+  Installing     : jakarta-commons-io-1.4-3.el6.noarch                                      138/405 
+  Installing     : canl-java-1.1.0-1.sl6.noarch                                             139/405 
+  Updating       : argus-pdp-pep-common-1.4.0-2.el6.noarch                                  140/405 
+  Updating       : tcp_wrappers-libs-7.6-57.el6.x86_64                                      141/405 
+  Installing     : xml-common-0.6.3-32.el6.noarch                                           142/405 
+  Installing     : iso-codes-3.16-2.el6.noarch                                              143/405 
+  Installing     : bouncycastle-mail-1.46-1.sl6.noarch                                      144/405 
+  Installing     : voms-api-java3-3.0.0-1.el6.noarch                                        145/405 
+  Updating       : argus-pap-1.6.0-1.el6.noarch                                             146/405 
+warning: /etc/argus/pap/pap-admin.properties created as /etc/argus/pap/pap-admin.properties.rpmnew
+  Updating       : libcap-ng-0.6.4-3.el6_0.1.x86_64                                         147/405 
+  Installing     : 1:dbus-1.2.24-7.el6_3.x86_64                                             148/405 
+  Installing     : liboil-0.3.16-4.1.el6.x86_64                                             149/405 
+  Updating       : libgpg-error-1.7-4.el6.x86_64                                            150/405 
+  Installing     : slf4j-1.5.8-7.el6.noarch                                                 151/405 
+  Updating       : newt-0.52.11-3.el6.x86_64                                                152/405 
+  Updating       : newt-python-0.52.11-3.el6.x86_64                                         153/405 
+  Updating       : glite-yaim-bdii-4.3.13-1.el6.noarch                                      154/405 
+  Updating       : emi-version-3.0.0-0.rc.sl6.x86_64                                        155/405 
+  Updating       : argus-pep-common-2.3.0-1.el6.noarch                                      156/405 
+  Updating       : pciutils-libs-3.1.4-11.el6.x86_64                                        157/405 
+  Updating       : plymouth-core-libs-0.8.3-24.sl6.x86_64                                   158/405 
+  Installing     : libXv-1.0.5-1.el6.x86_64                                                 159/405 
+  Installing     : axis2-1.6.1-1.emi.noarch                                                 160/405 
+  Installing     : libXxf86vm-1.1.0-1.el6.x86_64                                            161/405 
+  Installing     : mesa-libGL-7.11-5.el6.x86_64                                             162/405 
+  Installing     : mesa-libGLU-7.11-5.el6.x86_64                                            163/405 
+  Updating       : nss-softokn-freebl-3.12.9-11.el6.x86_64                                  164/405 
+  Installing     : libvisual-0.4.0-9.1.el6.x86_64                                           165/405 
+  Installing     : gstreamer-plugins-base-0.10.29-1.el6.x86_64                              166/405 
+  Installing     : 1:phonon-backend-gstreamer-4.6.2-24.el6.x86_64                           167/405 
+  Installing     : 1:qt-x11-4.6.2-24.el6.x86_64                                             168/405 
+  Installing     : redhat-lsb-graphics-4.0-3.el6.x86_64                                     169/405 
+  Updating       : mingetty-1.08-5.el6.x86_64                                               170/405 
+  Updating       : iputils-20071127-16.el6.x86_64                                           171/405 
+  Updating       : util-linux-ng-2.17.2-12.7.el6.x86_64                                     172/405 
+  Updating       : initscripts-9.03.31-2.el6.x86_64                                         173/405 
+  Updating       : udev-147-2.41.el6.x86_64                                                 174/405 
+  Updating       : cronie-anacron-1.4.4-7.el6.x86_64                                        175/405 
+  Updating       : cronie-1.4.4-7.el6.x86_64                                                176/405 
+  Updating       : crontabs-1.10-33.el6.noarch                                              177/405 
+  Updating       : device-mapper-1.02.74-10.el6.x86_64                                      178/405 
+  Updating       : device-mapper-libs-1.02.74-10.el6.x86_64                                 179/405 
+  Updating       : device-mapper-event-libs-1.02.74-10.el6.x86_64                           180/405 
+  Updating       : policycoreutils-2.0.83-19.24.el6.x86_64                                  181/405 
+  Updating       : device-mapper-event-1.02.74-10.el6.x86_64                                182/405 
+  Updating       : lvm2-libs-2.02.95-10.el6.x86_64                                          183/405 
+  Updating       : plymouth-0.8.3-24.sl6.x86_64                                             184/405 
+  Updating       : dracut-004-283.el6.noarch                                                185/405 
+  Updating       : libcgroup-0.37-4.el6.x86_64                                              186/405 
+  Updating       : policycoreutils-python-2.0.83-19.24.el6.x86_64                           187/405 
+  Updating       : glue-schema-2.0.10-1.el6.noarch                                          188/405 
+  Updating       : bdii-5.2.17-1.el6.noarch                                                 189/405 
+warning: /etc/bdii/bdii-slapd.conf saved as /etc/bdii/bdii-slapd.conf.rpmsave
+warning: /etc/bdii/bdii-top-slapd.conf saved as /etc/bdii/bdii-top-slapd.conf.rpmsave
+  Installing     : jclassads-2.4.0-3.sl6.noarch                                             190/405 
+  Installing     : poppler-data-0.4.0-1.el6.noarch                                          191/405 
+  Installing     : poppler-0.12.4-3.el6_0.1.x86_64                                          192/405 
+  Installing     : poppler-utils-0.12.4-3.el6_0.1.x86_64                                    193/405 
+  Installing     : 1:cups-1.4.2-48.el6.x86_64                                               194/405 
+  Installing     : foomatic-db-ppds-4.0-7.20091126.el6.noarch                               195/405 
+  Installing     : foomatic-db-4.0-7.20091126.el6.noarch                                    196/405 
+  Installing     : foomatic-4.0.4-1.el6_1.1.x86_64                                          197/405 
+  Installing     : redhat-lsb-printing-4.0-3.el6.x86_64                                     198/405 
+  Updating       : redhat-lsb-4.0-3.el6.x86_64                                              199/405 
+  Updating       : argus-pdp-1.6.0-1.el6.noarch                                             200/405 
+warning: /etc/argus/pdp/pdp.ini created as /etc/argus/pdp/pdp.ini.rpmnew
+  Updating       : argus-pep-server-1.6.0-3.el6.noarch                                      201/405 
+  Installing     : tomcat6-6.0.24-45.el6.noarch                                             202/405 
+  Updating       : glite-yaim-core-5.1.1-1.sl6.noarch                                       203/405 
+  Updating       : yaim-argus_server-1.6.0-1.el6.noarch                                     204/405 
+  Installing     : apache-tomcat-apis-0.1-1.el6.noarch                                      205/405 
+  Installing     : geronimo-specs-1.0-3.4.M2.el6.noarch                                     206/405 
+  Installing     : geronimo-specs-compat-1.0-3.4.M2.el6.noarch                              207/405 
+  Installing     : 1:mysql-connector-java-5.1.17-6.el6.noarch                               208/405 
+  Installing     : glite-ce-common-java-1.15.1-2.sl6.noarch                                 209/405 
+  Updating       : emi-argus-1.6.0-1.el6.noarch                                             210/405 
+  Updating       : dracut-kernel-004-283.el6.noarch                                         211/405 
+  Updating       : lvm2-2.02.95-10.el6.x86_64                                               212/405 
+  Updating       : 1:iwl1000-firmware-39.31.5.1-1.el6.noarch                                213/405 
+  Updating       : iwl6000-firmware-9.221.4.1-1.el6.noarch                                  214/405 
+  Updating       : iwl6050-firmware-41.28.5.1-2.el6.noarch                                  215/405 
+  Updating       : bfa-firmware-3.0.0.0-1.el6.noarch                                        216/405 
+  Updating       : cyrus-sasl-2.1.23-13.el6.x86_64                                          217/405 
+  Updating       : nss-softokn-3.12.9-11.el6.x86_64                                         218/405 
+  Updating       : efibootmgr-0.5.4-10.el6.x86_64                                           219/405 
+  Updating       : authconfig-6.1.12-10.el6.x86_64                                          220/405 
+  Updating       : libgcrypt-1.4.5-9.el6_2.2.x86_64                                         221/405 
+  Updating       : audit-2.2-2.el6.x86_64                                                   222/405 
+  Updating       : e2fsprogs-1.41.12-12.el6.x86_64                                          223/405 
+  Updating       : emi-release-3.0.0-1.el6.noarch                                           224/405 
+  Updating       : yum-plugin-security-1.1.30-14.el6.noarch                                 225/405 
+  Updating       : libsndfile-1.0.20-5.el6.x86_64                                           226/405 
+  Updating       : system-config-firewall-base-1.2.27-5.el6.noarch                          227/405 
+  Updating       : perl-Compress-Zlib-2.020-127.el6.x86_64                                  228/405 
+  Updating       : 1:grub-0.97-77.el6.x86_64                                                229/405 
+  Updating       : logrotate-3.7.8-15.el6.x86_64                                            230/405 
+  Updating       : grubby-7.0.15-3.el6.x86_64                                               231/405 
+  Updating       : 2:vim-minimal-7.2.411-1.8.el6.x86_64                                     232/405 
+  Updating       : attr-2.4.44-7.el6.x86_64                                                 233/405 
+  Updating       : pinentry-0.7.6-6.el6.x86_64                                              234/405 
+  Updating       : libgomp-4.4.6-4.el6.x86_64                                               235/405 
+  Updating       : ql2400-firmware-5.06.05-1.el6.noarch                                     236/405 
+  Updating       : ql2500-firmware-5.06.05-1.el6.noarch                                     237/405 
+  Updating       : mailcap-2.1.31-2.el6.noarch                                              238/405 
+  Updating       : iwl5000-firmware-8.83.5.1_1-1.el6_1.1.noarch                             239/405 
+  Updating       : keyutils-libs-1.4-4.el6.x86_64                                           240/405 
+  Updating       : nss-softokn-freebl-3.12.9-11.el6.i686                                    241/405 
+  Cleanup        : perl-Compress-Zlib-2.020-119.el6_1.1.x86_64                              242/405 
+  Cleanup        : perl-IO-Compress-Zlib-2.020-119.el6_1.1.x86_64                           243/405 
+  Cleanup        : emi-argus-1.5.0-1.sl6.x86_64                                             244/405 
+  Cleanup        : bdii-5.2.12-1.el6.noarch                                                 245/405 
+  Cleanup        : argus-pep-server-1.5.1-2.sl6.noarch                                      246/405 
+  Cleanup        : yaim-argus_server-1.5.1-1.sl6.noarch                                     247/405 
+Starting argus-pepd... [  OK  ]
+  Cleanup        : glite-yaim-core-5.1.0-1.sl6.noarch                                       248/405 
+  Cleanup        : argus-pdp-1.5.1-2.sl6.noarch                                             249/405 
+  Cleanup        : redhat-lsb-4.0-2.1.el6.x86_64                                            250/405 
+Starting argus-pdp... [  OK  ]
+  Cleanup        : emi-release-2.0.0-1.sl6.noarch                                           251/405 
+  Cleanup        : 1:grub-0.97-68.el6.x86_64                                                252/405 
+  Cleanup        : system-config-firewall-base-1.2.27-3.el6_1.3.noarch                      253/405 
+  Cleanup        : crontabs-1.10-32.1.el6.noarch                                            254/405 
+  Cleanup        : cronie-anacron-1.4.4-2.el6.x86_64                                        255/405 
+  Cleanup        : cronie-1.4.4-2.el6.x86_64                                                256/405 
+  Cleanup        : cyrus-sasl-2.1.23-8.el6.x86_64                                           257/405 
+  Cleanup        : lvm2-2.02.72-8.el6.x86_64                                                258/405 
+  Cleanup        : libgcj-4.4.4-13.el6.x86_64                                               259/405 
+  Cleanup        : passwd-0.77-4.el6.x86_64                                                 260/405 
+  Cleanup        : policycoreutils-python-2.0.83-19.8.el6_0.x86_64                          261/405 
+  Cleanup        : policycoreutils-2.0.83-19.8.el6_0.x86_64                                 262/405 
+  Cleanup        : e2fsprogs-1.41.12-3.el6.x86_64                                           263/405 
+  Cleanup        : audit-2.0.4-1.el6.x86_64                                                 264/405 
+  Cleanup        : 1:cups-libs-1.4.2-44.el6.x86_64                                          265/405 
+  Cleanup        : man-1.6f-29.el6.x86_64                                                   266/405 
+  Cleanup        : libcgroup-0.36.1-6.el6_0.1.x86_64                                        267/405 
+  Cleanup        : lvm2-libs-2.02.72-8.el6.x86_64                                           268/405 
+  Cleanup        : device-mapper-event-1.02.53-8.el6.x86_64                                 269/405 
+  Cleanup        : logrotate-3.7.8-12.el6_0.1.x86_64                                        270/405 
+  Cleanup        : libuser-0.56.13-4.el6_0.1.x86_64                                         271/405 
+  Cleanup        : iptables-ipv6-1.4.7-3.el6.x86_64                                         272/405 
+  Cleanup        : at-3.1.10-42.el6.x86_64                                                  273/405 
+  Cleanup        : authconfig-6.1.4-6.el6.x86_64                                            274/405 
+  Cleanup        : grubby-7.0.15-2.el6.x86_64                                               275/405 
+  Cleanup        : glite-info-provider-service-1.9.0-5.el6.noarch                           276/405 
+  Cleanup        : argus-pap-1.5.1-1.el6.noarch                                             277/405 
+  Cleanup        : less-436-4.el6.x86_64                                                    278/405 
+  Cleanup        : file-5.04-5.el6.x86_64                                                   279/405 
+  Cleanup        : argus-pepcli-2.1.0-2.sl6.x86_64                                          280/405 
+  Cleanup        : argus-pep-api-c-2.1.0-3.sl6.x86_64                                       281/405 
+  Cleanup        : perl-Compress-Raw-Zlib-2.023-119.el6_1.1.x86_64                          282/405 
+  Cleanup        : 2:vim-minimal-7.2.411-1.4.el6.x86_64                                     283/405 
+  Cleanup        : efibootmgr-0.5.4-8.el6.x86_64                                            284/405 
+  Cleanup        : nss-softokn-3.12.9-3.el6.x86_64                                          285/405 
+  Cleanup        : acl-2.2.49-4.el6.x86_64                                                  286/405 
+  Cleanup        : pinentry-0.7.6-5.el6.x86_64                                              287/405 
+  Cleanup        : yum-plugin-priorities-1.1.26-11.el6.noarch                               288/405 
+  Cleanup        : yum-plugin-protectbase-1.1.26-11.el6.noarch                              289/405 
+  Cleanup        : argus-pdp-pep-common-1.3.1-1.sl6.noarch                                  290/405 
+  Cleanup        : perl-IO-Compress-Base-2.020-119.el6_1.1.x86_64                           291/405 
+  Cleanup        : dracut-kernel-004-32.el6.noarch                                          292/405 
+  Cleanup        : dracut-004-32.el6.noarch                                                 293/405 
+  Cleanup        : filesystem-2.4.30-2.1.el6.x86_64                                         294/405 
+  Cleanup        : bfa-firmware-2.1.2.1-2.el6.noarch                                        295/405 
+  Cleanup        : iwl6050-firmware-9.201.4.1-2.el6.noarch                                  296/405 
+  Cleanup        : iwl6000-firmware-9.176.4.1-2.el6.noarch                                  297/405 
+  Cleanup        : yum-plugin-security-1.1.26-11.el6.noarch                                 298/405 
+  Cleanup        : yum-3.2.27-14.el6.noarch                                                 299/405 
+  Cleanup        : python-urlgrabber-3.9.1-7.el6.noarch                                     300/405 
+  Erasing        : emi-trustmanager-3.1.4-1.sl6.noarch                                      301/405 
+  Cleanup        : glite-yaim-bdii-4.3.11-1.el6.noarch                                      302/405 
+  Cleanup        : argus-pep-common-2.2.0-1.sl6.noarch                                      303/405 
+  Cleanup        : glue-schema-2.0.8-2.el6.noarch                                           304/405 
+  Cleanup        : emi-version-2.6.0-1.sl6.x86_64                                           305/405 
+  Cleanup        : ql2400-firmware-5.03.02-1.el6.noarch                                     306/405 
+  Cleanup        : ql2500-firmware-5.03.02-2.el6.noarch                                     307/405 
+  Cleanup        : mailcap-2.1.31-1.1.el6.noarch                                            308/405 
+  Cleanup        : iwl5000-firmware-8.24.2.12-3.el6.noarch                                  309/405 
+  Cleanup        : nss-softokn-freebl-3.12.9-3.el6                                          310/405 
+  Cleanup        : iwl1000-firmware-128.50.3.1-1.1.el6.noarch                               311/405 
+  Cleanup        : rpm-python-4.8.0-19.el6_2.1.x86_64                                       312/405 
+  Cleanup        : rpm-libs-4.8.0-19.el6_2.1.x86_64                                         313/405 
+  Cleanup        : rpm-4.8.0-19.el6_2.1.x86_64                                              314/405 
+  Cleanup        : 1:perl-Module-Pluggable-3.90-119.el6_1.1.x86_64                          315/405 
+  Cleanup        : 1:perl-Pod-Escapes-1.04-119.el6_1.1.x86_64                               316/405 
+  Cleanup        : 1:perl-Pod-Simple-3.13-119.el6_1.1.x86_64                                317/405 
+  Cleanup        : 3:perl-version-0.77-119.el6_1.1.x86_64                                   318/405 
+  Cleanup        : 4:perl-libs-5.10.1-119.el6_1.1.x86_64                                    319/405 
+  Cleanup        : 4:perl-5.10.1-119.el6_1.1.x86_64                                         320/405 
+  Cleanup        : plymouth-0.8.3-17.sl6.2.x86_64                                           321/405 
+  Cleanup        : plymouth-scripts-0.8.3-17.sl6.2.x86_64                                   322/405 
+  Cleanup        : curl-7.19.7-26.el6_1.2.x86_64                                            323/405 
+  Cleanup        : 2:tar-1.23-3.el6.x86_64                                                  324/405 
+  Cleanup        : redhat-logos-60.0.14-1.sl6.1.noarch                                      325/405 
+  Cleanup        : db4-utils-4.7.25-16.el6.x86_64                                           326/405 
+  Cleanup        : file-libs-5.04-5.el6.x86_64                                              327/405 
+  Cleanup        : python-pycurl-7.19.0-5.el6.x86_64                                        328/405 
+  Cleanup        : libcurl-7.19.7-26.el6_1.2.x86_64                                         329/405 
+  Cleanup        : libssh2-1.2.2-7.el6.x86_64                                               330/405 
+  Cleanup        : yum-metadata-parser-1.1.2-14.1.el6.x86_64                                331/405 
+  Cleanup        : which-2.19-5.1.el6.x86_64                                                332/405 
+  Cleanup        : newt-python-0.52.11-2.el6.x86_64                                         333/405 
+  Cleanup        : device-mapper-event-libs-1.02.53-8.el6.x86_64                            334/405 
+  Cleanup        : device-mapper-1.02.53-8.el6.x86_64                                       335/405 
+  Cleanup        : device-mapper-libs-1.02.53-8.el6.x86_64                                  336/405 
+  Cleanup        : util-linux-ng-2.17.2-12.4.el6.x86_64                                     337/405 
+  Cleanup        : iputils-20071127-13.el6.x86_64                                           338/405 
+  Cleanup        : udev-147-2.29.el6.x86_64                                                 339/405 
+  Cleanup        : initscripts-9.03.17-1.el6.x86_64                                         340/405 
+  Cleanup        : iproute-2.6.32-10.el6.x86_64                                             341/405 
+  Cleanup        : 2:shadow-utils-4.1.4.2-8.el6.x86_64                                      342/405 
+  Cleanup        : upstart-0.6.5-6.1.el6.x86_64                                             343/405 
+  Cleanup        : iptables-1.4.7-3.el6.x86_64                                              344/405 
+  Cleanup        : sed-4.2.1-5.el6.x86_64                                                   345/405 
+  Cleanup        : libblkid-2.17.2-12.4.el6.x86_64                                          346/405 
+  Cleanup        : sl-release-6.0-6.0.1.x86_64                                              347/405 
+  Cleanup        : hwdata-0.233-1.el6.noarch                                                348/405 
+  Cleanup        : module-init-tools-3.9-17.el6.x86_64                                      349/405 
+  Cleanup        : binutils-2.20.51.0.2-5.11.el6.x86_64                                     350/405 
+  Cleanup        : libnih-1.0.1-6.el6.x86_64                                                351/405 
+  Cleanup        : gawk-3.1.7-6.el6.x86_64                                                  352/405 
+  Cleanup        : psmisc-22.6-15.el6.x86_64                                                353/405 
+  Cleanup        : cpio-2.10-9.el6.x86_64                                                   354/405 
+  Cleanup        : glib2-2.22.5-5.el6.x86_64                                                355/405 
+  Cleanup        : net-tools-1.60-102.el6.x86_64                                            356/405 
+  Cleanup        : e2fsprogs-libs-1.41.12-3.el6.x86_64                                      357/405 
+  Cleanup        : libss-1.41.12-3.el6.x86_64                                               358/405 
+  Cleanup        : libselinux-utils-2.0.94-2.el6.x86_64                                     359/405 
+  Cleanup        : 1:make-3.81-19.el6.x86_64                                                360/405 
+  Cleanup        : audit-libs-python-2.0.4-1.el6.x86_64                                     361/405 
+  Cleanup        : libselinux-python-2.0.94-2.el6.x86_64                                    362/405 
+  Cleanup        : libsemanage-python-2.0.43-4.el6.x86_64                                   363/405 
+  Cleanup        : libsemanage-2.0.43-4.el6.x86_64                                          364/405 
+  Cleanup        : readline-6.0-3.el6.x86_64                                                365/405 
+  Cleanup        : cyrus-sasl-lib-2.1.23-8.el6.x86_64                                       366/405 
+  Cleanup        : expect-5.44.1.15-2.el6.x86_64                                            367/405 
+  Cleanup        : libgomp-4.4.4-13.el6.x86_64                                              368/405 
+  Cleanup        : libsndfile-1.0.20-3.el6_1.1.x86_64                                       369/405 
+  Cleanup        : alsa-lib-1.0.21-3.el6.x86_64                                             370/405 
+  Cleanup        : coreutils-libs-8.4-9.el6.x86_64                                          371/405 
+  Cleanup        : pam-1.1.1-4.el6_0.1.x86_64                                               372/405 
+  Cleanup        : coreutils-8.4-9.el6.x86_64                                               373/405 
+  Cleanup        : gmp-4.3.1-7.el6.x86_64                                                   374/405 
+  Cleanup        : grep-2.6.3-2.el6.x86_64                                                  375/405 
+  Cleanup        : pcre-7.8-3.1.el6.x86_64                                                  376/405 
+  Cleanup        : libselinux-2.0.94-2.el6.x86_64                                           377/405 
+  Cleanup        : libsepol-2.0.41-3.el6.x86_64                                             378/405 
+  Cleanup        : libstdc++-4.4.4-13.el6.x86_64                                            379/405 
+  Cleanup        : libacl-2.2.49-4.el6.x86_64                                               380/405 
+  Cleanup        : libgcrypt-1.4.5-3.el6.x86_64                                             381/405 
+  Cleanup        : attr-2.4.44-4.el6.x86_64                                                 382/405 
+  Cleanup        : portreserve-0.0.4-4.el6.x86_64                                           383/405 
+  Cleanup        : setup-2.8.14-10.el6.noarch                                               384/405 
+  Cleanup        : bash-4.1.2-3.el6.x86_64                                                  385/405 
+  Cleanup        : libattr-2.4.44-4.el6.x86_64                                              386/405 
+  Cleanup        : libgpg-error-1.7-3.el6.x86_64                                            387/405 
+  Cleanup        : libgcc-4.4.4-13.el6.x86_64                                               388/405 
+  Cleanup        : audit-libs-2.0.4-1.el6.x86_64                                            389/405 
+  Cleanup        : db4-4.7.25-16.el6.x86_64                                                 390/405 
+  Cleanup        : libcom_err-1.41.12-3.el6.x86_64                                          391/405 
+  Cleanup        : zlib-1.2.3-25.el6.x86_64                                                 392/405 
+  Cleanup        : libuuid-2.17.2-12.4.el6.x86_64                                           393/405 
+  Cleanup        : chkconfig-1.3.47-1.el6.x86_64                                            394/405 
+  Cleanup        : sysvinit-tools-2.87-3.dsf.el6.x86_64                                     395/405 
+  Cleanup        : procps-3.2.8-14.el6.x86_64                                               396/405 
+  Cleanup        : mingetty-1.08-4.1.el6.x86_64                                             397/405 
+  Cleanup        : libudev-147-2.29.el6.x86_64                                              398/405 
+  Cleanup        : newt-0.52.11-2.el6.x86_64                                                399/405 
+  Cleanup        : plymouth-core-libs-0.8.3-17.sl6.2.x86_64                                 400/405 
+  Cleanup        : nss-softokn-freebl-3.12.9-3.el6                                          401/405 
+  Cleanup        : pciutils-libs-3.1.4-9.el6.x86_64                                         402/405 
+  Cleanup        : tcp_wrappers-libs-7.6-56.3.el6.x86_64                                    403/405 
+  Cleanup        : libcap-ng-0.6.4-3.el6.x86_64                                             404/405 
+  Cleanup        : keyutils-libs-1.4-1.el6.x86_64                                           405/405 
+
+Installed:
+  glite-ce-common-java.noarch 0:1.15.1-2.sl6                                                        
+
+Dependency Installed:
+  apache-tomcat-apis.noarch 0:0.1-1.el6                                                             
+  axis2.noarch 0:1.6.1-1.emi                                                                        
+  bcel.x86_64 0:5.2-7.2.el6                                                                         
+  bouncycastle-mail.noarch 0:1.46-1.sl6                                                             
+  canl-java.noarch 0:1.1.0-1.sl6                                                                    
+  cdparanoia-libs.x86_64 0:10.2-5.1.el6                                                             
+  cups.x86_64 1:1.4.2-48.el6                                                                        
+  dbus.x86_64 1:1.2.24-7.el6_3                                                                      
+  ecj.x86_64 1:3.4.2-6.el6                                                                          
+  flac.x86_64 0:1.2.1-6.1.el6                                                                       
+  foomatic.x86_64 0:4.0.4-1.el6_1.1                                                                 
+  foomatic-db.noarch 0:4.0-7.20091126.el6                                                           
+  foomatic-db-filesystem.noarch 0:4.0-7.20091126.el6                                                
+  foomatic-db-ppds.noarch 0:4.0-7.20091126.el6                                                      
+  geronimo-specs.noarch 0:1.0-3.4.M2.el6                                                            
+  geronimo-specs-compat.noarch 0:1.0-3.4.M2.el6                                                     
+  ghostscript.x86_64 0:8.70-14.el6_3.1                                                              
+  ghostscript-fonts.noarch 0:5.50-23.1.el6                                                          
+  gstreamer.x86_64 0:0.10.29-1.el6                                                                  
+  gstreamer-plugins-base.x86_64 0:0.10.29-1.el6                                                     
+  gstreamer-tools.x86_64 0:0.10.29-1.el6                                                            
+  iso-codes.noarch 0:3.16-2.el6                                                                     
+  jakarta-commons-collections.noarch 0:3.2.1-3.4.el6                                                
+  jakarta-commons-daemon.x86_64 1:1.0.1-8.9.el6                                                     
+  jakarta-commons-dbcp.noarch 0:1.2.1-13.8.el6                                                      
+  jakarta-commons-io.noarch 0:1.4-3.el6                                                             
+  jakarta-commons-pool.x86_64 0:1.3-12.7.el6                                                        
+  jclassads.noarch 0:2.4.0-3.sl6                                                                    
+  lcms-libs.x86_64 0:1.19-1.el6                                                                     
+  libXfont.x86_64 0:1.4.1-2.el6_1                                                                   
+  libXt.x86_64 0:1.0.7-1.el6                                                                        
+  libXv.x86_64 0:1.0.5-1.el6                                                                        
+  libXxf86vm.x86_64 0:1.1.0-1.el6                                                                   
+  libfontenc.x86_64 0:1.0.5-2.el6                                                                   
+  libgudev1.x86_64 0:147-2.41.el6                                                                   
+  libmng.x86_64 0:1.0.10-4.1.el6                                                                    
+  libogg.x86_64 2:1.1.4-2.1.el6                                                                     
+  liboil.x86_64 0:0.3.16-4.1.el6                                                                    
+  libtheora.x86_64 1:1.1.0-2.el6                                                                    
+  libvisual.x86_64 0:0.4.0-9.1.el6                                                                  
+  libvorbis.x86_64 1:1.2.3-4.el6_2.1                                                                
+  mesa-dri-drivers.x86_64 0:7.11-5.el6                                                              
+  mesa-libGL.x86_64 0:7.11-5.el6                                                                    
+  mesa-libGLU.x86_64 0:7.11-5.el6                                                                   
+  mx4j.noarch 1:3.0.1-9.13.el6                                                                      
+  mysql-connector-java.noarch 1:5.1.17-6.el6                                                        
+  openjpeg-libs.x86_64 0:1.3-9.el6_3                                                                
+  perl-CGI.x86_64 0:3.51-127.el6                                                                    
+  perl-ExtUtils-MakeMaker.x86_64 0:6.55-127.el6                                                     
+  perl-ExtUtils-ParseXS.x86_64 1:2.2003.0-127.el6                                                   
+  perl-Test-Harness.x86_64 0:3.17-127.el6                                                           
+  perl-Test-Simple.x86_64 0:0.92-127.el6                                                            
+  perl-devel.x86_64 4:5.10.1-127.el6                                                                
+  phonon-backend-gstreamer.x86_64 1:4.6.2-24.el6                                                    
+  pkgconfig.x86_64 1:0.23-9.1.el6                                                                   
+  poppler.x86_64 0:0.12.4-3.el6_0.1                                                                 
+  poppler-data.noarch 0:0.4.0-1.el6                                                                 
+  poppler-utils.x86_64 0:0.12.4-3.el6_0.1                                                           
+  qt.x86_64 1:4.6.2-24.el6                                                                          
+  qt-sqlite.x86_64 1:4.6.2-24.el6                                                                   
+  qt-x11.x86_64 1:4.6.2-24.el6                                                                      
+  qt3.x86_64 0:3.3.8b-30.el6                                                                        
+  redhat-lsb-graphics.x86_64 0:4.0-3.el6                                                            
+  redhat-lsb-printing.x86_64 0:4.0-3.el6                                                            
+  regexp.x86_64 0:1.5-4.4.el6                                                                       
+  slf4j.noarch 0:1.5.8-7.el6                                                                        
+  tmpwatch.x86_64 0:2.9.16-4.el6                                                                    
+  tomcat6.noarch 0:6.0.24-45.el6                                                                    
+  tomcat6-el-2.1-api.noarch 0:6.0.24-45.el6                                                         
+  tomcat6-jsp-2.1-api.noarch 0:6.0.24-45.el6                                                        
+  tomcat6-lib.noarch 0:6.0.24-45.el6                                                                
+  tomcat6-servlet-2.5-api.noarch 0:6.0.24-45.el6                                                    
+  urw-fonts.noarch 0:2.4-10.el6                                                                     
+  voms-api-java3.noarch 0:3.0.0-1.el6                                                               
+  xml-common.noarch 0:0.6.3-32.el6                                                                  
+  xml-commons-resolver.x86_64 0:1.1-4.18.el6                                                        
+  xorg-x11-font-utils.x86_64 1:7.2-11.el6                                                           
+
+Updated:
+  acl.x86_64 0:2.2.49-6.el6                                                                         
+  alsa-lib.x86_64 0:1.0.22-3.el6                                                                    
+  argus-pap.noarch 0:1.6.0-1.el6                                                                    
+  argus-pdp.noarch 0:1.6.0-1.el6                                                                    
+  argus-pdp-pep-common.noarch 0:1.4.0-2.el6                                                         
+  argus-pep-api-c.x86_64 0:2.2.0-1.el6                                                              
+  argus-pep-common.noarch 0:2.3.0-1.el6                                                             
+  argus-pep-server.noarch 0:1.6.0-3.el6                                                             
+  argus-pepcli.x86_64 0:2.2.0-1.el6                                                                 
+  at.x86_64 0:3.1.10-43.el6_2.1                                                                     
+  attr.x86_64 0:2.4.44-7.el6                                                                        
+  audit.x86_64 0:2.2-2.el6                                                                          
+  audit-libs.x86_64 0:2.2-2.el6                                                                     
+  audit-libs-python.x86_64 0:2.2-2.el6                                                              
+  authconfig.x86_64 0:6.1.12-10.el6                                                                 
+  bash.x86_64 0:4.1.2-9.el6_2                                                                       
+  bdii.noarch 0:5.2.17-1.el6                                                                        
+  bfa-firmware.noarch 0:3.0.0.0-1.el6                                                               
+  binutils.x86_64 0:2.20.51.0.2-5.34.el6                                                            
+  chkconfig.x86_64 0:1.3.49.3-2.el6                                                                 
+  coreutils.x86_64 0:8.4-19.el6                                                                     
+  coreutils-libs.x86_64 0:8.4-19.el6                                                                
+  cpio.x86_64 0:2.10-10.el6                                                                         
+  cronie.x86_64 0:1.4.4-7.el6                                                                       
+  cronie-anacron.x86_64 0:1.4.4-7.el6                                                               
+  crontabs.noarch 0:1.10-33.el6                                                                     
+  cups-libs.x86_64 1:1.4.2-48.el6                                                                   
+  curl.x86_64 0:7.19.7-26.el6_2.4                                                                   
+  cyrus-sasl.x86_64 0:2.1.23-13.el6                                                                 
+  cyrus-sasl-lib.x86_64 0:2.1.23-13.el6                                                             
+  db4.x86_64 0:4.7.25-17.el6                                                                        
+  db4-utils.x86_64 0:4.7.25-17.el6                                                                  
+  device-mapper.x86_64 0:1.02.74-10.el6                                                             
+  device-mapper-event.x86_64 0:1.02.74-10.el6                                                       
+  device-mapper-event-libs.x86_64 0:1.02.74-10.el6                                                  
+  device-mapper-libs.x86_64 0:1.02.74-10.el6                                                        
+  dracut.noarch 0:004-283.el6                                                                       
+  dracut-kernel.noarch 0:004-283.el6                                                                
+  e2fsprogs.x86_64 0:1.41.12-12.el6                                                                 
+  e2fsprogs-libs.x86_64 0:1.41.12-12.el6                                                            
+  efibootmgr.x86_64 0:0.5.4-10.el6                                                                  
+  emi-argus.noarch 0:1.6.0-1.el6                                                                    
+  emi-release.noarch 0:3.0.0-1.el6                                                                  
+  emi-version.x86_64 0:3.0.0-0.rc.sl6                                                               
+  expect.x86_64 0:5.44.1.15-4.el6                                                                   
+  file.x86_64 0:5.04-13.el6                                                                         
+  file-libs.x86_64 0:5.04-13.el6                                                                    
+  filesystem.x86_64 0:2.4.30-3.el6                                                                  
+  gawk.x86_64 0:3.1.7-9.el6                                                                         
+  glib2.x86_64 0:2.22.5-7.el6                                                                       
+  glite-info-provider-service.noarch 0:1.12.0-1.el6                                                 
+  glite-yaim-bdii.noarch 0:4.3.13-1.el6                                                             
+  glite-yaim-core.noarch 0:5.1.1-1.sl6                                                              
+  glue-schema.noarch 0:2.0.10-1.el6                                                                 
+  gmp.x86_64 0:4.3.1-7.el6_2.2                                                                      
+  grep.x86_64 0:2.6.3-3.el6                                                                         
+  grub.x86_64 1:0.97-77.el6                                                                         
+  grubby.x86_64 0:7.0.15-3.el6                                                                      
+  hwdata.noarch 0:0.233-7.8.el6                                                                     
+  initscripts.x86_64 0:9.03.31-2.el6                                                                
+  iproute.x86_64 0:2.6.32-20.el6                                                                    
+  iptables.x86_64 0:1.4.7-5.1.el6_2                                                                 
+  iptables-ipv6.x86_64 0:1.4.7-5.1.el6_2                                                            
+  iputils.x86_64 0:20071127-16.el6                                                                  
+  iwl1000-firmware.noarch 1:39.31.5.1-1.el6                                                         
+  iwl5000-firmware.noarch 0:8.83.5.1_1-1.el6_1.1                                                    
+  iwl6000-firmware.noarch 0:9.221.4.1-1.el6                                                         
+  iwl6050-firmware.noarch 0:41.28.5.1-2.el6                                                         
+  keyutils-libs.x86_64 0:1.4-4.el6                                                                  
+  less.x86_64 0:436-10.el6                                                                          
+  libacl.x86_64 0:2.2.49-6.el6                                                                      
+  libattr.x86_64 0:2.4.44-7.el6                                                                     
+  libblkid.x86_64 0:2.17.2-12.7.el6                                                                 
+  libcap-ng.x86_64 0:0.6.4-3.el6_0.1                                                                
+  libcgroup.x86_64 0:0.37-4.el6                                                                     
+  libcom_err.x86_64 0:1.41.12-12.el6                                                                
+  libcurl.x86_64 0:7.19.7-26.el6_2.4                                                                
+  libgcc.x86_64 0:4.4.6-4.el6                                                                       
+  libgcj.x86_64 0:4.4.6-4.el6                                                                       
+  libgcrypt.x86_64 0:1.4.5-9.el6_2.2                                                                
+  libgomp.x86_64 0:4.4.6-4.el6                                                                      
+  libgpg-error.x86_64 0:1.7-4.el6                                                                   
+  libnih.x86_64 0:1.0.1-7.el6                                                                       
+  libselinux.x86_64 0:2.0.94-5.3.el6                                                                
+  libselinux-python.x86_64 0:2.0.94-5.3.el6                                                         
+  libselinux-utils.x86_64 0:2.0.94-5.3.el6                                                          
+  libsemanage.x86_64 0:2.0.43-4.1.el6                                                               
+  libsemanage-python.x86_64 0:2.0.43-4.1.el6                                                        
+  libsepol.x86_64 0:2.0.41-4.el6                                                                    
+  libsndfile.x86_64 0:1.0.20-5.el6                                                                  
+  libss.x86_64 0:1.41.12-12.el6                                                                     
+  libssh2.x86_64 0:1.2.2-7.el6_2.3                                                                  
+  libstdc++.x86_64 0:4.4.6-4.el6                                                                    
+  libudev.x86_64 0:147-2.41.el6                                                                     
+  libuser.x86_64 0:0.56.13-5.el6                                                                    
+  libuuid.x86_64 0:2.17.2-12.7.el6                                                                  
+  logrotate.x86_64 0:3.7.8-15.el6                                                                   
+  lvm2.x86_64 0:2.02.95-10.el6                                                                      
+  lvm2-libs.x86_64 0:2.02.95-10.el6                                                                 
+  mailcap.noarch 0:2.1.31-2.el6                                                                     
+  make.x86_64 1:3.81-20.el6                                                                         
+  man.x86_64 0:1.6f-30.el6                                                                          
+  mingetty.x86_64 0:1.08-5.el6                                                                      
+  module-init-tools.x86_64 0:3.9-20.el6                                                             
+  net-tools.x86_64 0:1.60-110.el6_2                                                                 
+  newt.x86_64 0:0.52.11-3.el6                                                                       
+  newt-python.x86_64 0:0.52.11-3.el6                                                                
+  nss-softokn.x86_64 0:3.12.9-11.el6                                                                
+  nss-softokn-freebl.i686 0:3.12.9-11.el6                                                           
+  nss-softokn-freebl.x86_64 0:3.12.9-11.el6                                                         
+  pam.x86_64 0:1.1.1-10.el6_2.1                                                                     
+  passwd.x86_64 0:0.77-4.el6_2.2                                                                    
+  pciutils-libs.x86_64 0:3.1.4-11.el6                                                               
+  pcre.x86_64 0:7.8-4.el6                                                                           
+  perl.x86_64 4:5.10.1-127.el6                                                                      
+  perl-Compress-Raw-Zlib.x86_64 1:2.020-127.el6                                                     
+  perl-Compress-Zlib.x86_64 0:2.020-127.el6                                                         
+  perl-IO-Compress-Base.x86_64 0:2.020-127.el6                                                      
+  perl-IO-Compress-Zlib.x86_64 0:2.020-127.el6                                                      
+  perl-Module-Pluggable.x86_64 1:3.90-127.el6                                                       
+  perl-Pod-Escapes.x86_64 1:1.04-127.el6                                                            
+  perl-Pod-Simple.x86_64 1:3.13-127.el6                                                             
+  perl-libs.x86_64 4:5.10.1-127.el6                                                                 
+  perl-version.x86_64 3:0.77-127.el6                                                                
+  pinentry.x86_64 0:0.7.6-6.el6                                                                     
+  plymouth.x86_64 0:0.8.3-24.sl6                                                                    
+  plymouth-core-libs.x86_64 0:0.8.3-24.sl6                                                          
+  plymouth-scripts.x86_64 0:0.8.3-24.sl6                                                            
+  policycoreutils.x86_64 0:2.0.83-19.24.el6                                                         
+  policycoreutils-python.x86_64 0:2.0.83-19.24.el6                                                  
+  portreserve.x86_64 0:0.0.4-9.el6                                                                  
+  procps.x86_64 0:3.2.8-23.el6                                                                      
+  psmisc.x86_64 0:22.6-15.el6_0.1                                                                   
+  python-pycurl.x86_64 0:7.19.0-8.el6                                                               
+  python-urlgrabber.noarch 0:3.9.1-8.el6                                                            
+  ql2400-firmware.noarch 0:5.06.05-1.el6                                                            
+  ql2500-firmware.noarch 0:5.06.05-1.el6                                                            
+  readline.x86_64 0:6.0-4.el6                                                                       
+  redhat-logos.noarch 0:60.0.14-2.sl6.5                                                             
+  redhat-lsb.x86_64 0:4.0-3.el6                                                                     
+  rpm.x86_64 0:4.8.0-27.el6                                                                         
+  rpm-libs.x86_64 0:4.8.0-27.el6                                                                    
+  rpm-python.x86_64 0:4.8.0-27.el6                                                                  
+  sed.x86_64 0:4.2.1-10.el6                                                                         
+  setup.noarch 0:2.8.14-16.el6                                                                      
+  shadow-utils.x86_64 2:4.1.4.2-13.el6                                                              
+  sl-release.x86_64 0:6.3-1                                                                         
+  system-config-firewall-base.noarch 0:1.2.27-5.el6                                                 
+  sysvinit-tools.x86_64 0:2.87-4.dsf.el6                                                            
+  tar.x86_64 2:1.23-7.el6                                                                           
+  tcp_wrappers-libs.x86_64 0:7.6-57.el6                                                             
+  udev.x86_64 0:147-2.41.el6                                                                        
+  upstart.x86_64 0:0.6.5-12.el6                                                                     
+  util-linux-ng.x86_64 0:2.17.2-12.7.el6                                                            
+  vim-minimal.x86_64 2:7.2.411-1.8.el6                                                              
+  which.x86_64 0:2.19-6.el6                                                                         
+  yaim-argus_server.noarch 0:1.6.0-1.el6                                                            
+  yum.noarch 0:3.2.29-30.el6                                                                        
+  yum-metadata-parser.x86_64 0:1.1.2-16.el6                                                         
+  yum-plugin-priorities.noarch 0:1.1.30-14.el6                                                      
+  yum-plugin-protectbase.noarch 0:1.1.30-14.el6                                                     
+  yum-plugin-security.noarch 0:1.1.30-14.el6                                                        
+  zlib.x86_64 0:1.2.3-27.el6                                                                        
+
+Replaced:
+  emi-trustmanager.noarch 0:3.1.4-1.sl6                                                             
+
+Complete!
+root@nemesis (~) # 
+
+
+-----------------------------------------------------------------------------------------------
+1.6 Argus Information (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # yum info emi-argus argus-pap argus-pdp argus-pep-server
+Loaded plugins: priorities, protectbase, security
+Installed Packages
+Name        : argus-pap
+Arch        : noarch
+Version     : 1.6.0
+Release     : 1.el6
+Size        : 19 M
+Repo        : installed
+From repo   : EMI-3-testing-base
+Summary     : Argus PAP service
+URL         : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License     : ASL 2.0
+Description : 
+            : Argus is a system meant to render consistent authorization decisions for
+            : distributed services (e.g. compute elements, portals). In order to achieve
+            : this consistency a number of points must be addressed. First, it must be
+            : possible to author and maintain consistent authorization policies. This is
+            : handled by the Policy Administration Point (PAP) component in the service.
+            : Second, authored policies must be evaluated in a consistent manner, a task
+            : performed by the Policy Decision Point (PDP). Finally, the data provided for
+            : evaluation against policies must be consistent (in form and definition) and
+            : this is done by the Policy Enforcement Point (PEP).
+            : 
+            : This package provides the Argus PAP service.
+
+Name        : argus-pdp
+Arch        : noarch
+Version     : 1.6.0
+Release     : 1.el6
+Size        : 13 M
+Repo        : installed
+From repo   : EMI-3-testing-base
+Summary     : Argus PDP
+URL         : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License     : ASL 2.0
+Description : Argus PDP (Policy Decision Point).
+            : The Argus Authorization Service renders consistent authorization
+            : decisions for distributed services (e.g., user interfaces,
+            : portals, computing elements, storage elements). The service is
+            : based on the XACML standard, and uses authorization policies to
+            : determine if a user is allowed or denied to perform a certain
+            : action on a particular service.
+            : The Argus Authorization Service is composed of three main
+            : components:
+            : - The Policy Administration Point (PAP) provides the tools to
+            : author authorization policies, organize them in the local
+            : repository and configure policy distribution among remote PAPs.
+            : - The Policy Decision Point (PDP) implements the authorization
+            : engine, and is responsible for the evaluation of the authorization
+            : requests against the XACML policies retrieved from the PAP.
+            : - The Policy Enforcement Point Server (PEP Server) ensures the
+            : integrity and consistency of the authorization requests received
+            : from the PEP clients. Lightweight PEP client libraries are also
+            : provided to ease the integration and interoperability with other
+            : EMI services or components.
+
+Name        : argus-pep-server
+Arch        : noarch
+Version     : 1.6.0
+Release     : 3.el6
+Size        : 15 M
+Repo        : installed
+From repo   : EMI-3-testing-base
+Summary     : Argus PEP Server
+URL         : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License     : ASL 2.0
+Description : Argus PEP (Policy Enforcement Point) Server.
+            : The Argus Authorization Service renders consistent authorization
+            : decisions for distributed services (e.g., user interfaces,
+            : portals, computing elements, storage elements). The service is
+            : based on the XACML standard, and uses authorization policies to
+            : determine if a user is allowed or denied to perform a certain
+            : action on a particular service.
+            : .
+            : The Argus Authorization Service is composed of three main
+            : components:
+            : - The Policy Administration Point (PAP) provides the tools to
+            : author authorization policies, organize them in the local
+            : repository and configure policy distribution among remote PAPs.
+            : - The Policy Decision Point (PDP) implements the authorization
+            : engine, and is responsible for the evaluation of the authorization
+            : requests against the XACML policies retrieved from the PAP.
+            : - The Policy Enforcement Point Server (PEP Server) ensures the
+            : integrity and consistency of the authorization requests received
+            : from the PEP clients. Lightweight PEP client libraries are also
+            : provided to ease the integration and interoperability with other
+            : EMI services or components.
+
+Name        : emi-argus
+Arch        : noarch
+Version     : 1.6.0
+Release     : 1.el6
+Size        : 0.0  
+Repo        : installed
+From repo   : EMI-3-testing-base
+Summary     : Argus EMI meta-package (PAP, PDP and PEP Server)
+URL         : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License     : ASL 2.0
+Description : Argus EMI meta-package (PAP, PDP and PEP Server).
+            : The Argus Authorization Service is composed of three main
+            : components:
+            : - The Policy Administration Point (PAP) provides the tools to
+            : author authorization policies, organize them in the local
+            : repository and configure policy distribution among remote PAPs.
+            : - The Policy Decision Point (PDP) implements the authorization
+            : engine, and is responsible for the evaluation of the authorization
+            : requests against the XACML policies retrieved from the PAP.
+            : - The Policy Enforcement Point Server (PEP Server) ensures the
+            : integrity and consistency of the authorization requests received
+            : from the PEP clients. Lightweight PEP client libraries are also
+            : provided to ease the integration and interoperability with other
+            : EMI services or components.
+
+
+-----------------------------------------------------------------------------------------------
+1.7 Argus Service Checks
+-----------------------------------------------------------------------------------------------
+
+root@nemesis# service argus-pap status
+PAP running!
+
+root@nemesis# service argus-pdp status
+argus-pdp is running...
+
+root@nemesis# service argus-pepd status
+argus-pepd is running...
+
+
+
