@@ -1,0 +1,705 @@
+Argus EMI-3 upgrade installation
+================================
+
+Author: valery.tschopp@switch.ch
+Date: 2013-02-14
+Platform: SL5 (x86_64)
+Host: minerva.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Service Upgrade
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Host Information
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# lsb_release -a
+LSB Version: :core-3.1-amd64:core-3.1-ia32:core-3.1-noarch:graphics-3.1-amd64:graphics-3.1-ia32:graphics-3.1-noarch
+Distributor ID: ScientificSL
+Description: Scientific Linux SL release 5.5 (Boron)
+Release: 5.5
+Codename: Boron
+
+
+-----------------------------------------------------------------------------------------------
+1.2 YUM Repositories (EMI-2)
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# yum repolist
+Loaded plugins: kernel-module, priorities, protectbase
+repo id                      repo name                                                 status
+EMI-2-base                   EMI 2 base                                                enabled:  598
+EMI-2-contribs               EMI 2 contribs                                            enabled:    2
+EMI-2-third-party            EMI 2 third-party                                         enabled:  107
+EMI-2-updates                EMI 2 updates                                             enabled:  607
+epel                         Extra Packages for Enterprise Linux 5 - x86_64            enabled: 7242
+eugridpma                    EUGridPMA                                                 enabled:  227
+sl-base                      SL 5 base                                                 enabled: 3567
+sl-security                  SL 5 security updates                                     enabled: 3262
+repolist: 15612
+
+
+-----------------------------------------------------------------------------------------------
+1.3 Argus Information (EMI-2)
+-----------------------------------------------------------------------------------------------
+
+
+[root@minerva ~]# yum info emi-argus argus-pap argus-pdp argus-pep-server
+Loaded plugins: kernel-module, priorities, protectbase
+374 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Installed Packages
+Name       : argus-pap
+Arch       : noarch
+Version    : 1.5.1
+Release    : 1.el5
+Size       : 14 M
+Repo       : installed
+Summary    : Argus PAP service
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: 
+           : Argus is a system meant to render consistent authorization decisions for
+           : distributed services (e.g. compute elements, portals). In order to achieve
+           : this consistency a number of points must be addressed. First, it must be
+           : possible to author and maintain consistent authorization policies. This is
+           : handled by the Policy Administration Point (PAP) component in the service.
+           : Second, authored policies must be evaluated in a consistent manner, a task
+           : performed by the Policy Decision Point (PDP). Finally, the data provided for
+           : evaluation against policies must be consistent (in form and definition) and
+           : this is done by the Policy Enforcement Point (PEP).
+           : 
+           : This package provides the Argus PAP service.
+
+Name       : argus-pdp
+Arch       : noarch
+Version    : 1.5.1
+Release    : 2.sl5
+Size       : 11 M
+Repo       : installed
+Summary    : Argus PDP
+License    : ASL 2.0
+Description: Argus PDP service (EMI)
+
+Name       : argus-pep-server
+Arch       : noarch
+Version    : 1.5.1
+Release    : 2.sl5
+Size       : 12 M
+Repo       : installed
+Summary    : Argus PEP Server
+License    : ASL 2.0
+Description: Argus PEP Server (EMI)
+
+Name       : emi-argus
+Arch       : x86_64
+Version    : 1.5.0
+Release    : 1.sl5
+Size       : 0.0 
+Repo       : installed
+Summary    : Emi-argus metapackage
+License    : ASL 2.0
+Description: Metapackage for the Argus authorization service (EMI)
+
+
+-----------------------------------------------------------------------------------------------
+1.4 Upgrading YUM Repositories (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# cd /etc/yum.repos.d/
+
+[root@minerva ~]# rm -f emi2-*.repo
+
+[root@minerva yum.repos.d]# wget http://eticssoft.web.cern.ch/eticssoft/mock/emi-3-rc-sl5.repo
+--2013-02-14 16:27:35--  http://eticssoft.web.cern.ch/eticssoft/mock/emi-3-rc-sl5.repo
+Resolving eticssoft.web.cern.ch... 137.138.139.19
+Connecting to eticssoft.web.cern.ch|137.138.139.19|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1574 (1.5K) [text/plain]
+Saving to: `emi-3-rc-sl5.repo'
+
+100%[==========================================================>] 1,574       --.-K/s   in 0s      
+
+2013-02-14 16:27:36 (51.8 MB/s) - `emi-3-rc-sl5.repo' saved [1574/1574]
+
+[root@minerva yum.repos.d]# yum clean all
+Loaded plugins: kernel-module, priorities, protectbase
+Cleaning up Everything
+
+
+-----------------------------------------------------------------------------------------------
+1.5 Upgrade to EMI-3
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# yum update
+Loaded plugins: kernel-module, priorities, protectbase
+4353 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Setting up Update Process
+Resolving Dependencies
+--> Running transaction check
+---> Package argus-pap.noarch 0:1.6.0-1.el5 set to be updated
+--> Processing Dependency: voms-api-java3 for package: argus-pap
+---> Package argus-pdp.noarch 0:1.6.0-1.el5 set to be updated
+---> Package argus-pdp-pep-common.noarch 0:1.4.0-2.el5 set to be updated
+--> Processing Dependency: canl-java for package: argus-pdp-pep-common
+---> Package argus-pep-api-c.x86_64 0:2.2.0-1.el5 set to be updated
+---> Package argus-pep-common.noarch 0:2.3.0-1.el5 set to be updated
+---> Package argus-pep-server.noarch 0:1.6.0-3.el5 set to be updated
+---> Package argus-pepcli.x86_64 0:2.2.0-1.el5 set to be updated
+---> Package bdii.noarch 0:5.2.17-1.el5 set to be updated
+--> Processing Dependency: openldap2.4-servers for package: bdii
+--> Processing Dependency: openldap2.4-clients for package: bdii
+---> Package emi-argus.noarch 0:1.6.0-1.el5 set to be updated
+---> Package emi-release.noarch 0:3.0.0-1.el5 set to be updated
+---> Package emi-version.x86_64 0:3.0.0-0.rc.sl5 set to be updated
+---> Package glite-ce-common-java.noarch 0:1.15.1-2.sl5 set to be updated
+--> Processing Dependency: tomcat5 for package: glite-ce-common-java
+--> Processing Dependency: axis2 for package: glite-ce-common-java
+--> Processing Dependency: mysql-connector-java for package: glite-ce-common-java
+--> Processing Dependency: jclassads for package: glite-ce-common-java
+---> Package glite-info-provider-service.noarch 0:1.12.0-1.el5 set to be updated
+---> Package glite-yaim-bdii.noarch 0:4.3.13-1.el5 set to be updated
+---> Package glite-yaim-core.noarch 0:5.1.1-1.sl5 set to be updated
+---> Package glue-schema.noarch 0:2.0.10-1.el5 set to be updated
+---> Package yaim-argus_server.noarch 0:1.6.0-1.el5 set to be updated
+--> Running transaction check
+---> Package axis2.noarch 0:1.6.1-1.emi set to be updated
+---> Package canl-java.noarch 0:1.1.0-1.sl5 set to be updated
+--> Processing Dependency: bcprov = 1.46 for package: canl-java
+--> Processing Dependency: jakarta-commons-io >= 1.4 for package: canl-java
+---> Package jclassads.noarch 0:2.4.0-3.sl5 set to be updated
+---> Package mysql-connector-java.x86_64 1:5.1.12-2.el5 set to be updated
+--> Processing Dependency: jta >= 1.0 for package: mysql-connector-java
+---> Package openldap2.4-clients.x86_64 0:2.4.22-1.el5 set to be updated
+--> Processing Dependency: lib64ldap2.4_2 = 2.4.22-1.el5 for package: openldap2.4-clients
+--> Processing Dependency: liblber-2.4.so.2()(64bit) for package: openldap2.4-clients
+--> Processing Dependency: libldap-2.4.so.2()(64bit) for package: openldap2.4-clients
+---> Package openldap2.4-servers.x86_64 0:2.4.22-1.el5 set to be updated
+--> Processing Dependency: openldap2.4-extra-schemas >= 1.3-7 for package: openldap2.4-servers
+--> Processing Dependency: openldap2.4-extra-schemas >= 1.3-7 for package: openldap2.4-servers
+--> Processing Dependency: libodbc.so.1()(64bit) for package: openldap2.4-servers
+---> Package tomcat5.x86_64 0:5.5.23-0jpp.31.el5_8 set to be updated
+--> Processing Dependency: tomcat5-common-lib = 5.5.23-0jpp.31.el5_8 for package: tomcat5
+--> Processing Dependency: tomcat5-server-lib = 5.5.23-0jpp.31.el5_8 for package: tomcat5
+--> Processing Dependency: tomcat5-server-lib = 5.5.23-0jpp.31.el5_8 for package: tomcat5
+--> Processing Dependency: tomcat5-common-lib = 5.5.23-0jpp.31.el5_8 for package: tomcat5
+--> Processing Dependency: xerces-j2 >= 2.7.1 for package: tomcat5
+--> Processing Dependency: jakarta-commons-daemon >= 1.0.1 for package: tomcat5
+--> Processing Dependency: jakarta-commons-launcher >= 0.9 for package: tomcat5
+---> Package voms-api-java3.noarch 0:3.0.0-1.el5 set to be updated
+--> Processing Dependency: bouncycastle146-mail for package: voms-api-java3
+--> Running transaction check
+---> Package bouncycastle146.noarch 0:1.46-1.el5 set to be updated
+---> Package bouncycastle146-mail.noarch 0:1.46-1.sl5 set to be updated
+---> Package geronimo-specs-compat.x86_64 0:1.0-0.M2.2jpp.12 set to be updated
+--> Processing Dependency: geronimo-specs = 1.0-0.M2.2jpp.12 for package: geronimo-specs-compat
+---> Package jakarta-commons-daemon.x86_64 1:1.0.1-6jpp.1 set to be updated
+---> Package jakarta-commons-io.noarch 0:1.4-3.el5 set to be updated
+---> Package jakarta-commons-launcher.x86_64 0:0.9-6jpp.1 set to be updated
+---> Package lib64ldap2.4_2.x86_64 0:2.4.22-1.el5 set to be updated
+--> Processing Dependency: openldap2.4 >= 2.1.25-4mdk for package: lib64ldap2.4_2
+---> Package openldap2.4-extra-schemas.noarch 0:1.3-10.el5 set to be updated
+---> Package tomcat5-common-lib.x86_64 0:5.5.23-0jpp.31.el5_8 set to be updated
+--> Processing Dependency: tomcat5-servlet-2.4-api = 5.5.23-0jpp.31.el5_8 for package: tomcat5-common-lib
+--> Processing Dependency: tomcat5-jasper = 5.5.23-0jpp.31.el5_8 for package: tomcat5-common-lib
+--> Processing Dependency: tomcat5-servlet-2.4-api = 5.5.23-0jpp.31.el5_8 for package: tomcat5-common-lib
+--> Processing Dependency: tomcat5-jsp-2.0-api = 5.5.23-0jpp.31.el5_8 for package: tomcat5-common-lib
+--> Processing Dependency: tomcat5-jasper = 5.5.23-0jpp.31.el5_8 for package: tomcat5-common-lib
+--> Processing Dependency: tomcat5-jsp-2.0-api = 5.5.23-0jpp.31.el5_8 for package: tomcat5-common-lib
+--> Processing Dependency: jakarta-commons-dbcp >= 1.2.1 for package: tomcat5-common-lib
+--> Processing Dependency: eclipse-ecj >= 3.1.1 for package: tomcat5-common-lib
+--> Processing Dependency: jakarta-commons-collections >= 3.1 for package: tomcat5-common-lib
+--> Processing Dependency: ant >= 1.6 for package: tomcat5-common-lib
+--> Processing Dependency: mx4j >= 3.0.1 for package: tomcat5-common-lib
+--> Processing Dependency: jakarta-commons-el >= 1.0 for package: tomcat5-common-lib
+--> Processing Dependency: jakarta-commons-pool >= 1.2 for package: tomcat5-common-lib
+--> Processing Dependency: jakarta-commons-dbcp >= 1.2.1 for package: tomcat5-common-lib
+--> Processing Dependency: jakarta-commons-collections >= 3.1 for package: tomcat5-common-lib
+--> Processing Dependency: ant >= 1.6 for package: tomcat5-common-lib
+--> Processing Dependency: mx4j >= 3.0.1 for package: tomcat5-common-lib
+--> Processing Dependency: jakarta-commons-el >= 1.0 for package: tomcat5-common-lib
+--> Processing Dependency: eclipse-ecj >= 3.1.1 for package: tomcat5-common-lib
+--> Processing Dependency: jakarta-commons-pool >= 1.2 for package: tomcat5-common-lib
+---> Package tomcat5-server-lib.x86_64 0:5.5.23-0jpp.31.el5_8 set to be updated
+--> Processing Dependency: jakarta-commons-digester >= 1.6 for package: tomcat5-server-lib
+--> Processing Dependency: jakarta-commons-beanutils >= 1.7.0 for package: tomcat5-server-lib
+--> Processing Dependency: regexp >= 1.3 for package: tomcat5-server-lib
+--> Processing Dependency: jakarta-commons-modeler >= 1.1-8jpp.1.0.1 for package: tomcat5-server-lib
+--> Processing Dependency: jakarta-commons-fileupload >= 1.0-1jpp for package: tomcat5-server-lib
+--> Processing Dependency: regexp >= 1.3 for package: tomcat5-server-lib
+--> Processing Dependency: jakarta-commons-digester >= 1.6 for package: tomcat5-server-lib
+--> Processing Dependency: jakarta-commons-beanutils >= 1.7.0 for package: tomcat5-server-lib
+--> Processing Dependency: jakarta-commons-modeler >= 1.1-8jpp.1.0.1 for package: tomcat5-server-lib
+--> Processing Dependency: jakarta-commons-fileupload >= 1.0-1jpp for package: tomcat5-server-lib
+---> Package unixODBC.x86_64 0:2.2.11-7.1 set to be updated
+---> Package xerces-j2.x86_64 0:2.7.1-7jpp.2.el5_4.2 set to be updated
+--> Processing Dependency: xml-commons-resolver >= 1.1 for package: xerces-j2
+--> Running transaction check
+---> Package ant.x86_64 0:1.6.5-2jpp.2 set to be updated
+--> Processing Dependency: java-devel for package: ant
+---> Package eclipse-ecj.x86_64 1:3.2.1-19.el5 set to be updated
+---> Package geronimo-specs.x86_64 0:1.0-0.M2.2jpp.12 set to be updated
+---> Package jakarta-commons-beanutils.x86_64 0:1.7.0-5jpp.1 set to be updated
+---> Package jakarta-commons-collections.x86_64 0:3.2-2jpp.3 set to be updated
+---> Package jakarta-commons-dbcp.x86_64 0:1.2.1-7jpp.1 set to be updated
+---> Package jakarta-commons-digester.x86_64 0:1.7-5jpp.1 set to be updated
+---> Package jakarta-commons-el.x86_64 0:1.0-7jpp.1 set to be updated
+---> Package jakarta-commons-fileupload.x86_64 1:1.0-6jpp.1 set to be updated
+---> Package jakarta-commons-modeler.x86_64 0:1.1-8jpp.3.el5 set to be updated
+--> Processing Dependency: jaxp_transform_impl for package: jakarta-commons-modeler
+---> Package jakarta-commons-pool.x86_64 0:1.3-5jpp.1 set to be updated
+---> Package mx4j.x86_64 1:3.0.1-6jpp.4 set to be updated
+--> Processing Dependency: bcel >= 5.0 for package: mx4j
+--> Processing Dependency: xml-commons for package: mx4j
+---> Package openldap2.4.x86_64 0:2.4.22-1.el5 set to be updated
+---> Package regexp.x86_64 0:1.4-2jpp.2 set to be updated
+---> Package tomcat5-jasper.x86_64 0:5.5.23-0jpp.31.el5_8 set to be updated
+---> Package tomcat5-jsp-2.0-api.x86_64 0:5.5.23-0jpp.31.el5_8 set to be updated
+---> Package tomcat5-servlet-2.4-api.x86_64 0:5.5.23-0jpp.31.el5_8 set to be updated
+---> Package xml-commons-resolver.x86_64 0:1.1-1jpp.12 set to be updated
+--> Running transaction check
+---> Package bcel.x86_64 0:5.1-8jpp.1 set to be updated
+---> Package java-1.6.0-openjdk-devel.x86_64 1:1.6.0.0-1.33.1.11.6.el5_9 set to be updated
+---> Package xalan-j2.x86_64 0:2.7.0-6jpp.1 set to be updated
+---> Package xml-commons.x86_64 0:1.3.02-0.b2.7jpp.10 set to be updated
+--> Finished Dependency Resolution
+Beginning Kernel Module Plugin
+Finished Kernel Module Plugin
+
+Dependencies Resolved
+
+====================================================================================================
+ Package                      Arch    Version                      Repository                  Size
+====================================================================================================
+Installing:
+ glite-ce-common-java         noarch  1.15.1-2.sl5                 EMI-3-testing-base         635 k
+     replacing  emi-trustmanager.noarch 3.1.4-1.sl5
+
+Updating:
+ argus-pap                    noarch  1.6.0-1.el5                  EMI-3-testing-base          17 M
+ argus-pdp                    noarch  1.6.0-1.el5                  EMI-3-testing-base          12 M
+ argus-pdp-pep-common         noarch  1.4.0-2.el5                  EMI-3-testing-base          78 k
+ argus-pep-api-c              x86_64  2.2.0-1.el5                  EMI-3-testing-base          54 k
+ argus-pep-common             noarch  2.3.0-1.el5                  EMI-3-testing-base         266 k
+ argus-pep-server             noarch  1.6.0-3.el5                  EMI-3-testing-base          13 M
+ argus-pepcli                 x86_64  2.2.0-1.el5                  EMI-3-testing-base          23 k
+ bdii                         noarch  5.2.17-1.el5                 EMI-3-testing-base          23 k
+ emi-argus                    noarch  1.6.0-1.el5                  EMI-3-testing-base         2.4 k
+ emi-release                  noarch  3.0.0-1.el5                  EMI-3-testing-base         4.7 k
+ emi-version                  x86_64  3.0.0-0.rc.sl5               EMI-3-testing-base         1.9 k
+ glite-info-provider-service  noarch  1.12.0-1.el5                 EMI-3-testing-base          67 k
+ glite-yaim-bdii              noarch  4.3.13-1.el5                 EMI-3-testing-base          10 k
+ glite-yaim-core              noarch  5.1.1-1.sl5                  EMI-3-testing-base         118 k
+ glue-schema                  noarch  2.0.10-1.el5                 EMI-3-testing-base          34 k
+ yaim-argus_server            noarch  1.6.0-1.el5                  EMI-3-testing-base          15 k
+Installing for dependencies:
+ ant                          x86_64  1.6.5-2jpp.2                 sl-base                    2.3 M
+ axis2                        noarch  1.6.1-1.emi                  EMI-3-testing-third-party   19 M
+ bcel                         x86_64  5.1-8jpp.1                   sl-base                    1.1 M
+ bouncycastle146              noarch  1.46-1.el5                   EMI-3-testing-base         1.9 M
+ bouncycastle146-mail         noarch  1.46-1.sl5                   EMI-3-testing-third-party  476 k
+ canl-java                    noarch  1.1.0-1.sl5                  EMI-3-testing-base         263 k
+ eclipse-ecj                  x86_64  1:3.2.1-19.el5               sl-base                    9.0 M
+ geronimo-specs               x86_64  1.0-0.M2.2jpp.12             sl-base                    258 k
+ geronimo-specs-compat        x86_64  1.0-0.M2.2jpp.12             sl-base                    5.4 k
+ jakarta-commons-beanutils    x86_64  1.7.0-5jpp.1                 sl-base                    567 k
+ jakarta-commons-collections  x86_64  3.2-2jpp.3                   sl-base                    1.2 M
+ jakarta-commons-daemon       x86_64  1:1.0.1-6jpp.1               sl-base                     46 k
+ jakarta-commons-dbcp         x86_64  1.2.1-7jpp.1                 sl-base                    278 k
+ jakarta-commons-digester     x86_64  1.7-5jpp.1                   sl-base                    349 k
+ jakarta-commons-el           x86_64  1.0-7jpp.1                   sl-base                    269 k
+ jakarta-commons-fileupload   x86_64  1:1.0-6jpp.1                 sl-base                     53 k
+ jakarta-commons-io           noarch  1.4-3.el5                    epel                       105 k
+ jakarta-commons-launcher     x86_64  0.9-6jpp.1                   sl-base                     97 k
+ jakarta-commons-modeler      x86_64  1.1-8jpp.3.el5               sl-base                    259 k
+ jakarta-commons-pool         x86_64  1.3-5jpp.1                   sl-base                    142 k
+ java-1.6.0-openjdk-devel     x86_64  1:1.6.0.0-1.33.1.11.6.el5_9  sl-security                 12 M
+ jclassads                    noarch  2.4.0-3.sl5                  EMI-3-testing-third-party   95 k
+ lib64ldap2.4_2               x86_64  2.4.22-1.el5                 EMI-3-testing-third-party  300 k
+ mx4j                         x86_64  1:3.0.1-6jpp.4               sl-base                    2.7 M
+ mysql-connector-java         x86_64  1:5.1.12-2.el5               epel                       2.5 M
+ openldap2.4                  x86_64  2.4.22-1.el5                 EMI-3-testing-third-party   40 k
+ openldap2.4-clients          x86_64  2.4.22-1.el5                 EMI-3-testing-third-party  298 k
+ openldap2.4-extra-schemas    noarch  1.3-10.el5                   EMI-3-testing-third-party   46 k
+ openldap2.4-servers          x86_64  2.4.22-1.el5                 EMI-3-testing-third-party  2.1 M
+ regexp                       x86_64  1.4-2jpp.2                   sl-base                    102 k
+ tomcat5                      x86_64  5.5.23-0jpp.31.el5_8         sl-security                362 k
+ tomcat5-common-lib           x86_64  5.5.23-0jpp.31.el5_8         sl-security                225 k
+ tomcat5-jasper               x86_64  5.5.23-0jpp.31.el5_8         sl-security                1.1 M
+ tomcat5-jsp-2.0-api          x86_64  5.5.23-0jpp.31.el5_8         sl-security                103 k
+ tomcat5-server-lib           x86_64  5.5.23-0jpp.31.el5_8         sl-security                4.0 M
+ tomcat5-servlet-2.4-api      x86_64  5.5.23-0jpp.31.el5_8         sl-security                163 k
+ unixODBC                     x86_64  2.2.11-7.1                   sl-base                    834 k
+ voms-api-java3               noarch  3.0.0-1.el5                  EMI-3-testing-base         120 k
+ xalan-j2                     x86_64  2.7.0-6jpp.1                 sl-base                    4.6 M
+ xerces-j2                    x86_64  2.7.1-7jpp.2.el5_4.2         sl-base                    3.1 M
+ xml-commons                  x86_64  1.3.02-0.b2.7jpp.10          sl-base                     19 k
+ xml-commons-resolver         x86_64  1.1-1jpp.12                  sl-base                    170 k
+
+Transaction Summary
+====================================================================================================
+Install      43 Package(s)
+Upgrade      16 Package(s)
+
+Total download size: 115 M
+Is this ok [y/N]: y
+Downloading Packages:
+(1/59): emi-version-3.0.0-0.rc.sl5.x86_64.rpm                                | 1.9 kB     00:00     
+(2/59): emi-argus-1.6.0-1.el5.noarch.rpm                                     | 2.4 kB     00:00     
+(3/59): emi-release-3.0.0-1.el5.noarch.rpm                                   | 4.7 kB     00:00     
+(4/59): geronimo-specs-compat-1.0-0.M2.2jpp.12.x86_64.rpm                    | 5.4 kB     00:00     
+(5/59): glite-yaim-bdii-4.3.13-1.el5.noarch.rpm                              |  10 kB     00:00     
+(6/59): yaim-argus_server-1.6.0-1.el5.noarch.rpm                             |  15 kB     00:00     
+(7/59): xml-commons-1.3.02-0.b2.7jpp.10.x86_64.rpm                           |  19 kB     00:00     
+(8/59): bdii-5.2.17-1.el5.noarch.rpm                                         |  23 kB     00:00     
+(9/59): argus-pepcli-2.2.0-1.el5.x86_64.rpm                                  |  23 kB     00:00     
+(10/59): glue-schema-2.0.10-1.el5.noarch.rpm                                 |  34 kB     00:00     
+(11/59): openldap2.4-2.4.22-1.el5.x86_64.rpm                                 |  40 kB     00:00     
+(12/59): openldap2.4-extra-schemas-1.3-10.el5.noarch.rpm                     |  46 kB     00:00     
+(13/59): jakarta-commons-daemon-1.0.1-6jpp.1.x86_64.rpm                      |  46 kB     00:00     
+(14/59): jakarta-commons-fileupload-1.0-6jpp.1.x86_64.rpm                    |  53 kB     00:00     
+(15/59): argus-pep-api-c-2.2.0-1.el5.x86_64.rpm                              |  54 kB     00:00     
+(16/59): glite-info-provider-service-1.12.0-1.el5.noarch.rpm                 |  67 kB     00:00     
+(17/59): argus-pdp-pep-common-1.4.0-2.el5.noarch.rpm                         |  78 kB     00:00     
+(18/59): jclassads-2.4.0-3.sl5.noarch.rpm                                    |  95 kB     00:00     
+(19/59): jakarta-commons-launcher-0.9-6jpp.1.x86_64.rpm                      |  97 kB     00:00     
+(20/59): regexp-1.4-2jpp.2.x86_64.rpm                                        | 102 kB     00:00     
+(21/59): tomcat5-jsp-2.0-api-5.5.23-0jpp.31.el5_8.x86_64.rpm                 | 103 kB     00:00     
+(22/59): jakarta-commons-io-1.4-3.el5.noarch.rpm                             | 105 kB     00:00     
+(23/59): glite-yaim-core-5.1.1-1.sl5.noarch.rpm                              | 118 kB     00:00     
+(24/59): voms-api-java3-3.0.0-1.el5.noarch.rpm                               | 120 kB     00:00     
+(25/59): jakarta-commons-pool-1.3-5jpp.1.x86_64.rpm                          | 142 kB     00:00     
+(26/59): tomcat5-servlet-2.4-api-5.5.23-0jpp.31.el5_8.x86_64.rpm             | 163 kB     00:00     
+(27/59): xml-commons-resolver-1.1-1jpp.12.x86_64.rpm                         | 170 kB     00:00     
+(28/59): tomcat5-common-lib-5.5.23-0jpp.31.el5_8.x86_64.rpm                  | 225 kB     00:00     
+(29/59): geronimo-specs-1.0-0.M2.2jpp.12.x86_64.rpm                          | 258 kB     00:00     
+(30/59): jakarta-commons-modeler-1.1-8jpp.3.el5.x86_64.rpm                   | 259 kB     00:00     
+(31/59): canl-java-1.1.0-1.sl5.noarch.rpm                                    | 263 kB     00:00     
+(32/59): argus-pep-common-2.3.0-1.el5.noarch.rpm                             | 266 kB     00:00     
+(33/59): jakarta-commons-el-1.0-7jpp.1.x86_64.rpm                            | 269 kB     00:00     
+(34/59): jakarta-commons-dbcp-1.2.1-7jpp.1.x86_64.rpm                        | 278 kB     00:00     
+(35/59): openldap2.4-clients-2.4.22-1.el5.x86_64.rpm                         | 298 kB     00:00     
+(36/59): lib64ldap2.4_2-2.4.22-1.el5.x86_64.rpm                              | 300 kB     00:00     
+(37/59): jakarta-commons-digester-1.7-5jpp.1.x86_64.rpm                      | 349 kB     00:00     
+(38/59): tomcat5-5.5.23-0jpp.31.el5_8.x86_64.rpm                             | 362 kB     00:00     
+(39/59): bouncycastle146-mail-1.46-1.sl5.noarch.rpm                          | 476 kB     00:00     
+(40/59): jakarta-commons-beanutils-1.7.0-5jpp.1.x86_64.rpm                   | 567 kB     00:00     
+(41/59): glite-ce-common-java-1.15.1-2.sl5.noarch.rpm                        | 635 kB     00:00     
+(42/59): unixODBC-2.2.11-7.1.x86_64.rpm                                      | 834 kB     00:00     
+(43/59): tomcat5-jasper-5.5.23-0jpp.31.el5_8.x86_64.rpm                      | 1.1 MB     00:00     
+(44/59): bcel-5.1-8jpp.1.x86_64.rpm                                          | 1.1 MB     00:00     
+(45/59): jakarta-commons-collections-3.2-2jpp.3.x86_64.rpm                   | 1.2 MB     00:00     
+(46/59): bouncycastle146-1.46-1.el5.noarch.rpm                               | 1.9 MB     00:00     
+(47/59): openldap2.4-servers-2.4.22-1.el5.x86_64.rpm                         | 2.1 MB     00:00     
+(48/59): ant-1.6.5-2jpp.2.x86_64.rpm                                         | 2.3 MB     00:00     
+(49/59): mysql-connector-java-5.1.12-2.el5.x86_64.rpm                        | 2.5 MB     00:00     
+(50/59): mx4j-3.0.1-6jpp.4.x86_64.rpm                                        | 2.7 MB     00:02     
+(51/59): xerces-j2-2.7.1-7jpp.2.el5_4.2.x86_64.rpm                           | 3.1 MB     00:02     
+(52/59): tomcat5-server-lib-5.5.23-0jpp.31.el5_8.x86_64.rpm                  | 4.0 MB     00:02     
+(53/59): xalan-j2-2.7.0-6jpp.1.x86_64.rpm                                    | 4.6 MB     00:03     
+(54/59): eclipse-ecj-3.2.1-19.el5.x86_64.rpm                                 | 9.0 MB     00:08     
+(55/59): java-1.6.0-openjdk-devel-1.6.0.0-1.33.1.11.6.el5_9.x86_64.rpm       |  12 MB     00:16     
+(56/59): argus-pdp-1.6.0-1.el5.noarch.rpm                                    |  12 MB     00:00     
+(57/59): argus-pep-server-1.6.0-3.el5.noarch.rpm                             |  13 MB     00:00     
+(58/59): argus-pap-1.6.0-1.el5.noarch.rpm                                    |  17 MB     00:00     
+(59/59): axis2-1.6.1-1.emi.noarch.rpm                                        |  19 MB     00:02     
+----------------------------------------------------------------------------------------------------
+Total                                                               2.1 MB/s | 115 MB     00:55     
+Running rpm_check_debug
+Running Transaction Test
+Finished Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Installing     : tomcat5-servlet-2.4-api                                                     1/76 
+  Installing     : jakarta-commons-collections                                                 2/76 
+  Installing     : jakarta-commons-beanutils                                                   3/76 
+  Updating       : argus-pep-api-c                                                             4/76 
+  Updating       : argus-pepcli                                                                5/76 
+  Installing     : jakarta-commons-digester                                                    6/76 
+  Installing     : tomcat5-jasper                                                              7/76 
+  Installing     : regexp                                                                      8/76 
+  Installing     : jakarta-commons-el                                                          9/76 
+  Installing     : jakarta-commons-pool                                                       10/76 
+  Updating       : argus-pep-common                                                           11/76 
+  Updating       : emi-version                                                                12/76 
+  Installing     : bouncycastle146                                                            13/76 
+  Updating       : glite-yaim-core                                                            14/76 
+  Updating       : glite-info-provider-service                                                15/76 
+  Updating       : glite-yaim-bdii                                                            16/76 
+  Updating       : yaim-argus_server                                                          17/76 
+  Updating       : glue-schema                                                                18/76 
+  Installing     : jakarta-commons-dbcp                                                       19/76 
+  Installing     : bcel                                                                       20/76 
+  Installing     : tomcat5-jsp-2.0-api                                                        21/76 
+  Installing     : jakarta-commons-fileupload                                                 22/76 
+  Installing     : jakarta-commons-daemon                                                     23/76 
+  Installing     : eclipse-ecj                                                                24/76 
+  Installing     : unixODBC                                                                   25/76 
+  Installing     : jakarta-commons-launcher                                                   26/76 
+  Installing     : java-1.6.0-openjdk-devel                                                   27/76 
+  Installing     : bouncycastle146-mail                                                       28/76 
+  Installing     : xml-commons                                                                29/76 
+  Installing     : jclassads                                                                  30/76 
+  Installing     : jakarta-commons-io                                                         31/76 
+  Installing     : canl-java                                                                  32/76 
+  Updating       : argus-pdp-pep-common                                                       33/76 
+  Updating       : argus-pdp                                                                  34/76 
+warning: /etc/argus/pdp/pdp.ini created as /etc/argus/pdp/pdp.ini.rpmnew
+  Installing     : voms-api-java3                                                             35/76 
+  Updating       : argus-pap                                                                  36/76 
+warning: /etc/argus/pap/pap-admin.properties created as /etc/argus/pap/pap-admin.properties.rpmnew
+  Updating       : argus-pep-server                                                           37/76 
+  Installing     : axis2                                                                      38/76 
+  Updating       : emi-release                                                                39/76 
+  Installing     : xerces-j2                                                                  40/76 
+  Installing     : lib64ldap2.4_2                                                             41/76 
+  Installing     : xml-commons-resolver                                                       42/76 
+  Installing     : mx4j                                                                       43/76 
+  Installing     : geronimo-specs                                                             44/76 
+  Installing     : xalan-j2                                                                   45/76 
+  Installing     : jakarta-commons-modeler                                                    46/76 
+  Installing     : tomcat5-server-lib                                                         47/76 
+  Installing     : ant                                                                        48/76 
+  Installing     : geronimo-specs-compat                                                      49/76 
+  Installing     : tomcat5-common-lib                                                         50/76 
+  Installing     : tomcat5                                                                    51/76 
+/usr/bin/build-jar-repository: error: Could not find xml-commons-apis Java extension for this JVM
+/usr/bin/build-jar-repository: error: Some specified jars were not found for this jvm
+  Installing     : mysql-connector-java                                                       52/76 
+  Installing     : glite-ce-common-java                                                       53/76 
+  Installing     : openldap2.4-clients                                                        54/76 
+  Installing     : openldap2.4                                                                55/76 
+  Installing     : openldap2.4-extra-schemas                                                  56/76 
+useradd: user ldap exists
+Adding user ldap to group ldap
+  Installing     : openldap2.4-servers                                                        57/76 
+Generating self-signed certificate...
+To generate a self-signed certificate, you can use the utility
+/usr/share/openldap2.4/gencert.sh...
+  Updating       : bdii                                                                       58/76 
+warning: /etc/bdii/bdii-slapd.conf saved as /etc/bdii/bdii-slapd.conf.rpmsave
+warning: /etc/bdii/bdii-top-slapd.conf saved as /etc/bdii/bdii-top-slapd.conf.rpmsave
+  Updating       : emi-argus                                                                  59/76 
+  Cleanup        : argus-pap                                                                  60/76 
+  Cleanup        : argus-pdp                                                                  61/76 
+Starting argus-pdp... [  OK  ]
+  Erasing        : emi-trustmanager                                                           62/76 
+  Cleanup        : argus-pepcli                                                               63/76 
+  Cleanup        : glue-schema                                                                64/76 
+  Cleanup        : glite-yaim-bdii                                                            65/76 
+  Cleanup        : glite-info-provider-service                                                66/76 
+  Cleanup        : bdii                                                                       67/76 
+  Cleanup        : argus-pdp-pep-common                                                       68/76 
+  Cleanup        : glite-yaim-core                                                            69/76 
+  Cleanup        : emi-argus                                                                  70/76 
+  Cleanup        : yaim-argus_server                                                          71/76 
+  Cleanup        : emi-version                                                                72/76 
+  Cleanup        : argus-pep-api-c                                                            73/76 
+  Cleanup        : argus-pep-server                                                           74/76 
+Starting argus-pepd... [  OK  ]
+  Cleanup        : emi-release                                                                75/76 
+  Cleanup        : argus-pep-common                                                           76/76 
+
+Installed:
+  glite-ce-common-java.noarch 0:1.15.1-2.sl5                                                        
+
+Dependency Installed:
+  ant.x86_64 0:1.6.5-2jpp.2                                                                         
+  axis2.noarch 0:1.6.1-1.emi                                                                        
+  bcel.x86_64 0:5.1-8jpp.1                                                                          
+  bouncycastle146.noarch 0:1.46-1.el5                                                               
+  bouncycastle146-mail.noarch 0:1.46-1.sl5                                                          
+  canl-java.noarch 0:1.1.0-1.sl5                                                                    
+  eclipse-ecj.x86_64 1:3.2.1-19.el5                                                                 
+  geronimo-specs.x86_64 0:1.0-0.M2.2jpp.12                                                          
+  geronimo-specs-compat.x86_64 0:1.0-0.M2.2jpp.12                                                   
+  jakarta-commons-beanutils.x86_64 0:1.7.0-5jpp.1                                                   
+  jakarta-commons-collections.x86_64 0:3.2-2jpp.3                                                   
+  jakarta-commons-daemon.x86_64 1:1.0.1-6jpp.1                                                      
+  jakarta-commons-dbcp.x86_64 0:1.2.1-7jpp.1                                                        
+  jakarta-commons-digester.x86_64 0:1.7-5jpp.1                                                      
+  jakarta-commons-el.x86_64 0:1.0-7jpp.1                                                            
+  jakarta-commons-fileupload.x86_64 1:1.0-6jpp.1                                                    
+  jakarta-commons-io.noarch 0:1.4-3.el5                                                             
+  jakarta-commons-launcher.x86_64 0:0.9-6jpp.1                                                      
+  jakarta-commons-modeler.x86_64 0:1.1-8jpp.3.el5                                                   
+  jakarta-commons-pool.x86_64 0:1.3-5jpp.1                                                          
+  java-1.6.0-openjdk-devel.x86_64 1:1.6.0.0-1.33.1.11.6.el5_9                                       
+  jclassads.noarch 0:2.4.0-3.sl5                                                                    
+  lib64ldap2.4_2.x86_64 0:2.4.22-1.el5                                                              
+  mx4j.x86_64 1:3.0.1-6jpp.4                                                                        
+  mysql-connector-java.x86_64 1:5.1.12-2.el5                                                        
+  openldap2.4.x86_64 0:2.4.22-1.el5                                                                 
+  openldap2.4-clients.x86_64 0:2.4.22-1.el5                                                         
+  openldap2.4-extra-schemas.noarch 0:1.3-10.el5                                                     
+  openldap2.4-servers.x86_64 0:2.4.22-1.el5                                                         
+  regexp.x86_64 0:1.4-2jpp.2                                                                        
+  tomcat5.x86_64 0:5.5.23-0jpp.31.el5_8                                                             
+  tomcat5-common-lib.x86_64 0:5.5.23-0jpp.31.el5_8                                                  
+  tomcat5-jasper.x86_64 0:5.5.23-0jpp.31.el5_8                                                      
+  tomcat5-jsp-2.0-api.x86_64 0:5.5.23-0jpp.31.el5_8                                                 
+  tomcat5-server-lib.x86_64 0:5.5.23-0jpp.31.el5_8                                                  
+  tomcat5-servlet-2.4-api.x86_64 0:5.5.23-0jpp.31.el5_8                                             
+  unixODBC.x86_64 0:2.2.11-7.1                                                                      
+  voms-api-java3.noarch 0:3.0.0-1.el5                                                               
+  xalan-j2.x86_64 0:2.7.0-6jpp.1                                                                    
+  xerces-j2.x86_64 0:2.7.1-7jpp.2.el5_4.2                                                           
+  xml-commons.x86_64 0:1.3.02-0.b2.7jpp.10                                                          
+  xml-commons-resolver.x86_64 0:1.1-1jpp.12                                                         
+
+Updated:
+  argus-pap.noarch 0:1.6.0-1.el5               argus-pdp.noarch 0:1.6.0-1.el5                      
+  argus-pdp-pep-common.noarch 0:1.4.0-2.el5    argus-pep-api-c.x86_64 0:2.2.0-1.el5                
+  argus-pep-common.noarch 0:2.3.0-1.el5        argus-pep-server.noarch 0:1.6.0-3.el5               
+  argus-pepcli.x86_64 0:2.2.0-1.el5            bdii.noarch 0:5.2.17-1.el5                          
+  emi-argus.noarch 0:1.6.0-1.el5               emi-release.noarch 0:3.0.0-1.el5                    
+  emi-version.x86_64 0:3.0.0-0.rc.sl5          glite-info-provider-service.noarch 0:1.12.0-1.el5   
+  glite-yaim-bdii.noarch 0:4.3.13-1.el5        glite-yaim-core.noarch 0:5.1.1-1.sl5                
+  glue-schema.noarch 0:2.0.10-1.el5            yaim-argus_server.noarch 0:1.6.0-1.el5              
+
+Replaced:
+  emi-trustmanager.noarch 0:3.1.4-1.sl5                                                             
+
+Complete!
+
+
+-----------------------------------------------------------------------------------------------
+1.6 Argus Information (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# yum info emi-argus argus-pap argus-pdp argus-pep-server
+Loaded plugins: kernel-module, priorities, protectbase
+EMI-3-base                                                                   | 1.9 kB     00:00     
+EMI-3-base/primary_db                                                        | 1.1 kB     00:00     
+EMI-3-contribs                                                               | 1.9 kB     00:00     
+EMI-3-contribs/primary_db                                                    | 1.1 kB     00:00     
+EMI-3-third-party                                                            | 1.9 kB     00:00     
+EMI-3-third-party/primary_db                                                 |  44 kB     00:00     
+EMI-3-updates                                                                | 1.9 kB     00:00     
+EMI-3-updates/primary_db                                                     | 1.1 kB     00:00     
+4427 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Installed Packages
+Name       : argus-pap
+Arch       : noarch
+Version    : 1.6.0
+Release    : 1.el5
+Size       : 19 M
+Repo       : installed
+Summary    : Argus PAP service
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: 
+           : Argus is a system meant to render consistent authorization decisions for
+           : distributed services (e.g. compute elements, portals). In order to achieve
+           : this consistency a number of points must be addressed. First, it must be
+           : possible to author and maintain consistent authorization policies. This is
+           : handled by the Policy Administration Point (PAP) component in the service.
+           : Second, authored policies must be evaluated in a consistent manner, a task
+           : performed by the Policy Decision Point (PDP). Finally, the data provided for
+           : evaluation against policies must be consistent (in form and definition) and
+           : this is done by the Policy Enforcement Point (PEP).
+           : 
+           : This package provides the Argus PAP service.
+
+Name       : argus-pdp
+Arch       : noarch
+Version    : 1.6.0
+Release    : 1.el5
+Size       : 13 M
+Repo       : installed
+Summary    : Argus PDP
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: Argus PDP (Policy Decision Point).
+           : The Argus Authorization Service renders consistent authorization
+           : decisions for distributed services (e.g., user interfaces,
+           : portals, computing elements, storage elements). The service is
+           : based on the XACML standard, and uses authorization policies to
+           : determine if a user is allowed or denied to perform a certain
+           : action on a particular service.
+           : The Argus Authorization Service is composed of three main
+           : components:
+           : - The Policy Administration Point (PAP) provides the tools to
+           : author authorization policies, organize them in the local
+           : repository and configure policy distribution among remote PAPs.
+           : - The Policy Decision Point (PDP) implements the authorization
+           : engine, and is responsible for the evaluation of the authorization
+           : requests against the XACML policies retrieved from the PAP.
+           : - The Policy Enforcement Point Server (PEP Server) ensures the
+           : integrity and consistency of the authorization requests received
+           : from the PEP clients. Lightweight PEP client libraries are also
+           : provided to ease the integration and interoperability with other
+           : EMI services or components.
+
+Name       : argus-pep-server
+Arch       : noarch
+Version    : 1.6.0
+Release    : 3.el5
+Size       : 15 M
+Repo       : installed
+Summary    : Argus PEP Server
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: Argus PEP (Policy Enforcement Point) Server.
+           : The Argus Authorization Service renders consistent authorization
+           : decisions for distributed services (e.g., user interfaces,
+           : portals, computing elements, storage elements). The service is
+           : based on the XACML standard, and uses authorization policies to
+           : determine if a user is allowed or denied to perform a certain
+           : action on a particular service.
+           : .
+           : The Argus Authorization Service is composed of three main
+           : components:
+           : - The Policy Administration Point (PAP) provides the tools to
+           : author authorization policies, organize them in the local
+           : repository and configure policy distribution among remote PAPs.
+           : - The Policy Decision Point (PDP) implements the authorization
+           : engine, and is responsible for the evaluation of the authorization
+           : requests against the XACML policies retrieved from the PAP.
+           : - The Policy Enforcement Point Server (PEP Server) ensures the
+           : integrity and consistency of the authorization requests received
+           : from the PEP clients. Lightweight PEP client libraries are also
+           : provided to ease the integration and interoperability with other
+           : EMI services or components.
+
+Name       : emi-argus
+Arch       : noarch
+Version    : 1.6.0
+Release    : 1.el5
+Size       : 0.0 
+Repo       : installed
+Summary    : Argus EMI meta-package (PAP, PDP and PEP Server)
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: Argus EMI meta-package (PAP, PDP and PEP Server).
+           : The Argus Authorization Service is composed of three main
+           : components:
+           : - The Policy Administration Point (PAP) provides the tools to
+           : author authorization policies, organize them in the local
+           : repository and configure policy distribution among remote PAPs.
+           : - The Policy Decision Point (PDP) implements the authorization
+           : engine, and is responsible for the evaluation of the authorization
+           : requests against the XACML policies retrieved from the PAP.
+           : - The Policy Enforcement Point Server (PEP Server) ensures the
+           : integrity and consistency of the authorization requests received
+           : from the PEP clients. Lightweight PEP client libraries are also
+           : provided to ease the integration and interoperability with other
+           : EMI services or components.
+
+
+-----------------------------------------------------------------------------------------------
+1.7 Argus Service Checks
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# service argus-pap status
+PAP running!
+
+[root@minerva ~]# service argus-pdp status
+argus-pdp is running...
+
+[root@minerva ~]# service argus-pepd status
+argus-pepd is running...
+
