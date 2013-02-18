@@ -1,6 +1,7 @@
 Argus EMI-3 glue2 validation
 ============================
 
+Document: http://argus-authz.github.com/reports/argus-EMI3_RC-glue-validator-SL6.txt
 Author: valery.tschopp@switch.ch
 Date: 2013-02-18
 Platform: SL6 (x86_64)

@@ -1,6 +1,7 @@
 Argus EMI-3 local deployment
 ============================
 
+Document: http://argus-authz.github.com/reports/argus-EMI3_RC-deployment-Deb6.txt
 Author: valery.tschopp@switch.ch
 Date: 2013-02-07
 Platform: Debian6 (x86_64)

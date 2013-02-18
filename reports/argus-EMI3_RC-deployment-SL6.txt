@@ -1,6 +1,7 @@
 Argus EMI-3 local deployment
 ============================
 
+Document: http://argus-authz.github.com/reports/argus-EMI3_RC-deployment-SL6.txt
 Author: valery.tschopp@switch.ch
 Date: 2013-02-05
 Platform: SL6 (x86_64)

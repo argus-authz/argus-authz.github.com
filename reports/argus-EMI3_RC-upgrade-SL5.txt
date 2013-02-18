@@ -1,6 +1,7 @@
 Argus EMI-3 upgrade installation
 ================================
 
+Document: http://argus-authz.github.com/reports/argus-EMI3_RC-upgrade-SL5.txt
 Author: valery.tschopp@switch.ch
 Date: 2013-02-14
 Platform: SL5 (x86_64)
