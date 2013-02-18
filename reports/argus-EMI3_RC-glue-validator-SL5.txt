@@ -1,0 +1,120 @@
+Argus EMI-3 glue2 validation
+============================
+
+Author: valery.tschopp@switch.ch
+Date: 2013-02-18
+Platform: SL5 (x86_64)
+Host: minerva.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Information
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# rpm -qa | grep -e emi- -e argus | sort
+argus-pap-1.6.0-1.el5.noarch
+argus-pdp-1.6.0-1.el5.noarch
+argus-pdp-pep-common-1.4.0-2.el5.noarch
+argus-pep-api-c-2.2.0-1.el5.x86_64
+argus-pep-common-2.3.0-1.el5.noarch
+argus-pep-server-1.6.0-3.el5.noarch
+argus-pepcli-2.2.0-1.el5.x86_64
+emi-argus-1.6.0-1.el5.noarch
+emi-release-3.0.0-1.el5.noarch
+emi-version-3.0.0-1.sl5.x86_64
+yaim-argus_server-1.6.0-1.el5.noarch
+
+
+-----------------------------------------------------------------------------------------------
+1. GLUE2 Validation
+-----------------------------------------------------------------------------------------------
+
+[root@minerva ~]# glue-validator -t glue2 -h localhost -p 2170 -b o=glue
+Validating data types. ... FAIL
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+Validating data types. ... ok
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+Validating data types. ... ok
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+Validating data types. ... ok
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+Validating data types. ... FAIL
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+Validating data types. ... FAIL
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+Validating data types. ... ok
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+Validating data types. ... ok
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+Validating data types. ... ok
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+Validating data types. ... FAIL
+Verifying that attributes are not empty. ... ok
+Verifying the existence of mandatory attributes. ... ok
+Verifying the object class ... ok
+Verifying single-valued attributes only have one value. ... ok
+
+======================================================================
+FAIL: Validating data types.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib/python2.4/site-packages/validator/EntryTest.py", line 61, in test_data_types
+    self.assertTrue(check(value), message)
+AssertionError: The field GLUE2ServiceCapability with value 'security.identitymapping' does not follow the type Capability_t in GLUE2ServiceID=minerva.switch.ch_org.glite.Argus_1527385135,GLUE2GroupID=resource,o=glue
+
+======================================================================
+FAIL: Validating data types.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib/python2.4/site-packages/validator/EntryTest.py", line 61, in test_data_types
+    self.assertTrue(check(value), message)
+AssertionError: The field GLUE2EndpointInterfaceName with value 'org.glite.Argus.PEP' does not follow the type InterfaceName_t in GLUE2EndpointID=minerva.switch.ch_org.glite.Argus_1527385135_org.glite.Argus.PEP_3195024223,GLUE2ServiceID=minerva.switch.ch_org.glite.Argus_1527385135,GLUE2GroupID=resource,o=glue
+
+======================================================================
+FAIL: Validating data types.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib/python2.4/site-packages/validator/EntryTest.py", line 61, in test_data_types
+    self.assertTrue(check(value), message)
+AssertionError: The field GLUE2EndpointInterfaceName with value 'org.glite.Argus.PDP' does not follow the type InterfaceName_t in GLUE2EndpointID=minerva.switch.ch_org.glite.Argus_1527385135_org.glite.Argus.PDP_1547825216,GLUE2ServiceID=minerva.switch.ch_org.glite.Argus_1527385135,GLUE2GroupID=resource,o=glue
+
+======================================================================
+FAIL: Validating data types.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib/python2.4/site-packages/validator/EntryTest.py", line 61, in test_data_types
+    self.assertTrue(check(value), message)
+AssertionError: The field GLUE2EndpointInterfaceName with value 'org.glite.Argus.PAP' does not follow the type InterfaceName_t in GLUE2EndpointID=minerva.switch.ch_org.glite.Argus_1527385135_org.glite.Argus.PAP_1197463473,GLUE2ServiceID=minerva.switch.ch_org.glite.Argus_1527385135,GLUE2GroupID=resource,o=glue
+
+----------------------------------------------------------------------
+Ran 50 tests in 0.022s
+
+FAILED (failures=4)
+[root@minerva ~]# 
+
