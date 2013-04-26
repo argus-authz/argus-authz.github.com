@@ -1,0 +1,83 @@
+**********************************
+* EMI Certification Report *
+**********************************
+- Product: ARGUS
+- Release Task: https://savannah.cern.ch/task/?41006
+- ETICS Subsystem Configuration Name: emi-argus_R_1_6_1_EMI3
+- VCS Tag: N/A (source packages)
+- EMI Major Release: EMI-3 update
+- Platforms: SL5/x86_64, SL6/x86_64, Debian6/x86_64
+- Author: Valery Tschopp
+- Date: 25-Apr-2013
+- Certification Report Template : v. 3.3
+
+**********************************************
+
+1. Release Task exists in the Release Tracker with core info properly provided:
+    1.1. Proper product name AND version is specified: YES
+    1.2. All the relevant RfCs are listed: YES
+    1.3. All the RfCs are "Tested" or "Not Tested": YES
+
+2. VCS tag is available: N/A (source packages)
+
+3. The ETICS configuration is available: YES
+     3.1. The ETICS configuration is locked: NO
+     3.2. The ETICS configuration can be built in ETICS without errors: YES
+
+4. Binary packages are available in EMI registered repo: 
+    4.1. rpms: YES
+    4.2. tarballs: N/A
+    4.3. debs: YES
+
+5. Source packages are available in EMI registered repo: 
+    5.1. rpms: YES
+    5.2. tarballs: N/A
+    5.3. debs: YES
+
+6. List of binary packages are specified in the Release Task: YES
+
+7. List of source packages are specified in the Release Task: YES
+
+8. Licence information is provided in the Release Task and the product has an "EMI-compatible" licence: YES
+
+***********
+Testing
+***********
+
+9. The deployment of the new version of the product from the EMI repo performed by the PT was succesful: YES
+
+10. The Product Test Plan URL is specified in the Release Task: YES
+
+11. The Product Test Report is attached to the Release Task: YES
+
+12. The Test Report contains result/logs of :
+      12.1. static code analysis: N/A
+      12.2. unit tests: YES
+      12.3. deployment tests: YES
+      12.4. functionality tests: N/A
+      12.5. regression tests: N/A
+      12.6. standard conformance tests: N/A
+      12.7. performance tests: N/A
+      12.8. scalability tests: N/A
+
+********************
+Documentation
+********************
+
+13. Component Release Notes are provided in the task: YES
+
+14. Are there documentation changes in this release? NO
+
+15. If Yes, are the changes reported in the Component Release Notes? N/A
+
+16. Up-to-date Minimum Required Documentation URLs are specified in the Release Task for: 
+      16.1: Functional Description: YES
+      16.2: User Guide: N/A
+      16.3: Client Installation and Configuration: N/A
+      16.4: System Administrator Guide: YES
+      16.5: Service Reference Card: YES
+
+
+**********************************************
+REMARKS:
+The binary tarballs don't exist, everything is built from source packages.

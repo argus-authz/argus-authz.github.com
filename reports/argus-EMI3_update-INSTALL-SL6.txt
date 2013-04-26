@@ -1,0 +1,645 @@
+Argus EMI-3 update installation
+===============================
+
+Document: http://argus-authz.github.com/reports/argus-EMI3_update-INSTALL-SL6.txt
+Author: valery.tschopp@switch.ch
+Date: 2013-04-26
+Platform: SL6 (x86_64)
+Host: nemesis.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Service Installation and Configuration (EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Host Information
+-----------------------------------------------------------------------------------------------
+
+root@nemesis# lsb_release -a
+lsb_release -a
+LSB Version:	:base-4.0-amd64:base-4.0-noarch:core-4.0-amd64:core-4.0-noarch:graphics-4.0-amd64:graphics-4.0-noarch:printing-4.0-amd64:printing-4.0-noarch
+Distributor ID:	Scientific
+Description:	Scientific Linux release 6.4 (Carbon)
+Release:	6.4
+Codename:	Carbon
+
+
+root@nemesis# yum repolist
+Loaded plugins: priorities, security
+318 packages excluded due to repository priority protections
+repo id                             repo name                                                   status
+EGI-trustanchors                    EGI-trustanchors                                             109+106
+EMI-3-testing-base                  EMI 3 Testing Base Repository                                   2012
+EMI-3-testing-third-party           EMI 3 Testing Third-Party Repository                              42
+Oracle-11                           Oracle Repository (not for distribution)                           3
+core                                SL 6 base                                                       6449
+epel                                Extra Packages for Enterprise Linux 6 - x86_64              8467+159
+eugridpma                           EUGridPMA                                                    115+112
+extras                              epel                                                        8467+159
+sl                                  Scientific Linux 6.4 - x86_64                                   6449
+sl-security                         Scientific Linux 6.4 - x86_64 - security updates                 362
+repolist: 32475
+
+-----------------------------------------------------------------------------------------------
+1.2 emi-argus Installation
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # yum install emi-argus
+Loaded plugins: priorities, security
+318 packages excluded due to repository priority protections
+Setting up Install Process
+Resolving Dependencies
+--> Running transaction check
+---> Package emi-argus.noarch 0:1.6.0-1.el6 will be installed
+--> Processing Dependency: emi-version for package: emi-argus-1.6.0-1.el6.noarch
+--> Processing Dependency: argus-pepcli for package: emi-argus-1.6.0-1.el6.noarch
+--> Processing Dependency: bdii for package: emi-argus-1.6.0-1.el6.noarch
+--> Processing Dependency: argus-pap for package: emi-argus-1.6.0-1.el6.noarch
+--> Processing Dependency: lcg-expiregridmapdir for package: emi-argus-1.6.0-1.el6.noarch
+--> Processing Dependency: argus-pdp for package: emi-argus-1.6.0-1.el6.noarch
+--> Processing Dependency: yaim-argus_server for package: emi-argus-1.6.0-1.el6.noarch
+--> Processing Dependency: argus-pep-server for package: emi-argus-1.6.0-1.el6.noarch
+--> Running transaction check
+---> Package argus-pap.noarch 0:1.6.1-1.el6 will be installed
+--> Processing Dependency: voms-api-java3 for package: argus-pap-1.6.1-1.el6.noarch
+--> Processing Dependency: java-1.6.0-openjdk for package: argus-pap-1.6.1-1.el6.noarch
+---> Package argus-pdp.noarch 0:1.6.0-1.el6 will be installed
+--> Processing Dependency: argus-pdp-pep-common >= 1.4 for package: argus-pdp-1.6.0-1.el6.noarch
+--> Processing Dependency: jpackage-utils for package: argus-pdp-1.6.0-1.el6.noarch
+---> Package argus-pep-server.noarch 0:1.6.1-1.el6 will be installed
+--> Processing Dependency: argus-pep-common >= 2.3 for package: argus-pep-server-1.6.1-1.el6.noarch
+---> Package argus-pepcli.x86_64 0:2.2.0-1.el6 will be installed
+--> Processing Dependency: libargus-pep.so.2()(64bit) for package: argus-pepcli-2.2.0-1.el6.x86_64
+---> Package bdii.noarch 0:5.2.17-1.el6 will be installed
+--> Processing Dependency: glue-schema >= 2.0.0 for package: bdii-5.2.17-1.el6.noarch
+--> Processing Dependency: openldap-servers for package: bdii-5.2.17-1.el6.noarch
+--> Processing Dependency: expect for package: bdii-5.2.17-1.el6.noarch
+--> Processing Dependency: policycoreutils-python for package: bdii-5.2.17-1.el6.noarch
+--> Processing Dependency: openldap-clients for package: bdii-5.2.17-1.el6.noarch
+---> Package emi-version.x86_64 0:3.0.0-1.sl6 will be installed
+---> Package lcg-expiregridmapdir.noarch 0:3.0.1-1 will be installed
+---> Package yaim-argus_server.noarch 0:1.6.0-1.el6 will be installed
+--> Processing Dependency: glite-yaim-bdii for package: yaim-argus_server-1.6.0-1.el6.noarch
+--> Processing Dependency: glite-info-provider-service for package: yaim-argus_server-1.6.0-1.el6.noarch
+--> Processing Dependency: glite-yaim-core for package: yaim-argus_server-1.6.0-1.el6.noarch
+--> Running transaction check
+---> Package argus-pdp-pep-common.noarch 0:1.4.0-2.el6 will be installed
+--> Processing Dependency: canl-java for package: argus-pdp-pep-common-1.4.0-2.el6.noarch
+---> Package argus-pep-api-c.x86_64 0:2.2.0-1.el6 will be installed
+---> Package argus-pep-common.noarch 0:2.3.0-1.el6 will be installed
+---> Package expect.x86_64 0:5.44.1.15-4.el6 will be installed
+--> Processing Dependency: libtcl8.5.so()(64bit) for package: expect-5.44.1.15-4.el6.x86_64
+---> Package glite-info-provider-service.noarch 0:1.12.0-1.el6 will be installed
+---> Package glite-yaim-bdii.noarch 0:4.3.13-1.el6 will be installed
+---> Package glite-yaim-core.noarch 0:5.1.2-1.sl6 will be installed
+---> Package glue-schema.noarch 0:2.0.10-1.el6 will be installed
+---> Package java-1.6.0-openjdk.x86_64 1:1.6.0.0-1.61.1.11.11.el6_4 will be installed
+--> Processing Dependency: tzdata-java for package: 1:java-1.6.0-openjdk-1.6.0.0-1.61.1.11.11.el6_4.x86_64
+--> Processing Dependency: rhino for package: 1:java-1.6.0-openjdk-1.6.0.0-1.61.1.11.11.el6_4.x86_64
+--> Processing Dependency: libpulse.so.0(PULSE_0)(64bit) for package: 1:java-1.6.0-openjdk-1.6.0.0-1.61.1.11.11.el6_4.x86_64
+--> Processing Dependency: libpulse.so.0()(64bit) for package: 1:java-1.6.0-openjdk-1.6.0.0-1.61.1.11.11.el6_4.x86_64
+--> Processing Dependency: libgif.so.4()(64bit) for package: 1:java-1.6.0-openjdk-1.6.0.0-1.61.1.11.11.el6_4.x86_64
+---> Package jpackage-utils.noarch 0:1.7.5-3.12.el6 will be installed
+---> Package openldap-clients.x86_64 0:2.4.23-31.el6 will be installed
+---> Package openldap-servers.x86_64 0:2.4.23-31.el6 will be installed
+--> Processing Dependency: libltdl.so.7()(64bit) for package: openldap-servers-2.4.23-31.el6.x86_64
+---> Package policycoreutils-python.x86_64 0:2.0.83-19.30.el6 will be installed
+--> Processing Dependency: libsemanage-python >= 2.0.43-4 for package: policycoreutils-python-2.0.83-19.30.el6.x86_64
+--> Processing Dependency: audit-libs-python >= 1.4.2-1 for package: policycoreutils-python-2.0.83-19.30.el6.x86_64
+--> Processing Dependency: setools-libs-python for package: policycoreutils-python-2.0.83-19.30.el6.x86_64
+--> Processing Dependency: libselinux-python for package: policycoreutils-python-2.0.83-19.30.el6.x86_64
+---> Package voms-api-java3.noarch 0:3.0.0-1.el6 will be installed
+--> Processing Dependency: bouncycastle-mail for package: voms-api-java3-3.0.0-1.el6.noarch
+--> Running transaction check
+---> Package audit-libs-python.x86_64 0:2.2-2.el6 will be installed
+---> Package bouncycastle-mail.noarch 0:1.46-1.sl6 will be installed
+--> Processing Dependency: bouncycastle = 1.46 for package: bouncycastle-mail-1.46-1.sl6.noarch
+---> Package canl-java.noarch 0:1.2.0-0.sl6 will be installed
+--> Processing Dependency: jakarta-commons-io >= 1.4 for package: canl-java-1.2.0-0.sl6.noarch
+---> Package giflib.x86_64 0:4.1.6-3.1.el6 will be installed
+---> Package libselinux-python.x86_64 0:2.0.94-5.3.el6 will be installed
+---> Package libsemanage-python.x86_64 0:2.0.43-4.2.el6 will be installed
+---> Package libtool-ltdl.x86_64 0:2.2.6-15.5.el6 will be installed
+---> Package pulseaudio-libs.x86_64 0:0.9.21-14.el6_3 will be installed
+--> Processing Dependency: libsndfile.so.1(libsndfile.so.1.0)(64bit) for package: pulseaudio-libs-0.9.21-14.el6_3.x86_64
+--> Processing Dependency: libsndfile.so.1()(64bit) for package: pulseaudio-libs-0.9.21-14.el6_3.x86_64
+--> Processing Dependency: libasyncns.so.0()(64bit) for package: pulseaudio-libs-0.9.21-14.el6_3.x86_64
+---> Package rhino.noarch 0:1.7-0.7.r2.2.el6 will be installed
+--> Processing Dependency: jline for package: rhino-1.7-0.7.r2.2.el6.noarch
+---> Package setools-libs-python.x86_64 0:3.3.7-4.el6 will be installed
+--> Processing Dependency: setools-libs = 3.3.7-4.el6 for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libqpol.so.1(VERS_1.3)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libapol.so.4(VERS_4.1)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libseaudit.so.4(VERS_4.2)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libapol.so.4(VERS_4.0)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libpoldiff.so.1(VERS_1.2)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libpoldiff.so.1(VERS_1.3)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libqpol.so.1(VERS_1.2)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libqpol.so.1(VERS_1.4)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libsefs.so.4(VERS_4.0)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libseaudit.so.4(VERS_4.1)(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libseaudit.so.4()(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libsefs.so.4()(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libapol.so.4()(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libpoldiff.so.1()(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+--> Processing Dependency: libqpol.so.1()(64bit) for package: setools-libs-python-3.3.7-4.el6.x86_64
+---> Package tcl.x86_64 1:8.5.7-6.el6 will be installed
+---> Package tzdata-java.noarch 0:2013b-1.el6 will be installed
+--> Running transaction check
+---> Package bouncycastle.noarch 0:1.46-1.el6 will be installed
+---> Package jakarta-commons-io.noarch 0:1.4-3.el6 will be installed
+---> Package jline.noarch 0:0.9.94-0.8.el6 will be installed
+---> Package libasyncns.x86_64 0:0.8-1.1.el6 will be installed
+---> Package libsndfile.x86_64 0:1.0.20-5.el6 will be installed
+--> Processing Dependency: libFLAC.so.8()(64bit) for package: libsndfile-1.0.20-5.el6.x86_64
+---> Package setools-libs.x86_64 0:3.3.7-4.el6 will be installed
+--> Running transaction check
+---> Package flac.x86_64 0:1.2.1-6.1.el6 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+========================================================================================================
+ Package                      Arch    Version                          Repository                  Size
+========================================================================================================
+Installing:
+ emi-argus                    noarch  1.6.0-1.el6                      EMI-3-testing-base         2.5 k
+Installing for dependencies:
+ argus-pap                    noarch  1.6.1-1.el6                      EMI-3-testing-base          16 M
+ argus-pdp                    noarch  1.6.0-1.el6                      EMI-3-testing-base          12 M
+ argus-pdp-pep-common         noarch  1.4.0-2.el6                      EMI-3-testing-base          77 k
+ argus-pep-api-c              x86_64  2.2.0-1.el6                      EMI-3-testing-base          48 k
+ argus-pep-common             noarch  2.3.0-1.el6                      EMI-3-testing-base         264 k
+ argus-pep-server             noarch  1.6.1-1.el6                      EMI-3-testing-base          13 M
+ argus-pepcli                 x86_64  2.2.0-1.el6                      EMI-3-testing-base          21 k
+ audit-libs-python            x86_64  2.2-2.el6                        core                        58 k
+ bdii                         noarch  5.2.17-1.el6                     EMI-3-testing-base          23 k
+ bouncycastle                 noarch  1.46-1.el6                       epel                       2.3 M
+ bouncycastle-mail            noarch  1.46-1.sl6                       EMI-3-testing-third-party  468 k
+ canl-java                    noarch  1.2.0-0.sl6                      EMI-3-testing-base         263 k
+ emi-version                  x86_64  3.0.0-1.sl6                      EMI-3-testing-base         2.1 k
+ expect                       x86_64  5.44.1.15-4.el6                  core                       255 k
+ flac                         x86_64  1.2.1-6.1.el6                    core                       242 k
+ giflib                       x86_64  4.1.6-3.1.el6                    core                        36 k
+ glite-info-provider-service  noarch  1.12.0-1.el6                     EMI-3-testing-base          62 k
+ glite-yaim-bdii              noarch  4.3.13-1.el6                     EMI-3-testing-base          11 k
+ glite-yaim-core              noarch  5.1.2-1.sl6                      EMI-3-testing-base         102 k
+ glue-schema                  noarch  2.0.10-1.el6                     EMI-3-testing-base          31 k
+ jakarta-commons-io           noarch  1.4-3.el6                        core                       104 k
+ java-1.6.0-openjdk           x86_64  1:1.6.0.0-1.61.1.11.11.el6_4     sl-security                 25 M
+ jline                        noarch  0.9.94-0.8.el6                   core                        85 k
+ jpackage-utils               noarch  1.7.5-3.12.el6                   core                        58 k
+ lcg-expiregridmapdir         noarch  3.0.1-1                          EMI-3-testing-base         6.5 k
+ libasyncns                   x86_64  0.8-1.1.el6                      core                        23 k
+ libselinux-python            x86_64  2.0.94-5.3.el6                   core                       201 k
+ libsemanage-python           x86_64  2.0.43-4.2.el6                   core                        80 k
+ libsndfile                   x86_64  1.0.20-5.el6                     core                       232 k
+ libtool-ltdl                 x86_64  2.2.6-15.5.el6                   core                        43 k
+ openldap-clients             x86_64  2.4.23-31.el6                    core                       164 k
+ openldap-servers             x86_64  2.4.23-31.el6                    core                       2.0 M
+ policycoreutils-python       x86_64  2.0.83-19.30.el6                 core                       341 k
+ pulseaudio-libs              x86_64  0.9.21-14.el6_3                  core                       461 k
+ rhino                        noarch  1.7-0.7.r2.2.el6                 core                       777 k
+ setools-libs                 x86_64  3.3.7-4.el6                      core                       399 k
+ setools-libs-python          x86_64  3.3.7-4.el6                      core                       221 k
+ tcl                          x86_64  1:8.5.7-6.el6                    core                       1.9 M
+ tzdata-java                  noarch  2013b-1.el6                      sl-security                155 k
+ voms-api-java3               noarch  3.0.0-1.el6                      EMI-3-testing-base         118 k
+ yaim-argus_server            noarch  1.6.0-1.el6                      EMI-3-testing-base          15 k
+
+Transaction Summary
+========================================================================================================
+Install      42 Package(s)
+
+Total download size: 78 M
+Installed size: 154 M
+Is this ok [y/N]: y
+
+Downloading Packages:
+(1/42): argus-pap-1.6.1-1.el6.noarch.rpm                                         |  16 MB     00:01     
+(2/42): argus-pdp-1.6.0-1.el6.noarch.rpm                                         |  12 MB     00:00     
+(3/42): argus-pdp-pep-common-1.4.0-2.el6.noarch.rpm                              |  77 kB     00:00     
+(4/42): argus-pep-api-c-2.2.0-1.el6.x86_64.rpm                                   |  48 kB     00:00     
+(5/42): argus-pep-common-2.3.0-1.el6.noarch.rpm                                  | 264 kB     00:00     
+(6/42): argus-pep-server-1.6.1-1.el6.noarch.rpm                                  |  13 MB     00:00     
+(7/42): argus-pepcli-2.2.0-1.el6.x86_64.rpm                                      |  21 kB     00:00     
+(8/42): audit-libs-python-2.2-2.el6.x86_64.rpm                                   |  58 kB     00:00     
+(9/42): bdii-5.2.17-1.el6.noarch.rpm                                             |  23 kB     00:00     
+(10/42): bouncycastle-1.46-1.el6.noarch.rpm                                      | 2.3 MB     00:00     
+(11/42): bouncycastle-mail-1.46-1.sl6.noarch.rpm                                 | 468 kB     00:00     
+(12/42): canl-java-1.2.0-0.sl6.noarch.rpm                                        | 263 kB     00:00     
+(13/42): emi-argus-1.6.0-1.el6.noarch.rpm                                        | 2.5 kB     00:00     
+(14/42): emi-version-3.0.0-1.sl6.x86_64.rpm                                      | 2.1 kB     00:00     
+(15/42): expect-5.44.1.15-4.el6.x86_64.rpm                                       | 255 kB     00:00     
+(16/42): flac-1.2.1-6.1.el6.x86_64.rpm                                           | 242 kB     00:00     
+(17/42): giflib-4.1.6-3.1.el6.x86_64.rpm                                         |  36 kB     00:00     
+(18/42): glite-info-provider-service-1.12.0-1.el6.noarch.rpm                     |  62 kB     00:00     
+(19/42): glite-yaim-bdii-4.3.13-1.el6.noarch.rpm                                 |  11 kB     00:00     
+(20/42): glite-yaim-core-5.1.2-1.sl6.noarch.rpm                                  | 102 kB     00:00     
+(21/42): glue-schema-2.0.10-1.el6.noarch.rpm                                     |  31 kB     00:00     
+(22/42): jakarta-commons-io-1.4-3.el6.noarch.rpm                                 | 104 kB     00:00     
+(23/42): java-1.6.0-openjdk-1.6.0.0-1.61.1.11.11.el6_4.x86_64.rpm                |  25 MB     01:50     
+(24/42): jline-0.9.94-0.8.el6.noarch.rpm                                         |  85 kB     00:00     
+(25/42): jpackage-utils-1.7.5-3.12.el6.noarch.rpm                                |  58 kB     00:00     
+(26/42): lcg-expiregridmapdir-3.0.1-1.noarch.rpm                                 | 6.5 kB     00:00     
+(27/42): libasyncns-0.8-1.1.el6.x86_64.rpm                                       |  23 kB     00:00     
+(28/42): libselinux-python-2.0.94-5.3.el6.x86_64.rpm                             | 201 kB     00:00     
+(29/42): libsemanage-python-2.0.43-4.2.el6.x86_64.rpm                            |  80 kB     00:00     
+(30/42): libsndfile-1.0.20-5.el6.x86_64.rpm                                      | 232 kB     00:00     
+(31/42): libtool-ltdl-2.2.6-15.5.el6.x86_64.rpm                                  |  43 kB     00:00     
+(32/42): openldap-clients-2.4.23-31.el6.x86_64.rpm                               | 164 kB     00:00     
+(33/42): openldap-servers-2.4.23-31.el6.x86_64.rpm                               | 2.0 MB     00:00     
+(34/42): policycoreutils-python-2.0.83-19.30.el6.x86_64.rpm                      | 341 kB     00:00     
+(35/42): pulseaudio-libs-0.9.21-14.el6_3.x86_64.rpm                              | 461 kB     00:00     
+(36/42): rhino-1.7-0.7.r2.2.el6.noarch.rpm                                       | 777 kB     00:00     
+(37/42): setools-libs-3.3.7-4.el6.x86_64.rpm                                     | 399 kB     00:00     
+(38/42): setools-libs-python-3.3.7-4.el6.x86_64.rpm                              | 221 kB     00:00     
+(39/42): tcl-8.5.7-6.el6.x86_64.rpm                                              | 1.9 MB     00:00     
+(40/42): tzdata-java-2013b-1.el6.noarch.rpm                                      | 155 kB     00:00     
+(41/42): voms-api-java3-3.0.0-1.el6.noarch.rpm                                   | 118 kB     00:00     
+(42/42): yaim-argus_server-1.6.0-1.el6.noarch.rpm                                |  15 kB     00:00     
+--------------------------------------------------------------------------------------------------------
+Total                                                                   693 kB/s |  78 MB     01:55     
+Running rpm_check_debug
+Running Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Installing : jpackage-utils-1.7.5-3.12.el6.noarch                                                1/42 
+  Installing : jakarta-commons-io-1.4-3.el6.noarch                                                 2/42 
+  Installing : glite-info-provider-service-1.12.0-1.el6.noarch                                     3/42 
+  Installing : giflib-4.1.6-3.1.el6.x86_64                                                         4/42 
+  Installing : glite-yaim-bdii-4.3.13-1.el6.noarch                                                 5/42 
+  Installing : libsemanage-python-2.0.43-4.2.el6.x86_64                                            6/42 
+  Installing : glue-schema-2.0.10-1.el6.noarch                                                     7/42 
+  Installing : flac-1.2.1-6.1.el6.x86_64                                                           8/42 
+  Installing : libsndfile-1.0.20-5.el6.x86_64                                                      9/42 
+  Installing : 1:tcl-8.5.7-6.el6.x86_64                                                           10/42 
+  Installing : expect-5.44.1.15-4.el6.x86_64                                                      11/42 
+  Installing : tzdata-java-2013b-1.el6.noarch                                                     12/42 
+  Installing : emi-version-3.0.0-1.sl6.x86_64                                                     13/42 
+  Installing : jline-0.9.94-0.8.el6.noarch                                                        14/42 
+  Installing : rhino-1.7-0.7.r2.2.el6.noarch                                                      15/42 
+  Installing : openldap-clients-2.4.23-31.el6.x86_64                                              16/42 
+  Installing : argus-pep-api-c-2.2.0-1.el6.x86_64                                                 17/42 
+  Installing : argus-pepcli-2.2.0-1.el6.x86_64                                                    18/42 
+  Installing : setools-libs-3.3.7-4.el6.x86_64                                                    19/42 
+  Installing : setools-libs-python-3.3.7-4.el6.x86_64                                             20/42 
+  Installing : glite-yaim-core-5.1.2-1.sl6.noarch                                                 21/42 
+  Installing : yaim-argus_server-1.6.0-1.el6.noarch                                               22/42 
+  Installing : libasyncns-0.8-1.1.el6.x86_64                                                      23/42 
+  Installing : pulseaudio-libs-0.9.21-14.el6_3.x86_64                                             24/42 
+  Installing : 1:java-1.6.0-openjdk-1.6.0.0-1.61.1.11.11.el6_4.x86_64                             25/42 
+  Installing : bouncycastle-1.46-1.el6.noarch                                                     26/42 
+  Installing : canl-java-1.2.0-0.sl6.noarch                                                       27/42 
+  Installing : argus-pdp-pep-common-1.4.0-2.el6.noarch                                            28/42 
+  Installing : argus-pdp-1.6.0-1.el6.noarch                                                       29/42 
+  Installing : bouncycastle-mail-1.46-1.sl6.noarch                                                30/42 
+  Installing : voms-api-java3-3.0.0-1.el6.noarch                                                  31/42 
+  Installing : argus-pap-1.6.1-1.el6.noarch                                                       32/42 
+  Installing : argus-pep-common-2.3.0-1.el6.noarch                                                33/42 
+  Installing : argus-pep-server-1.6.1-1.el6.noarch                                                34/42 
+  Installing : lcg-expiregridmapdir-3.0.1-1.noarch                                                35/42 
+  Installing : audit-libs-python-2.2-2.el6.x86_64                                                 36/42 
+  Installing : libselinux-python-2.0.94-5.3.el6.x86_64                                            37/42 
+  Installing : policycoreutils-python-2.0.83-19.30.el6.x86_64                                     38/42 
+  Installing : libtool-ltdl-2.2.6-15.5.el6.x86_64                                                 39/42 
+  Installing : openldap-servers-2.4.23-31.el6.x86_64                                              40/42 
+  Installing : bdii-5.2.17-1.el6.noarch                                                           41/42 
+  Installing : emi-argus-1.6.0-1.el6.noarch                                                       42/42 
+  Verifying  : voms-api-java3-3.0.0-1.el6.noarch                                                   1/42 
+  Verifying  : libtool-ltdl-2.2.6-15.5.el6.x86_64                                                  2/42 
+  Verifying  : argus-pdp-pep-common-1.4.0-2.el6.noarch                                             3/42 
+  Verifying  : libselinux-python-2.0.94-5.3.el6.x86_64                                             4/42 
+  Verifying  : audit-libs-python-2.2-2.el6.x86_64                                                  5/42 
+  Verifying  : expect-5.44.1.15-4.el6.x86_64                                                       6/42 
+  Verifying  : lcg-expiregridmapdir-3.0.1-1.noarch                                                 7/42 
+  Verifying  : bouncycastle-1.46-1.el6.noarch                                                      8/42 
+  Verifying  : openldap-servers-2.4.23-31.el6.x86_64                                               9/42 
+  Verifying  : libasyncns-0.8-1.1.el6.x86_64                                                      10/42 
+  Verifying  : rhino-1.7-0.7.r2.2.el6.noarch                                                      11/42 
+  Verifying  : glite-yaim-core-5.1.2-1.sl6.noarch                                                 12/42 
+  Verifying  : setools-libs-3.3.7-4.el6.x86_64                                                    13/42 
+  Verifying  : pulseaudio-libs-0.9.21-14.el6_3.x86_64                                             14/42 
+  Verifying  : argus-pep-common-2.3.0-1.el6.noarch                                                15/42 
+  Verifying  : argus-pep-server-1.6.1-1.el6.noarch                                                16/42 
+  Verifying  : yaim-argus_server-1.6.0-1.el6.noarch                                               17/42 
+  Verifying  : bouncycastle-mail-1.46-1.sl6.noarch                                                18/42 
+  Verifying  : libsndfile-1.0.20-5.el6.x86_64                                                     19/42 
+  Verifying  : argus-pap-1.6.1-1.el6.noarch                                                       20/42 
+  Verifying  : argus-pep-api-c-2.2.0-1.el6.x86_64                                                 21/42 
+  Verifying  : jpackage-utils-1.7.5-3.12.el6.noarch                                               22/42 
+  Verifying  : openldap-clients-2.4.23-31.el6.x86_64                                              23/42 
+  Verifying  : jline-0.9.94-0.8.el6.noarch                                                        24/42 
+  Verifying  : policycoreutils-python-2.0.83-19.30.el6.x86_64                                     25/42 
+  Verifying  : emi-version-3.0.0-1.sl6.x86_64                                                     26/42 
+  Verifying  : tzdata-java-2013b-1.el6.noarch                                                     27/42 
+  Verifying  : canl-java-1.2.0-0.sl6.noarch                                                       28/42 
+  Verifying  : argus-pdp-1.6.0-1.el6.noarch                                                       29/42 
+  Verifying  : 1:java-1.6.0-openjdk-1.6.0.0-1.61.1.11.11.el6_4.x86_64                             30/42 
+  Verifying  : bdii-5.2.17-1.el6.noarch                                                           31/42 
+  Verifying  : setools-libs-python-3.3.7-4.el6.x86_64                                             32/42 
+  Verifying  : 1:tcl-8.5.7-6.el6.x86_64                                                           33/42 
+  Verifying  : jakarta-commons-io-1.4-3.el6.noarch                                                34/42 
+  Verifying  : flac-1.2.1-6.1.el6.x86_64                                                          35/42 
+  Verifying  : emi-argus-1.6.0-1.el6.noarch                                                       36/42 
+  Verifying  : argus-pepcli-2.2.0-1.el6.x86_64                                                    37/42 
+  Verifying  : glue-schema-2.0.10-1.el6.noarch                                                    38/42 
+  Verifying  : libsemanage-python-2.0.43-4.2.el6.x86_64                                           39/42 
+  Verifying  : glite-yaim-bdii-4.3.13-1.el6.noarch                                                40/42 
+  Verifying  : giflib-4.1.6-3.1.el6.x86_64                                                        41/42 
+  Verifying  : glite-info-provider-service-1.12.0-1.el6.noarch                                    42/42 
+
+Installed:
+  emi-argus.noarch 0:1.6.0-1.el6                                                                        
+
+Dependency Installed:
+  argus-pap.noarch 0:1.6.1-1.el6                                                                        
+  argus-pdp.noarch 0:1.6.0-1.el6                                                                        
+  argus-pdp-pep-common.noarch 0:1.4.0-2.el6                                                             
+  argus-pep-api-c.x86_64 0:2.2.0-1.el6                                                                  
+  argus-pep-common.noarch 0:2.3.0-1.el6                                                                 
+  argus-pep-server.noarch 0:1.6.1-1.el6                                                                 
+  argus-pepcli.x86_64 0:2.2.0-1.el6                                                                     
+  audit-libs-python.x86_64 0:2.2-2.el6                                                                  
+  bdii.noarch 0:5.2.17-1.el6                                                                            
+  bouncycastle.noarch 0:1.46-1.el6                                                                      
+  bouncycastle-mail.noarch 0:1.46-1.sl6                                                                 
+  canl-java.noarch 0:1.2.0-0.sl6                                                                        
+  emi-version.x86_64 0:3.0.0-1.sl6                                                                      
+  expect.x86_64 0:5.44.1.15-4.el6                                                                       
+  flac.x86_64 0:1.2.1-6.1.el6                                                                           
+  giflib.x86_64 0:4.1.6-3.1.el6                                                                         
+  glite-info-provider-service.noarch 0:1.12.0-1.el6                                                     
+  glite-yaim-bdii.noarch 0:4.3.13-1.el6                                                                 
+  glite-yaim-core.noarch 0:5.1.2-1.sl6                                                                  
+  glue-schema.noarch 0:2.0.10-1.el6                                                                     
+  jakarta-commons-io.noarch 0:1.4-3.el6                                                                 
+  java-1.6.0-openjdk.x86_64 1:1.6.0.0-1.61.1.11.11.el6_4                                                
+  jline.noarch 0:0.9.94-0.8.el6                                                                         
+  jpackage-utils.noarch 0:1.7.5-3.12.el6                                                                
+  lcg-expiregridmapdir.noarch 0:3.0.1-1                                                                 
+  libasyncns.x86_64 0:0.8-1.1.el6                                                                       
+  libselinux-python.x86_64 0:2.0.94-5.3.el6                                                             
+  libsemanage-python.x86_64 0:2.0.43-4.2.el6                                                            
+  libsndfile.x86_64 0:1.0.20-5.el6                                                                      
+  libtool-ltdl.x86_64 0:2.2.6-15.5.el6                                                                  
+  openldap-clients.x86_64 0:2.4.23-31.el6                                                               
+  openldap-servers.x86_64 0:2.4.23-31.el6                                                               
+  policycoreutils-python.x86_64 0:2.0.83-19.30.el6                                                      
+  pulseaudio-libs.x86_64 0:0.9.21-14.el6_3                                                              
+  rhino.noarch 0:1.7-0.7.r2.2.el6                                                                       
+  setools-libs.x86_64 0:3.3.7-4.el6                                                                     
+  setools-libs-python.x86_64 0:3.3.7-4.el6                                                              
+  tcl.x86_64 1:8.5.7-6.el6                                                                              
+  tzdata-java.noarch 0:2013b-1.el6                                                                      
+  voms-api-java3.noarch 0:3.0.0-1.el6                                                                   
+  yaim-argus_server.noarch 0:1.6.0-1.el6                                                                
+
+Complete!
+root@nemesis (~) # 
+
+
+-----------------------------------------------------------------------------------------------
+1.3 emi-argus Configuration (YAIM)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis# cat site-info.def 
+# BDII site name
+SITE_NAME=SWITCH_EMI3_update
+
+# Argus service hostname
+ARGUS_HOST=nemesis.switch.ch
+
+# PAP administrator DN allowed to use 'pap-admin' command
+PAP_ADMIN_DN="/DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3"
+
+# Users and Groups definition for grid and group mapfile
+USERS_CONF=/opt/glite/yaim/examples/users.conf
+GROUPS_CONF=/opt/glite/yaim/examples/groups.conf
+
+# Supported VOs
+VOS="dteam testers.eu-emi.eu"
+
+# VO definitions
+#
+VO_DTEAM_VOMSES="'dteam voms.hellasgrid.gr 15004 /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr dteam' 'dteam voms2.hellasgrid.gr 15004 /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms2.hellasgrid.gr dteam'"
+VO_DTEAM_VOMS_CA_DN="'/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006' '/C=GR/O=HellasGrid/OU=Certification Authorities/CN=HellasGrid CA 2006'"
+VO_TESTERS_EU_EMI_EU_VOMSES="'testers.eu-emi.eu emitestbed07.cnaf.infn.it 15002 /C=IT/O=INFN/OU=Host/L=CNAF/CN=emitestbed07.cnaf.infn.it testers.eu-emi.eu' 'testers.eu-emi.eu emitestbed01.cnaf.infn.it 15002 /C=IT/O=INFN/OU=Host/L=CNAF/CN=emitestbed01.cnaf.infn.it testers.eu-emi.eu'"
+VO_TESTERS_EU_EMI_EU_VOMS_CA_DN="'/C=IT/O=INFN/CN=INFN CA' '/C=IT/O=INFN/CN=INFN CA'"
+
+
+
+
+
+
+root@nemesis (~) # /opt/glite/yaim/bin/yaim -c -s site-info.def -n ARGUS_server
+   INFO: Configuring HOST: nemesis.switch.ch
+   INFO: Using site configuration file: site-info.def
+   INFO: 
+         ###################################################################
+         
+         .             /'.-. ')
+         .     yA,-"-,( ,m,:/ )   .oo.     oo    o      ooo  o.     .oo
+         .    /      .-Y a  a Y-.     8. .8'    8'8.     8    8b   d'8
+         .   /           ~ ~ /         8'    .8oo88.     8    8  8'  8
+         . (_/         '===='          8    .8'     8.   8    8  Y   8
+         .   Y,-''-,Yy,-.,/           o8o  o8o    o88o  o8o  o8o    o8o
+         .    I_))_) I_))_)
+         
+         
+         current working directory: /root
+         site-info.def date: Apr 26 09:58 site-info.def
+         yaim command: -c -s site-info.def -n ARGUS_server
+         log file: /opt/glite/yaim/bin/../log/yaimlog
+         Fri Apr 26 09:59:20 CEST 2013 : /opt/glite/yaim/bin/yaim
+         
+         Installed YAIM versions:
+         yaim-argus-server 1.6.0-1
+         glite-yaim-bdii 4.3.13-1
+         glite-yaim-core 5.1.2-1
+         
+         ####################################################################
+   INFO: The default location of the grid-env.(c)sh files will be: /usr/libexec
+   INFO: Sourcing the utilities in /opt/glite/yaim/functions/utils
+   INFO: Detecting environment
+   INFO: Executing function: config_host_certs_check 
+   INFO: Executing function: config_edgusers_check 
+   INFO: Executing function: config_vomsmap_check 
+   INFO: Executing function: config_vomsdir_check 
+   INFO: Executing function: config_pap_service_check 
+   INFO: Executing function: config_pdp_service_check 
+   INFO: Executing function: config_pep_service_check 
+   INFO: Executing function: config_info_glue2_service_argus_check 
+   INFO: Executing function: config_bdii_5.2_check 
+   INFO: Executing function: config_host_certs 
+   INFO: Executing function: config_edgusers 
+   INFO: Executing function: config_vomsmap_setenv 
+   INFO: Executing function: config_vomsmap 
+   INFO: Creating grid-map directory in /etc/grid-security/gridmapdir
+   INFO: Creating voms grid-map file in /etc/grid-security/voms-grid-mapfile
+   INFO: Creating voms groupmap file in /etc/grid-security/groupmapfile
+users_getvogroup: could not find group for "TESTERS.EU-EMI.EU".
+users_getvoprefix: could not find pool account prefix for TESTERS.EU-EMI.EU in /opt/glite/yaim/examples/users.conf
+   WARNING: VO 'TESTERS.EU-EMI.EU' not found in /opt/glite/yaim/examples/groups.conf
+   INFO: Copying the /etc/grid-security/voms-grid-mapfile in the standard location /etc/grid-security/grid-mapfile
+   INFO: Executing function: config_vomsdir_setenv 
+   INFO: Executing function: config_vomsdir 
+   INFO: Create the /etc/grid-security/vomsdir/ directory
+   INFO: Executing function: config_pap_service_setenv 
+   INFO: Executing function: config_pap_service 
+   INFO: Stopping Argus PAP service...
+PAP  server is not running!
+   INFO: Create the Argus PAP /usr/share/argus/pap/conf/pap_configuration.ini file
+   INFO: Create the Argus PAP /usr/share/argus/pap/conf/pap_authorization.ini file
+   INFO: Create the Argus PAP /usr/share/argus/pap/conf/pap-admin.properties file
+   INFO: Fixing files and directory permissions in /usr/share/argus/pap
+   INFO: Starting Argus PAP service...
+   INFO: Executing function: config_pdp_service_setenv 
+   INFO: Executing function: config_pdp_service 
+   INFO: Stopping Argus PDP service...
+Unable to connect to localhost:8153, perhaps the service is not running
+   INFO: Create the Argus PDP /etc/argus/pdp/pdp.ini file
+   INFO: Fixing files and directory permissions
+   INFO: Register /etc/init.d/argus-pdp...
+   INFO: Starting Argus PDP service...
+Starting argus-pdp...                                      [  OK  ]
+   INFO: Executing function: config_pep_service_setenv 
+   INFO: Executing function: config_pep_service 
+   INFO: Stopping Argus PEP Server service...
+Unable to connect to localhost:8155, perhaps the service is not running
+   INFO: Create the Argus PEP Server /etc/argus/pepd/pepd.ini file
+   INFO: Fixing files and directory permissions in /usr/share/argus/pepd
+   INFO: Starting Argus PEP Server service...
+Starting argus-pepd...                                     [  OK  ]
+   INFO: Executing function: config_info_glue2_service_argus_setenv 
+   INFO: Executing function: config_info_glue2_service_argus 
+   INFO: Create the GLUE2 info provider: /var/lib/bdii/gip/provider/glite-info-glue2-provider-service-argus
+   INFO: Executing function: config_bdii_5.2 
+Stopping BDII: BDII already stopped
+Starting BDII slapd:                                       [  OK  ]
+Starting BDII update process:                              [  OK  ]
+   INFO: Configuration Complete.                                               [  OK  ]
+   INFO: YAIM terminated succesfully.
+root@nemesis (~) # 
+
+-----------------------------------------------------------------------------------------------
+1.4 Service Checks
+-----------------------------------------------------------------------------------------------
+
+root@nemesis# service argus-pap status
+PAP running!
+
+root@nemesis# service argus-pdp status
+argus-pdp is running...
+
+root@nemesis# service argus-pepd status
+argus-pepd is running...
+
+-----------------------------------------------------------------------------------------------
+1.5 Argus Policies (Test)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis# pap-admin lp
+default (local):
+No policies has been found.
+
+
+root@nemesis# cat dteam-policy.spl 
+resource "test" {
+    obligation "http://glite.org/xacml/obligation/local-environment-map" {
+    }
+    action "test" {
+        rule permit { vo="dteam" }
+    }
+}
+
+
+root@nemesis:# pap-admin apf dteam-policy.spl 
+root@nemesis:# pap-admin lp
+
+default (local):
+resource "test" {
+    obligation "http://glite.org/xacml/obligation/local-environment-map" {
+    }
+    action "test" {
+        rule permit { vo="dteam" }
+    }
+}
+
+root@nemesis# service argus-pdp reloadpolicy
+
+
+-----------------------------------------------------------------------------------------------
+2. Service Test (pepcli)
+-----------------------------------------------------------------------------------------------
+
+[tschopp@nemesis ~]$ voms-proxy-init -voms dteam
+Enter GRID pass phrase:
+Your identity: /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+Creating temporary proxy ....................................... Done
+Contacting  voms.hellasgrid.gr:15004 [/C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr] "dteam" Done
+Creating proxy ....................... Done
+
+Your proxy is valid until Fri Apr 26 22:12:40 2013
+
+[tschopp@nemesis ~]$ voms-proxy-info -all
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3/CN=proxy
+issuer    : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+identity  : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+type      : proxy
+strength  : 1024 bits
+path      : /tmp/x509up_u959
+timeleft  : 11:59:55
+key usage : Digital Signature, Key Encipherment
+=== VO dteam extension information ===
+VO        : dteam
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+issuer    : /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr
+attribute : /dteam/Role=NULL/Capability=NULL
+attribute : /dteam/NGI_CH/Role=NULL/Capability=NULL
+timeleft  : 11:59:55
+uri       : voms.hellasgrid.gr:15004
+
+[tschopp@nemesis ~]$ pepcli -p https://nemesis.switch.ch:8154/authz --capath /etc/grid-security/certificates --cert ~/.globus/usercert.pem --key ~/.globus/userkey.pem --keyinfo /tmp/x509up_u959 --resource test --action test
+Key password: **********
+Resource: test
+Decision: Permit
+Obligation: http://glite.org/xacml/obligation/local-environment-map/posix (caller should resolve POSIX account mapping)
+Username: dteam045
+Group: dteam
+Secondary Groups: dteam
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

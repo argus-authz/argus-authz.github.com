@@ -1,0 +1,358 @@
+Argus EMI-3 update upgrade
+==========================
+
+Document: http://argus-authz.github.com/reports/argus-EMI3_update-UPGRADE-SL6.txt
+Author: valery.tschopp@switch.ch
+Date: 2013-04-26
+Platform: SL6 (x86_64)
+Host: nemesis.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Service Update (EMI-3 -> EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Host Information
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # lsb_release -a
+LSB Version:	:base-4.0-amd64:base-4.0-noarch:core-4.0-amd64:core-4.0-noarch:graphics-4.0-amd64:graphics-4.0-noarch:printing-4.0-amd64:printing-4.0-noarch
+Distributor ID:	Scientific
+Description:	Scientific Linux release 6.4 (Carbon)
+Release:	6.4
+Codename:	Carbon
+
+
+-----------------------------------------------------------------------------------------------
+1.2 YUM Repositories (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # yum repolist
+Loaded plugins: priorities, protectbase, security
+195 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+repo id                         repo name                                                       status
+EMI-3-base                      EMI 3 base                                                           572
+EMI-3-contribs                  EMI 3 contribs                                                         0
+EMI-3-third-party               EMI 3 third-party                                                     98
+EMI-3-updates                   EMI 3 updates                                                         66
+epel                            Extra Packages for Enterprise Linux 6 - x86_64                  8437+189
+eugridpma                       EUGridPMA                                                        115+112
+sl                              Scientific Linux 6.4 - x86_64                                       6449
+sl-security                     Scientific Linux 6.4 - x86_64 - security updates                     362
+repolist: 16099
+
+
+-----------------------------------------------------------------------------------------------
+1.3 Argus Information (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # yum info emi-release emi-argus argus-pap argus-pep-server
+Loaded plugins: priorities, protectbase, security
+195 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Installed Packages
+Name        : argus-pap
+Arch        : noarch
+Version     : 1.6.0
+Release     : 1.el6
+Size        : 19 M
+Repo        : installed
+From repo   : EMI-3-base
+Summary     : Argus PAP service
+URL         : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License     : ASL 2.0
+Description : 
+            : Argus is a system meant to render consistent authorization decisions for
+            : distributed services (e.g. compute elements, portals). In order to achieve
+            : this consistency a number of points must be addressed. First, it must be
+            : possible to author and maintain consistent authorization policies. This is
+            : handled by the Policy Administration Point (PAP) component in the service.
+            : Second, authored policies must be evaluated in a consistent manner, a task
+            : performed by the Policy Decision Point (PDP). Finally, the data provided for
+            : evaluation against policies must be consistent (in form and definition) and
+            : this is done by the Policy Enforcement Point (PEP).
+            : 
+            : This package provides the Argus PAP service.
+
+Name        : argus-pep-server
+Arch        : noarch
+Version     : 1.6.0
+Release     : 3.el6
+Size        : 15 M
+Repo        : installed
+From repo   : EMI-3-base
+Summary     : Argus PEP Server
+URL         : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License     : ASL 2.0
+Description : Argus PEP (Policy Enforcement Point) Server.
+            : The Argus Authorization Service renders consistent authorization
+            : decisions for distributed services (e.g., user interfaces,
+            : portals, computing elements, storage elements). The service is
+            : based on the XACML standard, and uses authorization policies to
+            : determine if a user is allowed or denied to perform a certain
+            : action on a particular service.
+            : .
+            : The Argus Authorization Service is composed of three main
+            : components:
+            : - The Policy Administration Point (PAP) provides the tools to
+            : author authorization policies, organize them in the local
+            : repository and configure policy distribution among remote PAPs.
+            : - The Policy Decision Point (PDP) implements the authorization
+            : engine, and is responsible for the evaluation of the authorization
+            : requests against the XACML policies retrieved from the PAP.
+            : - The Policy Enforcement Point Server (PEP Server) ensures the
+            : integrity and consistency of the authorization requests received
+            : from the PEP clients. Lightweight PEP client libraries are also
+            : provided to ease the integration and interoperability with other
+            : EMI services or components.
+
+Name        : emi-argus
+Arch        : noarch
+Version     : 1.6.0
+Release     : 1.el6
+Size        : 0.0  
+Repo        : installed
+From repo   : EMI-3-base
+Summary     : Argus EMI meta-package (PAP, PDP and PEP Server)
+URL         : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License     : ASL 2.0
+Description : Argus EMI meta-package (PAP, PDP and PEP Server).
+            : The Argus Authorization Service is composed of three main
+            : components:
+            : - The Policy Administration Point (PAP) provides the tools to
+            : author authorization policies, organize them in the local
+            : repository and configure policy distribution among remote PAPs.
+            : - The Policy Decision Point (PDP) implements the authorization
+            : engine, and is responsible for the evaluation of the authorization
+            : requests against the XACML policies retrieved from the PAP.
+            : - The Policy Enforcement Point Server (PEP Server) ensures the
+            : integrity and consistency of the authorization requests received
+            : from the PEP clients. Lightweight PEP client libraries are also
+            : provided to ease the integration and interoperability with other
+            : EMI services or components.
+
+Name        : emi-release
+Arch        : noarch
+Version     : 3.0.0
+Release     : 2.el6
+Size        : 2.7 k
+Repo        : installed
+Summary     : EMI 3 Release
+License     : Apache Software License
+Description : EMI middleware release files
+
+-----------------------------------------------------------------------------------------------
+1.4 Updating YUM Repositories (EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (~) # cd /etc/yum.repos.d/
+
+root@nemesis (yum.repos.d) # wget http://eticssoft.web.cern.ch/eticssoft/mock/emi-3-rc-sl6.repo
+--2013-04-26 11:28:16--  http://eticssoft.web.cern.ch/eticssoft/mock/emi-3-rc-sl6.repo
+Resolving eticssoft.web.cern.ch... 137.138.139.19
+Connecting to eticssoft.web.cern.ch|137.138.139.19|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1892 (1.8K) [text/plain]
+Saving to: `emi-3-rc-sl6.repo'
+
+100%[==============================================================>] 1,892       --.-K/s   in 0s      
+
+2013-04-26 11:28:16 (212 MB/s) - `emi-3-rc-sl6.repo' saved [1892/1892]
+
+root@nemesis (yum.repos.d) # yum clean all
+Loaded plugins: priorities, protectbase, security
+Cleaning repos: EGI-trustanchors EMI-3-base EMI-3-contribs EMI-3-testing-base EMI-3-testing-third-party
+              : EMI-3-third-party EMI-3-updates Oracle-11 core epel eugridpma extras sl sl-security
+Cleaning up Everything
+
+-----------------------------------------------------------------------------------------------
+1.5 Updating to EMI-3 update (testing repo)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (yum.repos.d) # yum update
+Loaded plugins: priorities, protectbase, security
+EGI-trustanchors                                                                 |  951 B     00:00     
+EGI-trustanchors/primary                                                         |  31 kB     00:00     
+EGI-trustanchors                                                                                215/215
+EMI-3-base                                                                       | 1.9 kB     00:00     
+EMI-3-base/primary_db                                                            | 269 kB     00:00     
+EMI-3-contribs                                                                   | 1.9 kB     00:00     
+EMI-3-contribs/primary_db                                                        | 1.1 kB     00:00     
+EMI-3-testing-base                                                               | 1.9 kB     00:00     
+EMI-3-testing-base/primary_db                                                    | 965 kB     00:00     
+EMI-3-testing-third-party                                                        | 1.9 kB     00:00     
+EMI-3-testing-third-party/primary_db                                             |  39 kB     00:00     
+EMI-3-third-party                                                                | 1.9 kB     00:00     
+EMI-3-third-party/primary_db                                                     |  68 kB     00:00     
+EMI-3-updates                                                                    | 1.9 kB     00:00     
+EMI-3-updates/primary_db                                                         |  34 kB     00:00     
+Oracle-11                                                                        | 1.9 kB     00:00     
+Oracle-11/primary_db                                                             | 3.8 kB     00:00     
+core                                                                             | 3.7 kB     00:00     
+core/primary_db                                                                  | 4.2 MB     00:00     
+epel/metalink                                                                    |  19 kB     00:00     
+epel                                                                             | 4.2 kB     00:00     
+epel/primary_db                                                                  | 5.0 MB     00:00     
+eugridpma                                                                        |  951 B     00:00     
+eugridpma/primary                                                                |  29 kB     00:00     
+eugridpma                                                                                       227/227
+extras                                                                           | 4.2 kB     00:00     
+extras/primary_db                                                                | 5.0 MB     00:07     
+sl                                                                               | 3.7 kB     00:00     
+sl/primary_db                                                                    | 4.2 MB     00:18     
+sl-security                                                                      | 3.0 kB     00:00     
+sl-security/primary_db                                                           | 1.8 MB     00:07     
+388 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Setting up Update Process
+Resolving Dependencies
+--> Running transaction check
+---> Package argus-pap.noarch 0:1.6.0-1.el6 will be updated
+---> Package argus-pap.noarch 0:1.6.1-1.el6 will be an update
+---> Package argus-pep-server.noarch 0:1.6.0-3.el6 will be updated
+---> Package argus-pep-server.noarch 0:1.6.1-1.el6 will be an update
+---> Package canl-java.noarch 0:1.1.0-2.sl6 will be updated
+---> Package canl-java.noarch 0:1.2.0-0.sl6 will be an update
+---> Package glite-yaim-core.noarch 0:5.1.1-1.sl6 will be updated
+---> Package glite-yaim-core.noarch 0:5.1.2-1.sl6 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+========================================================================================================
+ Package                    Arch             Version                 Repository                    Size
+========================================================================================================
+Updating:
+ argus-pap                  noarch           1.6.1-1.el6             EMI-3-testing-base            16 M
+ argus-pep-server           noarch           1.6.1-1.el6             EMI-3-testing-base            13 M
+ canl-java                  noarch           1.2.0-0.sl6             EMI-3-testing-base           263 k
+ glite-yaim-core            noarch           5.1.2-1.sl6             EMI-3-testing-base           102 k
+
+Transaction Summary
+========================================================================================================
+Upgrade       4 Package(s)
+
+Total download size: 30 M
+Is this ok [y/N]: y
+Downloading Packages:
+(1/4): argus-pap-1.6.1-1.el6.noarch.rpm                                          |  16 MB     00:00     
+(2/4): argus-pep-server-1.6.1-1.el6.noarch.rpm                                   |  13 MB     00:00     
+(3/4): canl-java-1.2.0-0.sl6.noarch.rpm                                          | 263 kB     00:00     
+(4/4): glite-yaim-core-5.1.2-1.sl6.noarch.rpm                                    | 102 kB     00:00     
+--------------------------------------------------------------------------------------------------------
+Total                                                                   5.9 MB/s |  30 MB     00:05     
+Running rpm_check_debug
+Running Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Updating   : argus-pap-1.6.1-1.el6.noarch                                                         1/8 
+  Updating   : glite-yaim-core-5.1.2-1.sl6.noarch                                                   2/8 
+  Updating   : canl-java-1.2.0-0.sl6.noarch                                                         3/8 
+  Updating   : argus-pep-server-1.6.1-1.el6.noarch                                                  4/8 
+warning: /etc/argus/pepd/pepd.ini created as /etc/argus/pepd/pepd.ini.rpmnew
+  Cleanup    : argus-pap-1.6.0-1.el6.noarch                                                         5/8 
+  Cleanup    : glite-yaim-core-5.1.1-1.sl6.noarch                                                   6/8 
+  Cleanup    : canl-java-1.1.0-2.sl6.noarch                                                         7/8 
+  Cleanup    : argus-pep-server-1.6.0-3.el6.noarch                                                  8/8 
+  Verifying  : argus-pep-server-1.6.1-1.el6.noarch                                                  1/8 
+  Verifying  : canl-java-1.2.0-0.sl6.noarch                                                         2/8 
+  Verifying  : glite-yaim-core-5.1.2-1.sl6.noarch                                                   3/8 
+  Verifying  : argus-pap-1.6.1-1.el6.noarch                                                         4/8 
+  Verifying  : argus-pap-1.6.0-1.el6.noarch                                                         5/8 
+  Verifying  : canl-java-1.1.0-2.sl6.noarch                                                         6/8 
+  Verifying  : argus-pep-server-1.6.0-3.el6.noarch                                                  7/8 
+  Verifying  : glite-yaim-core-5.1.1-1.sl6.noarch                                                   8/8 
+
+Updated:
+  argus-pap.noarch 0:1.6.1-1.el6                  argus-pep-server.noarch 0:1.6.1-1.el6                 
+  canl-java.noarch 0:1.2.0-0.sl6                  glite-yaim-core.noarch 0:5.1.2-1.sl6                  
+
+Complete!
+
+-----------------------------------------------------------------------------------------------
+1.6 Argus Information (EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+root@nemesis (yum.repos.d) # yum info argus-pap argus-pep-server
+Loaded plugins: priorities, protectbase, security
+388 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Installed Packages
+Name        : argus-pap
+Arch        : noarch
+Version     : 1.6.1
+Release     : 1.el6
+Size        : 19 M
+Repo        : installed
+From repo   : EMI-3-testing-base
+Summary     : Argus PAP service
+URL         : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License     : ASL 2.0
+Description : 
+            : Argus is a system meant to render consistent authorization decisions for
+            : distributed services (e.g. compute elements, portals). In order to achieve
+            : this consistency a number of points must be addressed. First, it must be
+            : possible to author and maintain consistent authorization policies. This is
+            : handled by the Policy Administration Point (PAP) component in the service.
+            : Second, authored policies must be evaluated in a consistent manner, a task
+            : performed by the Policy Decision Point (PDP). Finally, the data provided for
+            : evaluation against policies must be consistent (in form and definition) and
+            : this is done by the Policy Enforcement Point (PEP).
+            : 
+            : This package provides the Argus PAP service.
+
+Name        : argus-pep-server
+Arch        : noarch
+Version     : 1.6.1
+Release     : 1.el6
+Size        : 15 M
+Repo        : installed
+From repo   : EMI-3-testing-base
+Summary     : Argus PEP Server
+URL         : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License     : ASL 2.0
+Description : Argus PEP (Policy Enforcement Point) Server.
+            : The Argus Authorization Service renders consistent authorization
+            : decisions for distributed services (e.g., user interfaces,
+            : portals, computing elements, storage elements). The service is
+            : based on the XACML standard, and uses authorization policies to
+            : determine if a user is allowed or denied to perform a certain
+            : action on a particular service.
+            : .
+            : The Argus Authorization Service is composed of three main
+            : components:
+            : - The Policy Administration Point (PAP) provides the tools to
+            : author authorization policies, organize them in the local
+            : repository and configure policy distribution among remote PAPs.
+            : - The Policy Decision Point (PDP) implements the authorization
+            : engine, and is responsible for the evaluation of the authorization
+            : requests against the XACML policies retrieved from the PAP.
+            : - The Policy Enforcement Point Server (PEP Server) ensures the
+            : integrity and consistency of the authorization requests received
+            : from the PEP clients. Lightweight PEP client libraries are also
+            : provided to ease the integration and interoperability with other
+            : EMI services or components.
+
+-----------------------------------------------------------------------------------------------
+1.7 Argus Service Checks
+-----------------------------------------------------------------------------------------------
+
+root@nemesis# service argus-pap status
+PAP running!
+
+root@nemesis# service argus-pdp status
+argus-pdp is running...
+
+root@nemesis (~) # service argus-pepd status
+argus-pepd is not running...
+
+=> PROBLEM !!! not restarted => Known Issue
+
+root@nemesis (~) # service argus-pepd restart
+Stopping argus-pepd... no process found, nothing to do     [  OK  ]
+Starting argus-pepd...                                     [  OK  ]
+
+root@nemesis (~) # service argus-pepd status
+argus-pepd is running...
+
