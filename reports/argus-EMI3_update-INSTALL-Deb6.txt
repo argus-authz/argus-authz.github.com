@@ -360,6 +360,7 @@ root@kronos:~#
 -----------------------------------------------------------------------------------------------
 
 root@kronos:~# cat site-info.def 
+# BDII site name
 SITE_NAME=SWITCH_EMI3_update
 
 # Argus service hostname
