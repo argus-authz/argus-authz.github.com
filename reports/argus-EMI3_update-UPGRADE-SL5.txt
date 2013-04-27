@@ -1,0 +1,329 @@
+Argus EMI-3 update upgrade
+==========================
+
+Document: http://argus-authz.github.com/reports/argus-EMI3_update-UPGRADE-SL5.txt
+Author: valery.tschopp@switch.ch
+Date: 2013-04-27
+Platform: SL5 (x86_64)
+Host: minerva.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Service Update (EMI-3 -> EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Host Information
+-----------------------------------------------------------------------------------------------
+
+root@minerva (~) # lsb_release -a
+LSB Version:	:core-3.1-amd64:core-3.1-ia32:core-3.1-noarch:graphics-3.1-amd64:graphics-3.1-ia32:graphics-3.1-noarch
+Distributor ID:	ScientificSL
+Description:	Scientific Linux SL release 5.5 (Boron)
+Release:	5.5
+Codename:	Boron
+
+-----------------------------------------------------------------------------------------------
+1.2 YUM Repositories (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+root@minerva (yum.repos.d) # yum repolist
+Loaded plugins: kernel-module, priorities, protectbase
+repo id                     repo name                                                 status
+EMI-3-base                  EMI 3 base                                                enabled:   577
+EMI-3-contribs              EMI 3 contribs                                            enabled:     0
+EMI-3-third-party           EMI 3 third-party                                         enabled:   106
+EMI-3-updates               EMI 3 updates                                             enabled:    54
+epel                        Extra Packages for Enterprise Linux 5 - x86_64            enabled: 7,287
+eugridpma                   EUGridPMA                                                 enabled:   227
+sl-base                     SL 5 base                                                 enabled: 3,567
+sl-security                 SL 5 security updates                                     enabled: 3,504
+repolist: 15,322
+
+
+-----------------------------------------------------------------------------------------------
+1.3 Argus Information (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+root@minerva (~) # yum info emi-release emi-argus argus-pap argus-pep-server
+Loaded plugins: kernel-module, priorities, protectbase
+364 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Installed Packages
+Name       : argus-pap
+Arch       : noarch
+Version    : 1.6.0
+Release    : 1.el5
+Size       : 19 M
+Repo       : installed
+Summary    : Argus PAP service
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: 
+           : Argus is a system meant to render consistent authorization decisions for
+           : distributed services (e.g. compute elements, portals). In order to achieve
+           : this consistency a number of points must be addressed. First, it must be
+           : possible to author and maintain consistent authorization policies. This is
+           : handled by the Policy Administration Point (PAP) component in the service.
+           : Second, authored policies must be evaluated in a consistent manner, a task
+           : performed by the Policy Decision Point (PDP). Finally, the data provided for
+           : evaluation against policies must be consistent (in form and definition) and
+           : this is done by the Policy Enforcement Point (PEP).
+           : 
+           : This package provides the Argus PAP service.
+
+Name       : argus-pep-server
+Arch       : noarch
+Version    : 1.6.0
+Release    : 3.el5
+Size       : 15 M
+Repo       : installed
+Summary    : Argus PEP Server
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: Argus PEP (Policy Enforcement Point) Server.
+           : The Argus Authorization Service renders consistent authorization
+           : decisions for distributed services (e.g., user interfaces,
+           : portals, computing elements, storage elements). The service is
+           : based on the XACML standard, and uses authorization policies to
+           : determine if a user is allowed or denied to perform a certain
+           : action on a particular service.
+           : .
+           : The Argus Authorization Service is composed of three main
+           : components:
+           : - The Policy Administration Point (PAP) provides the tools to
+           : author authorization policies, organize them in the local
+           : repository and configure policy distribution among remote PAPs.
+           : - The Policy Decision Point (PDP) implements the authorization
+           : engine, and is responsible for the evaluation of the authorization
+           : requests against the XACML policies retrieved from the PAP.
+           : - The Policy Enforcement Point Server (PEP Server) ensures the
+           : integrity and consistency of the authorization requests received
+           : from the PEP clients. Lightweight PEP client libraries are also
+           : provided to ease the integration and interoperability with other
+           : EMI services or components.
+
+Name       : emi-argus
+Arch       : noarch
+Version    : 1.6.0
+Release    : 1.el5
+Size       : 0.0 
+Repo       : installed
+Summary    : Argus EMI meta-package (PAP, PDP and PEP Server)
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: Argus EMI meta-package (PAP, PDP and PEP Server).
+           : The Argus Authorization Service is composed of three main
+           : components:
+           : - The Policy Administration Point (PAP) provides the tools to
+           : author authorization policies, organize them in the local
+           : repository and configure policy distribution among remote PAPs.
+           : - The Policy Decision Point (PDP) implements the authorization
+           : engine, and is responsible for the evaluation of the authorization
+           : requests against the XACML policies retrieved from the PAP.
+           : - The Policy Enforcement Point Server (PEP Server) ensures the
+           : integrity and consistency of the authorization requests received
+           : from the PEP clients. Lightweight PEP client libraries are also
+           : provided to ease the integration and interoperability with other
+           : EMI services or components.
+
+Name       : emi-release
+Arch       : noarch
+Version    : 3.0.0
+Release    : 2.el5
+Size       : 2.7 k
+Repo       : installed
+Summary    : EMI 3 Release
+License    : Apache Software License
+Description: EMI middleware release files
+
+
+-----------------------------------------------------------------------------------------------
+1.4 Updating YUM Repositories (EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+root@minerva (yum.repos.d) # wget http://eticssoft.web.cern.ch/eticssoft/mock/emi-3-rc-sl5.repo
+--2013-04-27 14:57:45--  http://eticssoft.web.cern.ch/eticssoft/mock/emi-3-rc-sl5.repo
+Resolving eticssoft.web.cern.ch... 137.138.139.19
+Connecting to eticssoft.web.cern.ch|137.138.139.19|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1574 (1.5K) [text/plain]
+Saving to: `emi-3-rc-sl5.repo'
+
+100%[==========================================================>] 1,574       --.-K/s   in 0s      
+
+2013-04-27 14:57:45 (51.8 MB/s) - `emi-3-rc-sl5.repo' saved [1574/1574]
+
+root@minerva (yum.repos.d) # yum clean all
+Loaded plugins: kernel-module, priorities, protectbase
+Cleaning up Everything
+root@minerva (yum.repos.d) # 
+
+-----------------------------------------------------------------------------------------------
+1.5 Updating to EMI-3 update (testing repo)
+-----------------------------------------------------------------------------------------------
+
+root@minerva (~) # yum update
+Loaded plugins: kernel-module, priorities, protectbase
+EGI-trustanchors                                                             |  951 B     00:00     
+EGI-trustanchors/primary                                                     |  31 kB     00:00     
+EGI-trustanchors                                                                            215/215
+EMI-3-base                                                                   | 1.9 kB     00:00     
+EMI-3-base/primary_db                                                        | 259 kB     00:00     
+EMI-3-contribs                                                               | 1.9 kB     00:00     
+EMI-3-contribs/primary_db                                                    | 1.1 kB     00:00     
+EMI-3-testing-base                                                           | 1.9 kB     00:00     
+EMI-3-testing-base/primary_db                                                | 910 kB     00:00     
+EMI-3-testing-third-party                                                    | 1.9 kB     00:00     
+EMI-3-testing-third-party/primary_db                                         |  45 kB     00:00     
+EMI-3-third-party                                                            | 1.9 kB     00:00     
+EMI-3-third-party/primary_db                                                 |  71 kB     00:00     
+EMI-3-updates                                                                | 1.9 kB     00:00     
+EMI-3-updates/primary_db                                                     |  25 kB     00:00     
+Oracle-11                                                                    | 1.9 kB     00:00     
+Oracle-11/primary_db                                                         | 3.8 kB     00:00     
+epel                                                                         | 3.4 kB     00:00     
+epel/primary_db                                                              | 3.7 MB     00:02     
+eugridpma                                                                    |  951 B     00:00     
+eugridpma/primary                                                            |  29 kB     00:00     
+eugridpma                                                                                   227/227
+extras                                                                       | 3.4 kB     00:00     
+extras/primary_db                                                            | 3.7 MB     00:01     
+sl-base                                                                      | 2.1 kB     00:00     
+sl-base/primary_db                                                           | 2.0 MB     00:09     
+sl-security                                                                  | 2.3 kB     00:00     
+sl-security/primary_db                                                       | 2.5 MB     00:11     
+734 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Setting up Update Process
+Resolving Dependencies
+--> Running transaction check
+---> Package argus-pap.noarch 0:1.6.1-1.el5 set to be updated
+---> Package argus-pep-server.noarch 0:1.6.1-1.el5 set to be updated
+---> Package canl-java.noarch 0:1.2.0-0.sl5 set to be updated
+---> Package glite-yaim-core.noarch 0:5.1.2-1.sl5 set to be updated
+--> Finished Dependency Resolution
+Beginning Kernel Module Plugin
+Finished Kernel Module Plugin
+
+Dependencies Resolved
+
+====================================================================================================
+ Package                   Arch            Version                Repository                   Size
+====================================================================================================
+Updating:
+ argus-pap                 noarch          1.6.1-1.el5            EMI-3-testing-base           17 M
+ argus-pep-server          noarch          1.6.1-1.el5            EMI-3-testing-base           13 M
+ canl-java                 noarch          1.2.0-0.sl5            EMI-3-testing-base          265 k
+ glite-yaim-core           noarch          5.1.2-1.sl5            EMI-3-testing-base          118 k
+
+Transaction Summary
+====================================================================================================
+Install       0 Package(s)
+Upgrade       4 Package(s)
+
+Total download size: 30 M
+Is this ok [y/N]: y
+Downloading Packages:
+(1/4): glite-yaim-core-5.1.2-1.sl5.noarch.rpm                                | 118 kB     00:00     
+(2/4): canl-java-1.2.0-0.sl5.noarch.rpm                                      | 265 kB     00:00     
+(3/4): argus-pep-server-1.6.1-1.el5.noarch.rpm                               |  13 MB     00:00     
+(4/4): argus-pap-1.6.1-1.el5.noarch.rpm                                      |  17 MB     00:00     
+----------------------------------------------------------------------------------------------------
+Total                                                                19 MB/s |  30 MB     00:01     
+Running rpm_check_debug
+Running Transaction Test
+Finished Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Updating       : argus-pep-server                                                             1/8 
+warning: /etc/argus/pepd/pepd.ini created as /etc/argus/pepd/pepd.ini.rpmnew
+  Updating       : glite-yaim-core                                                              2/8 
+  Updating       : argus-pap                                                                    3/8 
+  Updating       : canl-java                                                                    4/8 
+  Cleanup        : argus-pep-server                                                             5/8 
+Starting argus-pepd... [  OK  ]
+  Cleanup        : glite-yaim-core                                                              6/8 
+  Cleanup        : argus-pap                                                                    7/8 
+  Cleanup        : canl-java                                                                    8/8 
+
+Updated:
+  argus-pap.noarch 0:1.6.1-1.el5                argus-pep-server.noarch 0:1.6.1-1.el5               
+  canl-java.noarch 0:1.2.0-0.sl5                glite-yaim-core.noarch 0:5.1.2-1.sl5                
+
+Complete!
+root@minerva (~) # 
+
+-----------------------------------------------------------------------------------------------
+1.6 Argus Information (EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+root@minerva (~) # yum info argus-pap argus-pep-server
+Loaded plugins: kernel-module, priorities, protectbase
+734 packages excluded due to repository priority protections
+0 packages excluded due to repository protections
+Installed Packages
+Name       : argus-pap
+Arch       : noarch
+Version    : 1.6.1
+Release    : 1.el5
+Size       : 19 M
+Repo       : installed
+Summary    : Argus PAP service
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: 
+           : Argus is a system meant to render consistent authorization decisions for
+           : distributed services (e.g. compute elements, portals). In order to achieve
+           : this consistency a number of points must be addressed. First, it must be
+           : possible to author and maintain consistent authorization policies. This is
+           : handled by the Policy Administration Point (PAP) component in the service.
+           : Second, authored policies must be evaluated in a consistent manner, a task
+           : performed by the Policy Decision Point (PDP). Finally, the data provided for
+           : evaluation against policies must be consistent (in form and definition) and
+           : this is done by the Policy Enforcement Point (PEP).
+           : 
+           : This package provides the Argus PAP service.
+
+Name       : argus-pep-server
+Arch       : noarch
+Version    : 1.6.1
+Release    : 1.el5
+Size       : 15 M
+Repo       : installed
+Summary    : Argus PEP Server
+URL        : https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+License    : ASL 2.0
+Description: Argus PEP (Policy Enforcement Point) Server.
+           : The Argus Authorization Service renders consistent authorization
+           : decisions for distributed services (e.g., user interfaces,
+           : portals, computing elements, storage elements). The service is
+           : based on the XACML standard, and uses authorization policies to
+           : determine if a user is allowed or denied to perform a certain
+           : action on a particular service.
+           : .
+           : The Argus Authorization Service is composed of three main
+           : components:
+           : - The Policy Administration Point (PAP) provides the tools to
+           : author authorization policies, organize them in the local
+           : repository and configure policy distribution among remote PAPs.
+           : - The Policy Decision Point (PDP) implements the authorization
+           : engine, and is responsible for the evaluation of the authorization
+           : requests against the XACML policies retrieved from the PAP.
+           : - The Policy Enforcement Point Server (PEP Server) ensures the
+           : integrity and consistency of the authorization requests received
+           : from the PEP clients. Lightweight PEP client libraries are also
+           : provided to ease the integration and interoperability with other
+           : EMI services or components.
+
+root@minerva (~) # 
+-----------------------------------------------------------------------------------------------
+1.7 Argus Service Checks
+-----------------------------------------------------------------------------------------------
+
+root@minerva (~) # service argus-pap status
+PAP running!
+root@minerva (~) # service argus-pdp status
+argus-pdp is running...
+root@minerva (~) # service argus-pepd status
+argus-pepd is running...
+root@minerva (~) # 
