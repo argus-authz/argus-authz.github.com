@@ -7,7 +7,7 @@ EMI Test Report Argus 1.6.1
 - ETICS Subsystem Configuration Name: emi-argus_R_1_6_1_EMI3
 - VCS Tag: N/A (source packages)
 - EMI Major Release: EMI-3 update
-- Platforms: SL6/x86_64
+- Platforms: SL5/x86_64
 - Author: Valery Tschopp
 - Date: 26-Apr-2013
 - Test Report Template : v. 3.2
@@ -38,11 +38,11 @@ REMARKS:
 
 1.1. Clean Installation
 -----------------------------
-URL of a clean installation report: http://argus-authz.github.com/reports/argus-EMI3_update-INSTALL-SL6.txt
+URL of a clean installation report: http://argus-authz.github.com/reports/argus-EMI3_update-INSTALL-SL5.txt
 
 1.2. Upgrade Installation
 --------------------------------
-URL of a upgrade report: http://argus-authz.github.com/reports/argus-EMI3_update-UPGRADE-SL6.txt
+URL of a upgrade report: http://argus-authz.github.com/reports/argus-EMI3_update-UPGRADE-SL5.txt
 
 2. Static Code Analysis
 ******************************
@@ -50,11 +50,11 @@ URL of a upgrade report: http://argus-authz.github.com/reports/argus-EMI3_update
 
 3. Unit Tests
 *****************
-- URL pointing to the results of the Unit Tests: http://argus-authz.github.com/reports/argus-EMI3_update-TESTS-SL6.txt
+- URL pointing to the results of the Unit Tests: http://argus-authz.github.com/reports/argus-EMI3_update-TESTS-SL5.txt
 - Code Coverage %, if available: N/A
 
 4. System tests 
 *********************
 - URL where the tests/testsuite can be accessed: https://github.com/argus-authz/argus-testsuites
-- URL where the test results can be accessed: http://argus-authz.github.com/reports/argus-EMI3_RC-testsuites-SL6.txt
+- URL where the test results can be accessed: http://argus-authz.github.com/reports/argus-EMI3_RC-testsuites-SL5.txt
 
