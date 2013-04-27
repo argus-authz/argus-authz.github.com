@@ -1,0 +1,504 @@
+Argus EMI-3 update upgrade
+==========================
+
+Document: http://argus-authz.github.com/reports/argus-EMI3_update-UPGRADE-Deb6.txt
+Author: valery.tschopp@switch.ch
+Date: 2013-04-27
+Platform: Debian6 (x86_64)
+Host: kronos.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Service Update (EMI-3 -> EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Host Information
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# lsb_release -a
+No LSB modules are available.
+Distributor ID:	Debian
+Description:	Debian GNU/Linux 6.0.7 (squeeze)
+Release:	6.0.7
+Codename:	squeeze
+
+-----------------------------------------------------------------------------------------------
+1.2 YUM Repositories (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# apt-cache policy
+Package files:
+ 100 /var/lib/dpkg/status
+     release a=now
+ 990 http://ftp.ch.debian.org/debian/ squeeze/non-free amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=non-free
+     origin ftp.ch.debian.org
+ 990 http://ftp.ch.debian.org/debian/ squeeze/contrib amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=contrib
+     origin ftp.ch.debian.org
+ 990 http://ftp.ch.debian.org/debian/ squeeze/main amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=main
+     origin ftp.ch.debian.org
+ 990 ftp://mirror.switch.ch/mirror/debian/ squeeze/non-free amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=non-free
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian/ squeeze/contrib amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=contrib
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian/ squeeze/main amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=main
+     origin mirror.switch.ch
+ 990 http://security.debian.org/ squeeze/updates/non-free amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=non-free
+     origin security.debian.org
+ 990 http://security.debian.org/ squeeze/updates/contrib amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=contrib
+     origin security.debian.org
+ 990 http://security.debian.org/ squeeze/updates/main amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=main
+     origin security.debian.org
+ 990 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/non-free amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=non-free
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/contrib amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=contrib
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=main
+     origin mirror.switch.ch
+ 500 http://pkg.switch.ch/debian/internal/ squeeze/non-free amd64 Packages
+     release o=SWITCH,a=squeeze,n=squeeze,l=SWITCH-internal,c=non-free
+     origin pkg.switch.ch
+ 500 http://pkg.switch.ch/debian/internal/ squeeze/contrib amd64 Packages
+     release o=SWITCH,a=squeeze,n=squeeze,l=SWITCH-internal,c=contrib
+     origin pkg.switch.ch
+ 500 http://pkg.switch.ch/debian/internal/ squeeze/main amd64 Packages
+     release o=SWITCH,a=squeeze,n=squeeze,l=SWITCH-internal,c=main
+     origin pkg.switch.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze-updates/main amd64 Packages
+     origin emisoft.web.cern.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze/third-party amd64 Packages
+     origin emisoft.web.cern.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze/main amd64 Packages
+     origin emisoft.web.cern.ch
+ 500 http://dist.eugridpma.info/distribution/current/ igtf/accredited amd64 Packages
+     release o=International Grid Trust Federation,a=igtf,l=IGTF Trust Anchor Distribution,c=accredited
+     origin dist.eugridpma.info
+Pinned packages:
+root@kronos:~# 
+
+-----------------------------------------------------------------------------------------------
+1.3 Argus Information (EMI-3)
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# dpkg-query -s emi-version argus-pap argus-pep-server
+Package: emi-version
+Status: install ok installed
+Priority: optional
+Section: devel
+Installed-Size: 1
+Maintainer: ETICS <etics-support@cern.ch>
+Architecture: amd64
+Version: 3.1.0-1.deb6.1
+Conffiles:
+ /etc/emi-version 6eafe2e74329a2886443cef9069ebe49
+Description: package whose version identifies a snapshot of the EMI repository
+
+Package: argus-pap
+Status: install ok installed
+Priority: extra
+Section: java
+Installed-Size: 19122
+Maintainer: Valery Tschopp <valery.tschopp@switch.ch>
+Architecture: all
+Version: 1.6.0-1
+Depends: default-jre-headless, libvoms3-java, lsb-base
+Conffiles:
+ /etc/argus/pap/logging/client/logback.xml f59e6449d8743ee3c3296327ce99b49f
+ /etc/argus/pap/logging/standalone/logback.xml 3be9c0792013918cb3c9fb909ae50620
+ /etc/argus/pap/pap_configuration.ini db0679c1cb5ff3df27227f5ba6964693
+ /etc/argus/pap/pap_authorization.ini 603053546d91a1d36ca817a292d0b2bd
+ /etc/argus/pap/pap-admin.properties f18ca00cda89955eb3fec346704c4477
+ /etc/argus/pap/attribute-mappings.ini c8696476d148dec7d9c24f60ed05f33c
+ /etc/default/argus-pap 45c7005841156dd6e15095f341b45f53
+Description: Argus PAP (Policy Administration Point)
+ The Argus Authorization Service renders consistent authorization
+ decisions for distributed services (e.g., user interfaces,
+ portals, computing elements, storage elements). The service
+ is based on the XACML standard, and uses authorization policies
+ to determine if a user is allowed or denied to perform a certain
+ action on a particular service.
+Homepage: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+
+Package: argus-pep-server
+Status: install ok installed
+Priority: extra
+Section: java
+Installed-Size: 15199
+Maintainer: Valery Tschopp <valery.tschopp@switch.ch>
+Architecture: all
+Version: 1.6.0-3
+Depends: default-jre-headless, lsb-base, libargus-pep-common-java (>= 2.3), libargus-pdp-pep-common-java (>= 1.4), libvoms3-java
+Conffiles:
+ /etc/argus/pepd/logging.xml b221e279aa7def7dcb1cfbfd52e8cb16
+ /etc/argus/pepd/pepd.ini d543a312e0eb6c9d91304a0c0fabb64f
+ /etc/default/argus-pepd 9fdd5de16e57335d32f232ea0997a356
+ /etc/init.d/argus-pepd 33312e3fa5a26abb4ac128906a6f758d
+Description: Argus PEP Server
+ The Argus Authorization Service renders consistent authorization
+ decisions for distributed services (e.g., user interfaces,
+ portals, computing elements, storage elements). The service
+ is based on the XACML standard, and uses authorization policies
+ to determine if a user is allowed or denied to perform a certain
+ action on a particular service.
+Homepage: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+root@kronos:~# 
+
+-----------------------------------------------------------------------------------------------
+1.4 Updating YUM Repositories (EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# cd /etc/apt/sources.list.d/
+root@kronos:/etc/apt/sources.list.d# wget http://eticssoft.web.cern.ch/eticssoft/pbuilder/emi-3-rc-deb6.list
+--2013-04-27 15:34:49--  http://eticssoft.web.cern.ch/eticssoft/pbuilder/emi-3-rc-deb6.list
+Resolving eticssoft.web.cern.ch... 137.138.139.19
+Connecting to eticssoft.web.cern.ch|137.138.139.19|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 162 [text/plain]
+Saving to: “emi-3-rc-deb6.list”
+
+100%[==========================================================>] 162         --.-K/s   in 0s      
+
+2013-04-27 15:34:49 (19.9 MB/s) - “emi-3-rc-deb6.list” saved [162/162]
+
+root@kronos:/etc/apt/sources.list.d# apt-get update
+Hit http://ftp.ch.debian.org squeeze Release.gpg
+Ign http://ftp.ch.debian.org/debian/ squeeze/contrib Translation-en
+Ign http://ftp.ch.debian.org/debian/ squeeze/contrib Translation-en_US
+Ign http://ftp.ch.debian.org/debian/ squeeze/main Translation-en                                   
+Ign http://ftp.ch.debian.org/debian/ squeeze/main Translation-en_US                                
+Ign http://ftp.ch.debian.org/debian/ squeeze/non-free Translation-en                               
+Ign http://ftp.ch.debian.org/debian/ squeeze/non-free Translation-en_US                            
+Hit http://pkg.switch.ch squeeze Release.gpg                                                       
+Hit http://ftp.ch.debian.org squeeze Release                                                       
+Ign http://emisoft.web.cern.ch stable Release.gpg                                                  
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main Translation-en       
+Ign http://pkg.switch.ch/debian/internal/ squeeze/contrib Translation-en                           
+Hit http://security.debian.org squeeze/updates Release.gpg                                         
+Ign http://security.debian.org/ squeeze/updates/contrib Translation-en                             
+Ign http://security.debian.org/ squeeze/updates/contrib Translation-en_US                          
+Ign http://security.debian.org/ squeeze/updates/main Translation-en                                
+Ign http://security.debian.org/ squeeze/updates/main Translation-en_US                             
+Ign http://security.debian.org/ squeeze/updates/non-free Translation-en                            
+Ign http://security.debian.org/ squeeze/updates/non-free Translation-en_US                         
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main Translation-en_US    
+Hit http://security.debian.org squeeze/updates Release                                             
+Ign http://pkg.switch.ch/debian/internal/ squeeze/contrib Translation-en_US                        
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/third-party Translation-en
+Hit http://dist.eugridpma.info igtf Release.gpg                                                    
+Hit http://ftp.ch.debian.org squeeze/main amd64 Packages                                           
+Hit http://ftp.ch.debian.org squeeze/contrib amd64 Packages                                        
+Hit http://ftp.ch.debian.org squeeze/non-free amd64 Packages                                       
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/third-party Translation-en_US
+Ign http://pkg.switch.ch/debian/internal/ squeeze/main Translation-en                              
+Hit http://emisoft.web.cern.ch squeeze Release.gpg                                                 
+Hit http://security.debian.org squeeze/updates/main amd64 Packages                                 
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze/main Translation-en              
+Hit ftp://mirror.switch.ch squeeze/updates Release.gpg                                             
+Ign http://pkg.switch.ch/debian/internal/ squeeze/main Translation-en_US                           
+Get:1 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/contrib Translation-en        
+Ign ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/contrib Translation-en          
+Get:2 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/contrib Translation-en_US     
+Hit http://security.debian.org squeeze/updates/contrib amd64 Packages                      
+Hit http://security.debian.org squeeze/updates/non-free amd64 Packages                     
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze/main Translation-en_US       
+Ign http://dist.eugridpma.info/distribution/current/ igtf/accredited Translation-en                
+Ign ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/contrib Translation-en_US       
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze/third-party Translation-en       
+Get:3 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main Translation-en           
+Ign http://pkg.switch.ch/debian/internal/ squeeze/non-free Translation-en                          
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze/third-party Translation-en_US    
+Ign ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main Translation-en             
+Get:4 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main Translation-en_US        
+Ign http://pkg.switch.ch/debian/internal/ squeeze/non-free Translation-en_US                       
+Hit http://pkg.switch.ch squeeze Release                                                           
+Hit http://emisoft.web.cern.ch squeeze-updates Release.gpg                                     
+Ign ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main Translation-en_US          
+Get:5 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/non-free Translation-en       
+Ign ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/non-free Translation-en         
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze-updates/main Translation-en      
+Get:6 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/non-free Translation-en_US    
+Ign http://dist.eugridpma.info/distribution/current/ igtf/accredited Translation-en_US             
+Ign http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze-updates/main Translation-en_US   
+Ign ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/non-free Translation-en_US      
+Hit ftp://mirror.switch.ch squeeze Release.gpg                                                     
+Get:7 ftp://mirror.switch.ch/mirror/debian/ squeeze/contrib Translation-en                         
+Ign ftp://mirror.switch.ch/mirror/debian/ squeeze/contrib Translation-en                           
+Get:8 ftp://mirror.switch.ch/mirror/debian/ squeeze/contrib Translation-en_US                      
+Ign http://emisoft.web.cern.ch stable Release                                                      
+Ign http://pkg.switch.ch squeeze/main amd64 Packages                                               
+Ign ftp://mirror.switch.ch/mirror/debian/ squeeze/contrib Translation-en_US                        
+Get:9 ftp://mirror.switch.ch/mirror/debian/ squeeze/main Translation-en                            
+Hit http://emisoft.web.cern.ch squeeze Release                                                     
+Ign ftp://mirror.switch.ch/mirror/debian/ squeeze/main Translation-en                              
+Get:10 ftp://mirror.switch.ch/mirror/debian/ squeeze/main Translation-en_US                        
+Hit http://emisoft.web.cern.ch squeeze-updates Release                                             
+Ign http://pkg.switch.ch squeeze/contrib amd64 Packages                                            
+Ign http://emisoft.web.cern.ch stable/main amd64 Packages/DiffIndex                                
+Hit http://dist.eugridpma.info igtf Release                                                        
+Ign http://emisoft.web.cern.ch stable/third-party amd64 Packages/DiffIndex                         
+Ign http://pkg.switch.ch squeeze/non-free amd64 Packages                                           
+Ign ftp://mirror.switch.ch/mirror/debian/ squeeze/main Translation-en_US                           
+Get:11 ftp://mirror.switch.ch/mirror/debian/ squeeze/non-free Translation-en                       
+Hit http://emisoft.web.cern.ch squeeze/main Sources                                           
+Ign ftp://mirror.switch.ch/mirror/debian/ squeeze/non-free Translation-en                          
+Get:12 ftp://mirror.switch.ch/mirror/debian/ squeeze/non-free Translation-en_US                    
+Hit http://emisoft.web.cern.ch squeeze/third-party Sources                                       
+Ign http://pkg.switch.ch squeeze/main amd64 Packages                                               
+Ign ftp://mirror.switch.ch/mirror/debian/ squeeze/non-free Translation-en_US                       
+Hit http://emisoft.web.cern.ch squeeze/main amd64 Packages                                         
+Hit ftp://mirror.switch.ch squeeze/updates Release     
+Hit ftp://mirror.switch.ch squeeze Release                                                         
+Hit http://emisoft.web.cern.ch squeeze/third-party amd64 Packages                                  
+Ign http://pkg.switch.ch squeeze/contrib amd64 Packages                                            
+Ign http://emisoft.web.cern.ch stable/main amd64 Packages                                          
+Hit ftp://mirror.switch.ch squeeze/updates/main amd64 Packages                                     
+Hit ftp://mirror.switch.ch squeeze/updates/contrib amd64 Packages                                  
+Ign http://pkg.switch.ch squeeze/non-free amd64 Packages                                    
+Hit ftp://mirror.switch.ch squeeze/updates/non-free amd64 Packages                          
+Hit http://pkg.switch.ch squeeze/main amd64 Packages                                        
+Hit http://pkg.switch.ch squeeze/contrib amd64 Packages                                     
+Ign http://emisoft.web.cern.ch stable/third-party amd64 Packages                            
+Hit http://pkg.switch.ch squeeze/non-free amd64 Packages                                           
+Hit http://emisoft.web.cern.ch squeeze-updates/main Sources                                        
+Hit ftp://mirror.switch.ch squeeze/main amd64 Packages                                             
+Ign http://dist.eugridpma.info igtf/accredited amd64 Packages                 
+Hit ftp://mirror.switch.ch squeeze/contrib amd64 Packages
+Hit ftp://mirror.switch.ch squeeze/non-free amd64 Packages
+Hit http://emisoft.web.cern.ch squeeze-updates/main amd64 Packages                                 
+Ign http://emisoft.web.cern.ch stable/main amd64 Packages                                          
+Ign http://emisoft.web.cern.ch stable/third-party amd64 Packages                                   
+Hit http://emisoft.web.cern.ch stable/main amd64 Packages                                          
+Hit http://emisoft.web.cern.ch stable/third-party amd64 Packages
+Ign http://dist.eugridpma.info igtf/accredited amd64 Packages
+Hit http://dist.eugridpma.info igtf/accredited amd64 Packages
+Reading package lists... Done
+
+
+root@kronos:/etc/apt# rm /etc/apt/preferences.d/emi3
+
+
+root@kronos:~# apt-cache  policy
+Package files:
+ 100 /var/lib/dpkg/status
+     release a=now
+ 990 http://ftp.ch.debian.org/debian/ squeeze/non-free amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=non-free
+     origin ftp.ch.debian.org
+ 990 http://ftp.ch.debian.org/debian/ squeeze/contrib amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=contrib
+     origin ftp.ch.debian.org
+ 990 http://ftp.ch.debian.org/debian/ squeeze/main amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=main
+     origin ftp.ch.debian.org
+ 990 ftp://mirror.switch.ch/mirror/debian/ squeeze/non-free amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=non-free
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian/ squeeze/contrib amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=contrib
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian/ squeeze/main amd64 Packages
+     release v=6.0.7,o=Debian,a=stable,n=squeeze,l=Debian,c=main
+     origin mirror.switch.ch
+ 990 http://security.debian.org/ squeeze/updates/non-free amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=non-free
+     origin security.debian.org
+ 990 http://security.debian.org/ squeeze/updates/contrib amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=contrib
+     origin security.debian.org
+ 990 http://security.debian.org/ squeeze/updates/main amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=main
+     origin security.debian.org
+ 990 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/non-free amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=non-free
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/contrib amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=contrib
+     origin mirror.switch.ch
+ 990 ftp://mirror.switch.ch/mirror/debian-security/ squeeze/updates/main amd64 Packages
+     release v=6.0,o=Debian,a=stable,n=squeeze,l=Debian-Security,c=main
+     origin mirror.switch.ch
+ 500 http://pkg.switch.ch/debian/internal/ squeeze/non-free amd64 Packages
+     release o=SWITCH,a=squeeze,n=squeeze,l=SWITCH-internal,c=non-free
+     origin pkg.switch.ch
+ 500 http://pkg.switch.ch/debian/internal/ squeeze/contrib amd64 Packages
+     release o=SWITCH,a=squeeze,n=squeeze,l=SWITCH-internal,c=contrib
+     origin pkg.switch.ch
+ 500 http://pkg.switch.ch/debian/internal/ squeeze/main amd64 Packages
+     release o=SWITCH,a=squeeze,n=squeeze,l=SWITCH-internal,c=main
+     origin pkg.switch.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze-updates/main amd64 Packages
+     release o=EMI,a=squeeze-updates,n=EMI 3 production updates,l=EMI Debian production packages,c=main
+     origin emisoft.web.cern.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze/third-party amd64 Packages
+     release o=EMI,a=squeeze,n=EMI 3 production,l=EMI Debian production packages,c=third-party
+     origin emisoft.web.cern.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/3/debian/ squeeze/main amd64 Packages
+     release o=EMI,a=squeeze,n=EMI 3 production,l=EMI Debian production packages,c=main
+     origin emisoft.web.cern.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/third-party amd64 Packages
+     origin emisoft.web.cern.ch
+ 500 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main amd64 Packages
+     origin emisoft.web.cern.ch
+ 500 http://dist.eugridpma.info/distribution/current/ igtf/accredited amd64 Packages
+     release o=International Grid Trust Federation,a=igtf,l=IGTF Trust Anchor Distribution,c=accredited
+     origin dist.eugridpma.info
+Pinned packages:
+root@kronos:~# 
+
+-----------------------------------------------------------------------------------------------
+1.5 Updating to EMI-3 update (testing repo)
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# apt-get upgrade
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages will be upgraded:
+  argus-pap argus-pep-server glite-yaim-core libcanl-java
+4 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Need to get 31.7 MB of archives.
+After this operation, 3,072 B of additional disk space will be used.
+Do you want to continue [Y/n]? y
+WARNING: The following packages cannot be authenticated!
+  glite-yaim-core argus-pap argus-pep-server libcanl-java
+Install these packages without verification [y/N]? y
+Get:1 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main glite-yaim-core all 5.1.2-1.deb6.1 [96.1 kB]
+Get:2 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main argus-pap all 1.6.1-1 [17.4 MB]
+Get:3 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main argus-pep-server all 1.6.1-1 [13.9 MB]
+Get:4 http://emisoft.web.cern.ch/emisoft/dist/EMI/testing/3/debian/ stable/main libcanl-java all 1.2.0-0.deb6 [268 kB]
+Fetched 31.7 MB in 1s (28.5 MB/s) 
+(Reading database ... 26231 files and directories currently installed.)
+Preparing to replace glite-yaim-core 5.1.1-1.deb6.1 (using .../glite-yaim-core_5.1.2-1.deb6.1_all.deb) ...
+Unpacking replacement glite-yaim-core ...
+Preparing to replace argus-pap 1.6.0-1 (using .../argus-pap_1.6.1-1_all.deb) ...
+Ok.
+Unpacking replacement argus-pap ...
+Preparing to replace argus-pep-server 1.6.0-3 (using .../argus-pep-server_1.6.1-1_all.deb) ...
+Stopping argus-pepd... .
+Unpacking replacement argus-pep-server ...
+Preparing to replace libcanl-java 1.1.0-2.deb6 (using .../libcanl-java_1.2.0-0.deb6_all.deb) ...
+Unpacking replacement libcanl-java ...
+Setting up glite-yaim-core (5.1.2-1.deb6.1) ...
+Setting up argus-pap (1.6.1-1) ...
+update-rc.d: warning: argus-pap start runlevel arguments (2 3 4 5) do not match LSB Default-Start values (3 4 5)
+Setting up argus-pep-server (1.6.1-1) ...
+
+Configuration file `/etc/argus/pepd/pepd.ini'
+ ==> Modified (by you or by a script) since installation.
+ ==> Package distributor has shipped an updated version.
+   What would you like to do about it ?  Your options are:
+    Y or I  : install the package maintainer's version
+    N or O  : keep your currently-installed version
+      D     : show the differences between the versions
+      Z     : start a shell to examine the situation
+ The default action is to keep your current version.
+*** pepd.ini (Y/I/N/O/D/Z) [default=N] ? 
+update-rc.d: warning: argus-pepd start runlevel arguments (2 3 4 5) do not match LSB Default-Start values (3 4 5)
+Starting argus-pepd... /usr/sbin/pepdctl: ERROR: /usr/share/java/canl.jar in classpath does not exist
+ failed!
+Setting up libcanl-java (1.2.0-0.deb6) ...
+root@kronos:~# 
+
+
+PROBLEM!!!! => argus-pepd does not restart automatically => KNOWN ISSUE
+
+-----------------------------------------------------------------------------------------------
+1.6 Argus Information (EMI-3 update)
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# dpkg-query -s emi-version argus-pap argus-pep-server
+Package: emi-version
+Status: install ok installed
+Priority: optional
+Section: devel
+Installed-Size: 1
+Maintainer: ETICS <etics-support@cern.ch>
+Architecture: amd64
+Version: 3.1.0-1.deb6.1
+Conffiles:
+ /etc/emi-version 6eafe2e74329a2886443cef9069ebe49
+Description: package whose version identifies a snapshot of the EMI repository
+
+Package: argus-pap
+Status: install ok installed
+Priority: extra
+Section: java
+Installed-Size: 19122
+Maintainer: Valery Tschopp <valery.tschopp@switch.ch>
+Architecture: all
+Version: 1.6.1-1
+Depends: default-jre-headless, libvoms3-java, lsb-base
+Conffiles:
+ /etc/argus/pap/logging/client/logback.xml f59e6449d8743ee3c3296327ce99b49f
+ /etc/argus/pap/logging/standalone/logback.xml 3be9c0792013918cb3c9fb909ae50620
+ /etc/argus/pap/pap_configuration.ini db0679c1cb5ff3df27227f5ba6964693
+ /etc/argus/pap/pap_authorization.ini 603053546d91a1d36ca817a292d0b2bd
+ /etc/argus/pap/pap-admin.properties f18ca00cda89955eb3fec346704c4477
+ /etc/argus/pap/attribute-mappings.ini c8696476d148dec7d9c24f60ed05f33c
+ /etc/default/argus-pap 45c7005841156dd6e15095f341b45f53
+Description: Argus PAP (Policy Administration Point)
+ The Argus Authorization Service renders consistent authorization
+ decisions for distributed services (e.g., user interfaces,
+ portals, computing elements, storage elements). The service
+ is based on the XACML standard, and uses authorization policies
+ to determine if a user is allowed or denied to perform a certain
+ action on a particular service.
+Homepage: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+
+Package: argus-pep-server
+Status: install ok installed
+Priority: extra
+Section: java
+Installed-Size: 15200
+Maintainer: Valery Tschopp <valery.tschopp@switch.ch>
+Architecture: all
+Version: 1.6.1-1
+Depends: default-jre-headless, lsb-base, libargus-pep-common-java (>= 2.3), libargus-pdp-pep-common-java (>= 1.4), libvoms3-java
+Conffiles:
+ /etc/argus/pepd/logging.xml b221e279aa7def7dcb1cfbfd52e8cb16
+ /etc/argus/pepd/pepd.ini b8ea5ee5e80fbe72435044b0e078a0eb
+ /etc/default/argus-pepd 9fdd5de16e57335d32f232ea0997a356
+ /etc/init.d/argus-pepd 33312e3fa5a26abb4ac128906a6f758d
+Description: Argus PEP Server
+ The Argus Authorization Service renders consistent authorization
+ decisions for distributed services (e.g., user interfaces,
+ portals, computing elements, storage elements). The service
+ is based on the XACML standard, and uses authorization policies
+ to determine if a user is allowed or denied to perform a certain
+ action on a particular service.
+Homepage: https://twiki.cern.ch/twiki/bin/view/EGEE/AuthorizationFramework
+root@kronos:~# 
+
+-----------------------------------------------------------------------------------------------
+1.7 Argus Service Checks
+-----------------------------------------------------------------------------------------------
+
+root@kronos:~# service argus-pap status
+PAP running!
+root@kronos:~# service argus-pdp status
+argus-pdp is running...
+root@kronos:~# service argus-pepd status
+argus-pepd is not running...
+5root@kronos:~# 
+
+PROBLEM!!!! => argus-pepd does not restart automatically => KNOWN ISSUE
+
+5root@kronos:~# service argus-pepd start
+Starting argus-pepd... .
+root@kronos:~# service argus-pepd status
+argus-pepd is running...
+root@kronos:~# 
+
+
+
