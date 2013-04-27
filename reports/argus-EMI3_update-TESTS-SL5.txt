@@ -1,0 +1,115 @@
+Document: http://argus-authz.github.com/reports/argus-EMI3_update-TESTS-SL5.txt
+Author: valery.tschopp@switch.ch
+Date: 2013-04-27
+Platform: SL5 (x86_64)
+Host: minerva.switch.ch
+
+-----------------------------------------------------------------------------------------------
+1. Unit Tests
+-----------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------
+1.1 Argus pap-admin ban doesn't convert DN in OpenSSL format to rfc2253
+    RfC: https://savannah.cern.ch/bugs/?101151
+-----------------------------------------------------------------------------------------------
+
+[tschopp@minerva ~]$ pap-admin lp
+
+default (local):
+
+resource "test" {
+    obligation "http://glite.org/xacml/obligation/local-environment-map" {
+    }
+
+    action "test" {
+        rule permit { vo="dteam" }
+    }
+}
+[tschopp@minerva ~]$ pap-admin ban subject "/C=CH/O=SWITCH/CN=Valery Tschopp"
+[tschopp@minerva ~]$ pap-admin lp
+
+default (local):
+
+resource ".*" {
+
+    action ".*" {
+        rule deny { subject="CN=Valery Tschopp,O=SWITCH,C=CH" }
+    }
+}
+
+resource "test" {
+    obligation "http://glite.org/xacml/obligation/local-environment-map" {
+    }
+
+    action "test" {
+        rule permit { vo="dteam" }
+    }
+}
+[tschopp@minerva ~]$ 
+
+RESULT: OpenSSL DN correctly transformed to RFC2253 DN
+TEST PASSED
+
+-----------------------------------------------------------------------------------------------
+1.2 PEP Server have false WARN about secondary FAQNs in log file
+    RfC: https://savannah.cern.ch/bugs/?101104
+-----------------------------------------------------------------------------------------------
+
+root@minerva (~) # tail /var/log/argus/pepd/process.log
+2013-04-27 12:00:06.976Z - INFO [PEPDaemonIniConfigurationParser] - PDP: PDP endpoints: https://minerva.switch.ch:8152/authz
+2013-04-27 12:00:06.976Z - INFO [PEPDaemonIniConfigurationParser] - PDP: max cached responses: 500
+2013-04-27 12:00:06.976Z - INFO [PEPDaemonIniConfigurationParser] - PDP: cached response TTL: 600000ms
+2013-04-27 12:00:06.976Z - INFO [AbstractIniServiceConfigurationParser] - PDP: building SOAP client (SSL)
+2013-04-27 12:00:07.029Z - INFO [AbstractIniServiceConfigurationParser] - PDP: connection timeout: 30000ms
+2013-04-27 12:00:07.029Z - INFO [AbstractIniServiceConfigurationParser] - PDP: maximum requests: 200
+2013-04-27 12:00:07.029Z - INFO [AbstractIniServiceConfigurationParser] - PDP: recieve buffer size: 16384 bytes
+2013-04-27 12:00:07.029Z - INFO [AbstractIniServiceConfigurationParser] - PDP: send buffer size: 16384 bytes
+2013-04-27 12:00:07.096Z - INFO [PEPDaemon] - Starting all PIPs
+2013-04-27 12:00:09.690Z - INFO [PEPDaemon] - Argus PEP Server version 1.6.1 started
+root@minerva (~) # 
+
+
+[tschopp@minerva ~]$ voms-proxy-info -all
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3/CN=proxy
+issuer    : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+identity  : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+type      : proxy
+strength  : 1024 bits
+path      : /tmp/x509up_u959
+timeleft  : 11:57:51
+key usage : Digital Signature, Key Encipherment
+=== VO dteam extension information ===
+VO        : dteam
+subject   : /DC=ch/DC=switch/DC=slcs/O=SWITCH/CN=Valery Tschopp 9FEE5EE3
+issuer    : /C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms.hellasgrid.gr
+attribute : /dteam/Role=NULL/Capability=NULL
+attribute : /dteam/NGI_CH/Role=NULL/Capability=NULL
+timeleft  : 11:57:53
+uri       : voms.hellasgrid.gr:15004
+[tschopp@minerva ~]$ pepcli -p https://minerva.switch.ch:8154/authz --capath /etc/grid-security/certificates --cert ~/.globus/usercert.pem --key ~/.globus/userkey.pem --keyinfo /tmp/x509up_u959 --resource test --action test
+Key password: 
+Resource: test
+Decision: Permit
+Obligation: http://glite.org/xacml/obligation/local-environment-map/posix (caller should resolve POSIX account mapping)
+Username: dteam026
+Group: dteam
+Secondary Groups: dteam
+[tschopp@minerva ~]$ 
+
+
+root@minerva (~) # tail /var/log/argus/pepd/process.log
+2013-04-27 12:00:06.976Z - INFO [PEPDaemonIniConfigurationParser] - PDP: max cached responses: 500
+2013-04-27 12:00:06.976Z - INFO [PEPDaemonIniConfigurationParser] - PDP: cached response TTL: 600000ms
+2013-04-27 12:00:06.976Z - INFO [AbstractIniServiceConfigurationParser] - PDP: building SOAP client (SSL)
+2013-04-27 12:00:07.029Z - INFO [AbstractIniServiceConfigurationParser] - PDP: connection timeout: 30000ms
+2013-04-27 12:00:07.029Z - INFO [AbstractIniServiceConfigurationParser] - PDP: maximum requests: 200
+2013-04-27 12:00:07.029Z - INFO [AbstractIniServiceConfigurationParser] - PDP: recieve buffer size: 16384 bytes
+2013-04-27 12:00:07.029Z - INFO [AbstractIniServiceConfigurationParser] - PDP: send buffer size: 16384 bytes
+2013-04-27 12:00:07.096Z - INFO [PEPDaemon] - Starting all PIPs
+2013-04-27 12:00:09.690Z - INFO [PEPDaemon] - Argus PEP Server version 1.6.1 started
+2013-04-27 12:10:36.521Z - INFO [DFPMObligationHandler] - ACCOUNTMAPPER_OH: DN: CN=Valery Tschopp 9FEE5EE3,O=SWITCH,DC=slcs,DC=switch,DC=ch pFQAN: /dteam FQANs: [/dteam, /dteam/NGI_CH] mapped to POSIX account: PosixAccount{user=dteam026 group=dteam}
+root@minerva (~) # 
+
+
+RESULT: The false WARN message about secondary FQANs is not shown anymore
+TEST PASSED
